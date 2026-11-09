@@ -175,6 +175,8 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
 .pcard .short { display: none; }
 .swipehint { display: none; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 13px; margin: -4px 0 0; }
 .swipehint[hidden] { display: none !important; }
+.stickyname { display: none; position: absolute; left: 0; right: 0; z-index: 6; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 16px rgb(45 26 46 / .12); font-family: var(--font-display); font-weight: 800; color: var(--accent); font-size: 15px; }
+.stickyname[hidden] { display: none !important; }
 .dots { display: inline-flex; gap: 6px; }
 .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
 .dots span.on { background: var(--accent); }
@@ -197,7 +199,8 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
   table { display: block; min-width: 0; width: var(--w, 100%); }
   td, thead th { scroll-snap-align: start; }
   .swipehint { display: flex; }
-  table.multi td[data-p]::before { content: attr(data-p); display: block; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  tr.quizrow { background: var(--accent-soft); }
+  .stickyname:not([hidden]) { display: flex; }
   thead, tbody { display: block; }
   tr { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); }
   th, td { overflow-wrap: break-word; hyphens: auto; }
@@ -233,14 +236,15 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
     <div class="picker" id="picker"></div>
   </section>
 
-  <section aria-labelledby="cmp-h" style="display:grid; gap:12px" id="compare">
+  <section aria-labelledby="cmp-h" style="display:grid; gap:12px; position:relative" id="compare">
+    <div class="stickyname" id="stickyname" hidden aria-hidden="true"><span></span><span class="dots"></span></div>
     <div class="toolbar">
       <h2 id="cmp-h">Jämförelse</h2>
       <div class="controls">
         <label class="toggle"><input type="checkbox" id="diffonly"><span class="switch" aria-hidden="true"></span>Visa bara skillnader</label>
       </div>
     </div>
-    <p class="swipehint" id="swipehint" hidden><span>Svep i sidled för att se alla tre →</span><span class="dots" aria-hidden="true"></span></p>
+    <p class="swipehint" id="swipehint" hidden><span>Svep för nästa program →</span><span class="dots" aria-hidden="true"></span></p>
     <div class="tablewrap" id="tablewrap"><table id="table"></table></div>
     <p class="sources">Källor: utbildningssidorna på iths.se, länkade i varje kolumn. Sista ansökningsdag publiceras inte förrän ansökan öppnar i februari 2027.</p>
   </section>
@@ -762,11 +766,34 @@ function openQuiz() {
 
 function render() { renderQuizbox(); renderPicker(); renderTray(); renderTable(); }
 
+// Mobil: programnamnet följer med längst upp när man skrollar ner i tabellen.
+function updateSticky() {
+  const bar = document.getElementById("stickyname"), table = document.getElementById("table"), thead = table.querySelector("thead");
+  const sel = state.selected.map(id => byId[id]);
+  if (!thead || !sel.length || !matchMedia("(max-width: 640px)").matches) { bar.hidden = true; return; }
+  // Översta synliga punkten i sidans koordinater: egen skroll, eller vad iths.se berättar (plus marginal för sidhuvudet).
+  let vt = null;
+  if (!EMBEDDED || selfScrolls()) vt = window.pageYOffset + 8;
+  else if (parentView) vt = parentView.top + 16;
+  if (vt === null) { bar.hidden = true; return; }
+  const y = r => r + window.pageYOffset;
+  const start = y(thead.getBoundingClientRect().bottom), end = y(table.getBoundingClientRect().bottom) - 60;
+  if (vt < start - 40 || vt > end) { bar.hidden = true; return; }
+  const w = document.getElementById("tablewrap"), at = Math.min(sel.length - 1, Math.round(w.scrollLeft / Math.max(1, w.clientWidth)));
+  bar.firstElementChild.textContent = sel[at].name;
+  bar.lastElementChild.innerHTML = sel.length > 1 ? sel.map((_, i) => `<span class="${i === at ? "on" : ""}"></span>`).join("") : "";
+  bar.style.top = Math.round(vt - y(document.getElementById("compare").getBoundingClientRect().top)) + "px";
+  bar.hidden = false;
+}
+window.addEventListener("scroll", () => updateSticky(), { passive: true });
+window.addEventListener("resize", () => updateSticky());
+
 function updateDots() {
   const w = document.getElementById("tablewrap"), d = document.querySelectorAll("#swipehint .dots span");
   const at = Math.round(w.scrollLeft / Math.max(1, w.clientWidth)), last = at >= d.length - 1;
   d.forEach((el, i) => el.classList.toggle("on", i === at));
-  document.querySelector("#swipehint > span").textContent = last ? "← Svep tillbaka" : `Svep i sidled för nästa utbildning (${at + 1} av ${d.length}) →`;
+  document.querySelector("#swipehint > span").textContent = last ? "← Svep tillbaka" : `Svep för nästa program (${at + 1} av ${d.length}) →`;
+  updateSticky();
 }
 document.getElementById("tablewrap").addEventListener("scroll", updateDots, { passive: true });
 
@@ -809,6 +836,7 @@ if (EMBEDDED) {
     try { host = new URL(e.origin).hostname; } catch (_) {}
     if (!/(^|\.)iths\.se$/.test(host) || !e.data || e.data.type !== "jamfor-viewport") return;
     parentView = { top: Math.max(0, e.data.top), h: e.data.h };
+    updateSticky();
   });
 }
 
