@@ -18,7 +18,7 @@ Lägg ett block av typen Anpassad HTML på en WordPress-sida:
 Koden ovan räcker om sidan inte ska kopplas till quizet. För quizkopplingen, använd i stället den här varianten, som skickar vidare parametrarna i adressen till iframen:
 
 ```html
-<iframe id="jamfor" src="https://iths-hemsida.github.io/jamfor-utbildningar/" title="Jämför utbildningar" style="width:100%; height:1600px; border:0;"></iframe>
+<iframe id="jamfor" src="https://iths-hemsida.github.io/jamfor-utbildningar/" title="Jämför utbildningar" style="width:100%; height:1600px; border:0; scroll-margin-top:120px;"></iframe>
 <script>
   if (location.search) document.getElementById("jamfor").src = "https://iths-hemsida.github.io/jamfor-utbildningar/" + location.search;
 </script>
@@ -29,7 +29,7 @@ Koden ovan räcker om sidan inte ska kopplas till quizet. För quizkopplingen, a
 Quizet på iths.se/vilken-utbildning-passar-mig har en knapp på resultatsidan, "Jämför dina tre bästa sida vid sida". Den länkar hit med två parametrar:
 
 ```
-/jamfor-utbildningar/?valda=mjukvarutestare,javautvecklare,net&match=mjukvarutestare:50,javautvecklare:43,net:36,frontend:33,...
+/jamfor-utbildningar/?valda=mjukvarutestare,javautvecklare,net&match=mjukvarutestare:50,javautvecklare:43,net:36,frontend:33,...#jamfor
 ```
 
 - `valda` (valfri): upp till tre utbildningar, kommaseparerade. Om den saknas väljs de tre med högst matchning.
@@ -50,3 +50,5 @@ python3 tools/build-wpcode.py
 ## Quizet inbyggt på sidan
 
 Knappen "Gör quizet" öppnar quizet direkt i jämförelsesidan, så att besökaren stannar kvar. Frågorna och poängen (`QZ` i `index.html`) är kopierade från quizets WPCode-snutt och behöver ändras på båda ställena om quizet ändras.
+
+`#jamfor` i slutet gör att iths.se hoppar direkt ner till iframen (som har `id="jamfor"`), så att besökaren slipper sidans header.
