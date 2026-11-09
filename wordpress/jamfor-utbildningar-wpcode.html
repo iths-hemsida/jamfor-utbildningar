@@ -29,6 +29,7 @@
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 24px 120px;
 }
+#iths-jamfor html.embedded body { padding-top: 8px; }
 #iths-jamfor .wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
 #iths-jamfor h1, #iths-jamfor h2 { font-family: var(--font-display); font-weight: 800; text-wrap: balance; margin: 0; letter-spacing: -0.02em; line-height: 1.05; }
 #iths-jamfor h1 { color: var(--accent); }
@@ -199,6 +200,7 @@
 <script>
 (function(){
 
+if (window.self !== window.top) document.documentElement.classList.add("embedded");
 const BASE_REQ = ["Engelska 6", "Matematik 2", "Svenska 2"];
 const PROGRAMS = [
   {
