@@ -203,7 +203,7 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
   .stickyname:not([hidden]) { display: flex; }
   thead, tbody { display: block; }
   tr { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); }
-  th, td { overflow-wrap: break-word; hyphens: auto; }
+  th, td { overflow-wrap: break-word; hyphens: manual; }
   thead th:first-child { display: none; }
   thead th { position: static; font-size: 15px; padding: 12px 10px; }
   th[scope="row"] { grid-column: 1 / -1; justify-self: start; position: sticky; left: 0; width: auto; min-width: 0; padding: 12px 10px 2px; border-bottom: 0; font-size: 12px; }
@@ -781,7 +781,8 @@ function updateSticky() {
     if (key !== lastSticky) { lastSticky = key; window.parent.postMessage(msg, "*"); }
     return;
   }
-  if (!mobile) { bar.hidden = true; return; }
+  // Inbäddad med äldre iframe-kod: rutan skulle släpa efter vid skroll, så den visas inte alls.
+  if (!mobile || (EMBEDDED && !selfScrolls())) { bar.hidden = true; return; }
   // Översta synliga punkten i sidans koordinater: egen skroll, eller vad iths.se berättar (plus marginal för sidhuvudet).
   let vt = null;
   if (!EMBEDDED || selfScrolls()) vt = window.pageYOffset + 8;
