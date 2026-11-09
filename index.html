@@ -362,9 +362,24 @@ const DIM_LABEL = {
   manniskor: "Du gillar att leda, samarbeta och prata med kunder"
 };
 // Exempelsvar från quizet (simulerat)
-const QUIZ_ANSWERS = { visuellt: .9, logik: .5, sakerhet: .1, data: .2, webb: .9, manniskor: .4 };
+let QUIZ_ANSWERS = { visuellt: .9, logik: .5, sakerhet: .1, data: .2, webb: .9, manniskor: .4 };
 
 const state = { selected: ["frontend", "javautvecklare", "ux-designer"], fromQuiz: false, diffOnly: false };
+// Koppling till quizet: ?valda=frontend,ux-designer&svar=visuellt:0.9,logik:0.5,...
+(function readParams() {
+  const q = new URLSearchParams(location.search);
+  const ids = (q.get("valda") || "").split(",").map(x => x.trim()).filter(id => PROGRAMS.some(p => p.id === id));
+  const svar = {};
+  (q.get("svar") || "").split(",").forEach(pair => {
+    const [k, v] = pair.split(":");
+    const n = parseFloat(v);
+    if (k in QUIZ_ANSWERS && !isNaN(n)) svar[k] = Math.min(1, Math.max(0, n));
+  });
+  const hasSvar = Object.keys(svar).length === Object.keys(QUIZ_ANSWERS).length;
+  if (hasSvar) { QUIZ_ANSWERS = svar; state.fromQuiz = true; }
+  if (ids.length) state.selected = [...new Set(ids)].slice(0, 3);
+  else if (hasSvar) state.selected = [...PROGRAMS].sort((a, b) => matchScore(b) - matchScore(a)).slice(0, 3).map(p => p.id);
+})();
 const byId = Object.fromEntries(PROGRAMS.map(p => [p.id, p]));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
