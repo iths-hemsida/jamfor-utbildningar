@@ -46,3 +46,7 @@ Utan parametrar visar sidan en knapp till quizet. Knappen "Simulera quizresultat
 ```
 python3 tools/build-wpcode.py
 ```
+
+## Quizet inbyggt på sidan
+
+Knappen "Gör quizet" öppnar quizet direkt i jämförelsesidan, så att besökaren stannar kvar. Frågorna och poängen (`QZ` i `index.html`) är kopierade från quizets WPCode-snutt och behöver ändras på båda ställena om quizet ändras.

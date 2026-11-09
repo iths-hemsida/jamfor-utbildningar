@@ -119,6 +119,22 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
 .dlg-body ul { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
 .dlg-body .src { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 10px; }
 .dlg-body a { color: var(--accent); font-weight: 800; }
+.quizbox.qz-open { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 20px; background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.qz-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.qz-body { display: grid; gap: 10px; max-width: 680px; width: 100%; }
+.qz-body h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.15; color: var(--accent); }
+.qz-progress { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+.qz-bar { flex: 1; height: 4px; background: var(--bar); border-radius: 2px; overflow: hidden; }
+.qz-bar span { display: block; height: 100%; background: var(--accent); transition: width .2s; }
+.qz-hint { color: var(--muted); font-size: 14px; }
+.qz-opts { list-style: none; margin: 4px 0 0; padding: 0 !important; display: grid; gap: 8px; }
+.qz-opt { width: 100%; text-align: left; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 11px 14px 11px 42px; position: relative; font-size: 15px; line-height: 1.35; }
+.qz-opt::before { content: ""; position: absolute; left: 14px; top: 50%; width: 16px; height: 16px; margin-top: -8px; border: 2px solid var(--line); border-radius: 50%; background: var(--surface); }
+.qz-opt:hover { border-color: var(--accent); }
+.qz-opt[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.qz-opt[aria-checked="true"]::before { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--surface); }
+.qz-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; }
+.qz-nav .btn[disabled] { opacity: .4; cursor: not-allowed; }
 .dlg-close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 20px; line-height: 1; }
 .courses .pts { color: var(--muted); font-variant-numeric: tabular-nums; }
 .courses .ov { grid-column: 1 / -1; font-size: 12px; color: var(--detail); margin-top: -4px; }
@@ -407,21 +423,22 @@ function toggle(id) {
 
 function renderQuizbox() {
   const el = document.getElementById("quizbox");
+  if (qz.open) {
+    el.classList.add("qz-open");
+    el.innerHTML = `<div class="qz-head"><strong>Quiz: vilken utbildning passar dig?</strong><button class="btn ghost" id="qz-close">Avbryt</button></div><div class="qz-body" id="qz-body"></div>`;
+    el.querySelector("#qz-close").onclick = () => { qz.open = false; renderQuizbox(); };
+    renderQuizStep();
+    return;
+  }
+  el.classList.remove("qz-open");
   if (state.fromQuiz) {
     el.innerHTML = `<p><strong>Du kom hit från quizet.</strong> Dina tre bästa matchningar är valda, och tabellen visar hur väl varje utbildning stämmer med dina svar.</p>
       <button class="btn" id="quizoff">Dölj quizresultatet</button>`;
     el.querySelector("#quizoff").onclick = () => { state.fromQuiz = false; render(); };
   } else {
-    const demo = !/(^|\.)iths\.se$|github\.io$/.test(location.hostname) || new URLSearchParams(location.search).has("demo");
-    el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet så väljer vi dina tre bästa matchningar.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap"><a class="btn primary" href="https://www.iths.se/vilken-utbildning-passar-mig/" target="_top">Gör quizet</a>${demo ? `<button class="btn" id="quizon">Simulera quizresultat</button>` : ""}</div>`;
-    const sim = el.querySelector("#quizon");
-    if (sim) sim.onclick = () => {
-      state.fromQuiz = true;
-      state.selected = [...PROGRAMS].sort((a, b) => matchScore(b) - matchScore(a)).slice(0, 3).map(p => p.id);
-      render();
-      document.getElementById("compare").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-    };
+    el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet här, åtta korta frågor, så väljer vi dina tre bästa matchningar.</p>
+      <button class="btn primary" id="quizon">Gör quizet</button>`;
+    el.querySelector("#quizon").onclick = openQuiz;
   }
 }
 
@@ -538,6 +555,129 @@ function openCourse(pid, name) {
     ${body}
     <a href="${p.url}" target="_blank" rel="noopener">Se hela utbildningen på iths.se</a>`;
   dlg.showModal();
+}
+
+
+// Quizet från iths.se/vilken-utbildning-passar-mig, inbyggt så att man stannar på sidan.
+// Frågor och poäng ska hållas i synk med quizets WPCode-snutt.
+const QZ_ID = { frontend: "frontend", fullstack: "fullstack", java: "javautvecklare", dotnet: "net", cloud: "net-cloud", test: "mjukvarutestare",
+  ux: "ux-designer", pm: "it-projektledare", sec: "it-sakerhetsspecialist", sales: "account-manager", pentest: "it-sakerhetstestare" };
+const QZ = [
+  { t: "Vad lockar dig mest med IT?", h: "Välj det alternativ som känns mest som du.", o: [
+    ["Bygga det användaren ser och klickar på", { frontend: 3, fullstack: 2, ux: 1 }],
+    ["Bygga logiken bakom: system, data och tjänster", { java: 3, dotnet: 3, fullstack: 1, cloud: 2 }],
+    ["Förstå människor och designa bra upplevelser", { ux: 3, frontend: 1 }],
+    ["Leda team och få projekt i mål", { pm: 3, sales: 1 }],
+    ["Skydda system och data mot attacker", { sec: 3, pentest: 1, test: 1 }],
+    ["Hacka system lagligt för att hitta sårbarheter", { pentest: 3, sec: 1 }],
+    ["Hitta fel innan användarna gör det", { test: 3, sec: 1 }],
+    ["Träffa kunder och göra affärer kring teknik", { sales: 3, pm: 1 }]] },
+  { t: "Hur ser din perfekta arbetsdag ut?", h: "Tänk på vad som ger dig energi.", o: [
+    ["Fokuserad tid med kod och kluriga problem", { java: 2, dotnet: 2, fullstack: 2, cloud: 1, frontend: 1 }],
+    ["Workshop med användare och skisser i ett designverktyg", { ux: 3 }],
+    ["Planering, prioriteringar och avstämningar med teamet", { pm: 3 }],
+    ["Analysera loggar och utreda en misstänkt incident", { sec: 3 }],
+    ["Simulera attacker och testa ett företags säkerhet", { pentest: 3, sec: 1 }],
+    ["Skriva automatiserade tester och jaga buggar", { test: 3 }],
+    ["Kundmöten, presentationer och förhandlingar", { sales: 3 }]] },
+  { t: "Vilket problem löser du helst?", h: "", o: [
+    ["En webbplats som är långsam och ser konstig ut i mobilen", { frontend: 3, ux: 1, fullstack: 1 }],
+    ["Ett system som ska klara tusentals användare samtidigt", { cloud: 3, dotnet: 1, java: 1 }],
+    ["En app som är krånglig och förvirrande att använda", { ux: 3, frontend: 1 }],
+    ["Ett projekt som riskerar att bli försenat", { pm: 3 }],
+    ["Ett misstänkt intrång i nätverket", { sec: 3, pentest: 1 }],
+    ["Hitta svagheterna innan en angripare gör det", { pentest: 3, sec: 1, test: 1 }],
+    ["En release där ingen riktigt vet om allt fungerar", { test: 3 }],
+    ["En kund som inte ser vad tekniken kan göra för dem", { sales: 3 }]] },
+  { t: "Hur är din relation till programmering?", h: "Det finns inget rätt eller fel. Behörighetskraven skiljer sig mellan utbildningarna.", o: [
+    ["Jag har programmerat lite och vill bli riktigt bra", { java: 2, dotnet: 2, cloud: 2, fullstack: 1, test: 1, pentest: 1 }],
+    ["Jag har byggt webbsidor med HTML och CSS", { frontend: 3, fullstack: 2 }],
+    ["Jag gillar logik, men vill inte koda hela dagarna", { test: 2, sec: 2, pentest: 1, pm: 1 }],
+    ["Jag vill förstå tekniken men främst jobba med människor", { pm: 2, sales: 2, ux: 2 }]] },
+  { t: "Vilka verktyg och tekniker låter mest spännande?", h: "", o: [
+    ["JavaScript, ramverk och responsiv design", { frontend: 3, fullstack: 2 }],
+    ["Java och objektorienterad programmering", { java: 3, test: 1 }],
+    ["C# och .NET", { dotnet: 3, cloud: 1 }],
+    ["Azure, Docker, Kubernetes och CI/CD", { cloud: 3, fullstack: 1 }],
+    ["Figma, prototyper och användartester", { ux: 3 }],
+    ["Scrum, backlog och projektbudget", { pm: 3 }],
+    ["Kryptering, logganalys och incidenthantering", { sec: 3 }],
+    ["Penetrationstester, Linux och Active Directory", { pentest: 3, sec: 1 }],
+    ["Verktyg för testautomation", { test: 3 }],
+    ["CRM-system, offerter och avtal", { sales: 3 }]] },
+  { t: "Vad driver dig?", h: "", o: [
+    ["Att skapa något snyggt och användbart", { frontend: 2, ux: 2 }],
+    ["Att lösa svåra tekniska problem", { java: 2, dotnet: 2, cloud: 2, fullstack: 2, sec: 1, pentest: 1 }],
+    ["Att saker blir rätt och håller hög kvalitet", { test: 3, sec: 1 }],
+    ["Att förstå hur saker kan gå sönder och utnyttjas", { pentest: 3, test: 1 }],
+    ["Att teamet lyckas tillsammans", { pm: 3 }],
+    ["Att skydda människor och information", { sec: 3, pentest: 1 }],
+    ["Att nå mål och bygga relationer", { sales: 3 }]] },
+  { t: "Bredd eller djup?", h: "Hur vill du utvecklas i din yrkesroll?", o: [
+    ["Jag vill kunna hela kedjan, från gränssnitt till databas", { fullstack: 3 }],
+    ["Jag vill bli expert på ett språk och ekosystem", { java: 2, dotnet: 2 }],
+    ["Jag vill jobba med infrastruktur och molntjänster", { cloud: 3 }],
+    ["Jag vill bli specialist på ett område, som design, test eller säkerhet", { ux: 1, test: 1, sec: 1, pentest: 1, frontend: 1 }],
+    ["Jag vill se helheten och koordinera", { pm: 2, sales: 1 }]] },
+  { t: "Var befinner du dig i dag?", h: "Det här hjälper oss att ge mer träffsäkra förslag.", o: [
+    ["Jag har jobbat minst ett år inom IT eller med IT-försäljning", { sales: 2, pm: 1 }],
+    ["Jag vill byta karriär från ett annat yrke", {}],
+    ["Jag har nyligen gått ut gymnasiet eller studerar", {}],
+    ["Jag jobbar redan med kod och vill specialisera mig", { cloud: 1, fullstack: 1, sec: 1, pentest: 1 }]] }
+];
+const qz = { idx: 0, answers: [], open: false };
+
+function qzScore() {
+  const keys = Object.keys(QZ_ID), s = {}, max = {};
+  keys.forEach(k => { s[k] = 0; max[k] = 0; });
+  QZ.forEach((q, qi) => {
+    keys.forEach(k => { max[k] += Math.max(0, ...q.o.map(o => o[1][k] || 0)); });
+    const a = q.o[qz.answers[qi]]; if (a) Object.entries(a[1]).forEach(([k, v]) => { s[k] += v; });
+  });
+  // Account Manager har krävt yrkeserfarenhet: nedprioritera om man inte angett det (samma som quizet)
+  if (qz.answers[QZ.length - 1] !== 0) s.sales = Math.round(s.sales * 0.6);
+  const out = {};
+  keys.forEach(k => { out[QZ_ID[k]] = max[k] ? Math.round(s[k] / max[k] * 100) : 0; });
+  return out;
+}
+
+function renderQuizStep() {
+  const q = QZ[qz.idx], body = document.getElementById("qz-body"), last = qz.idx === QZ.length - 1;
+  body.innerHTML = `
+    <div class="qz-progress"><span>Fråga ${qz.idx + 1} av ${QZ.length}</span><div class="qz-bar" aria-hidden="true"><span style="width:${qz.idx / QZ.length * 100}%"></span></div></div>
+    <h3 id="qz-title" tabindex="-1">${esc(q.t)}</h3>
+    ${q.h ? `<p class="qz-hint">${esc(q.h)}</p>` : ""}
+    <ul class="qz-opts" role="radiogroup" aria-labelledby="qz-title">${q.o.map((o, i) => `<li><button type="button" class="qz-opt" role="radio" data-i="${i}" aria-checked="${qz.answers[qz.idx] === i}" tabindex="${qz.answers[qz.idx] === i || (qz.answers[qz.idx] == null && i === 0) ? 0 : -1}">${esc(o[0])}</button></li>`).join("")}</ul>
+    <div class="qz-nav">
+      <button type="button" class="btn ghost" id="qz-back" style="visibility:${qz.idx ? "visible" : "hidden"}">← Tillbaka</button>
+      <button type="button" class="btn primary" id="qz-next" ${qz.answers[qz.idx] == null ? "disabled" : ""}>${last ? "Visa jämförelsen" : "Nästa"} →</button>
+    </div>`;
+  const opts = [...body.querySelectorAll(".qz-opt")];
+  const pick = i => { qz.answers[qz.idx] = i; opts.forEach((b, j) => { b.setAttribute("aria-checked", j === i); b.tabIndex = j === i ? 0 : -1; }); body.querySelector("#qz-next").disabled = false; };
+  opts.forEach((b, i) => {
+    b.onclick = () => pick(i);
+    b.onkeydown = e => {
+      const j = ["ArrowDown", "ArrowRight"].includes(e.key) ? (i + 1) % opts.length : ["ArrowUp", "ArrowLeft"].includes(e.key) ? (i - 1 + opts.length) % opts.length : null;
+      if (j !== null) { e.preventDefault(); pick(j); opts[j].focus(); }
+    };
+  });
+  body.querySelector("#qz-back").onclick = () => { qz.idx--; renderQuizStep(); };
+  body.querySelector("#qz-next").onclick = () => {
+    if (qz.answers[qz.idx] == null) return;
+    if (!last) { qz.idx++; renderQuizStep(); return; }
+    QUIZ_MATCH = qzScore();
+    state.fromQuiz = true;
+    state.selected = Object.keys(QUIZ_MATCH).sort((a, b) => QUIZ_MATCH[b] - QUIZ_MATCH[a]).slice(0, 3);
+    qz.open = false;
+    render();
+    document.getElementById("compare").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  };
+  body.querySelector("#qz-title").focus({ preventScroll: true });
+}
+
+function openQuiz() {
+  qz.idx = 0; qz.answers = []; qz.open = true;
+  renderQuizbox();
 }
 
 function render() { renderQuizbox(); renderPicker(); renderTray(); renderTable(); }
