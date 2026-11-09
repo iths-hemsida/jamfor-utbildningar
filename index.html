@@ -59,7 +59,7 @@ button { font: inherit; cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible + .switch { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
-.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; }
+.btn { display: inline-block; text-decoration: none; font-size: 15px; font-family: inherit; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--pixel); border-color: var(--pixel); color: var(--terminal); font-weight: 800; }
 .btn.primary:hover { border-color: var(--terminal); }
@@ -365,30 +365,34 @@ const DIM_LABEL = {
 let QUIZ_ANSWERS = { visuellt: .9, logik: .5, sakerhet: .1, data: .2, webb: .9, manniskor: .4 };
 
 const state = { selected: ["frontend", "javautvecklare", "ux-designer"], fromQuiz: false, diffOnly: false };
-// Koppling till quizet: ?valda=frontend,ux-designer&svar=visuellt:0.9,logik:0.5,...
+// Koppling till quizet (iths.se/vilken-utbildning-passar-mig):
+// ?valda=frontend,ux-designer,fullstack&match=frontend:82,ux-designer:75,...
+let QUIZ_MATCH = null;
 (function readParams() {
   const q = new URLSearchParams(location.search);
-  const ids = (q.get("valda") || "").split(",").map(x => x.trim()).filter(id => PROGRAMS.some(p => p.id === id));
-  const svar = {};
-  (q.get("svar") || "").split(",").forEach(pair => {
+  const valid = id => PROGRAMS.some(p => p.id === id);
+  const ids = (q.get("valda") || "").split(",").map(x => x.trim()).filter(valid);
+  const match = {};
+  (q.get("match") || "").split(",").forEach(pair => {
     const [k, v] = pair.split(":");
-    const n = parseFloat(v);
-    if (k in QUIZ_ANSWERS && !isNaN(n)) svar[k] = Math.min(1, Math.max(0, n));
+    const n = parseInt(v, 10);
+    if (valid(k) && !isNaN(n)) match[k] = Math.min(100, Math.max(0, n));
   });
-  const hasSvar = Object.keys(svar).length === Object.keys(QUIZ_ANSWERS).length;
-  if (hasSvar) { QUIZ_ANSWERS = svar; state.fromQuiz = true; }
+  if (Object.keys(match).length) { QUIZ_MATCH = match; state.fromQuiz = true; }
   if (ids.length) state.selected = [...new Set(ids)].slice(0, 3);
-  else if (hasSvar) state.selected = [...PROGRAMS].sort((a, b) => matchScore(b) - matchScore(a)).slice(0, 3).map(p => p.id);
+  else if (QUIZ_MATCH) state.selected = Object.keys(match).sort((a, b) => match[b] - match[a]).slice(0, 3);
 })();
 const byId = Object.fromEntries(PROGRAMS.map(p => [p.id, p]));
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 function matchScore(p) {
+  if (QUIZ_MATCH) return QUIZ_MATCH[p.id] ?? null;
   const dims = Object.keys(QUIZ_ANSWERS);
   const diff = dims.reduce((s, d) => s + Math.abs(QUIZ_ANSWERS[d] - p.quiz[d]), 0) / dims.length;
   return Math.round((1 - diff) * 100);
 }
 function reasons(p) {
+  if (QUIZ_MATCH) return [];
   return Object.keys(QUIZ_ANSWERS)
     .map(d => [d, QUIZ_ANSWERS[d] * p.quiz[d]])
     .sort((a, b) => b[1] - a[1]).slice(0, 2).filter(r => r[1] > .3).map(r => DIM_LABEL[r[0]]);
@@ -408,9 +412,11 @@ function renderQuizbox() {
       <button class="btn" id="quizoff">Dölj quizresultatet</button>`;
     el.querySelector("#quizoff").onclick = () => { state.fromQuiz = false; render(); };
   } else {
-    el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet så väljer vi dina tre bästa matchningar. I prototypen kan du simulera ett quizresultat.</p>
-      <button class="btn primary" id="quizon">Simulera quizresultat</button>`;
-    el.querySelector("#quizon").onclick = () => {
+    const demo = location.hostname !== "iths-hemsida.github.io" || new URLSearchParams(location.search).has("demo");
+    el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet så väljer vi dina tre bästa matchningar.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap"><a class="btn primary" href="https://www.iths.se/vilken-utbildning-passar-mig/" target="_top">Gör quizet</a>${demo ? `<button class="btn" id="quizon">Simulera quizresultat</button>` : ""}</div>`;
+    const sim = el.querySelector("#quizon");
+    if (sim) sim.onclick = () => {
       state.fromQuiz = true;
       state.selected = [...PROGRAMS].sort((a, b) => matchScore(b) - matchScore(a)).slice(0, 3).map(p => p.id);
       render();
@@ -456,7 +462,7 @@ function rows(sel) {
   const R = [];
   if (state.fromQuiz) R.push({
     label: "Matchning med dina svar", cls: "quizrow", noDiff: true,
-    cell: p => { const rs = reasons(p); return { key: "", html: `<div class="match">${matchScore(p)} %</div>${rs.length ? `<ul class="reasons">${rs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}` }; }
+    cell: p => { const rs = reasons(p); return { key: "", html: `<div class="match">${matchScore(p) === null ? "–" : matchScore(p) + " %"}</div>${rs.length ? `<ul class="reasons">${rs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}` }; }
   });
   R.push(
     { label: "Längd", cell: p => ({ key: `${p.yhPoints}`, html: `<span class="num">${p.yhPoints} YH-poäng</span><div class="sub">${String(p.years).replace(".", ",")} år, heltid</div>` }) },

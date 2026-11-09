@@ -26,15 +26,15 @@ Koden ovan räcker om sidan inte ska kopplas till quizet. För quizkopplingen, a
 
 ## Koppling till quizet
 
-Quizets resultatsida länkar till jämförelsesidan med två parametrar:
+Quizet på iths.se/vilken-utbildning-passar-mig har en knapp på resultatsidan, "Jämför dina tre bästa sida vid sida". Den länkar hit med två parametrar:
 
 ```
-/jamfor-utbildningar/?valda=frontend,ux-designer,fullstack&svar=visuellt:0.9,logik:0.5,sakerhet:0.1,data:0.2,webb:0.9,manniskor:0.4
+/jamfor-utbildningar/?valda=mjukvarutestare,javautvecklare,net&match=mjukvarutestare:50,javautvecklare:43,net:36,frontend:33,...
 ```
 
-- `valda` (valfri): upp till tre utbildningar, kommaseparerade. Om den saknas väljs de tre som matchar svaren bäst.
-- `svar`: alla sex dimensionerna med ett värde mellan 0 och 1. När den finns visas raden "Matchning med dina svar".
+- `valda` (valfri): upp till tre utbildningar, kommaseparerade. Om den saknas väljs de tre med högst matchning.
+- `match`: quizets matchning i procent per utbildning. När den finns visas raden "Matchning med dina svar".
 
 Giltiga utbildningar: `frontend`, `javautvecklare`, `ux-designer`, `it-sakerhetsspecialist`, `fullstack`, `net`, `net-cloud`, `mjukvarutestare`, `it-projektledare`, `account-manager`, `it-sakerhetstestare`.
 
-Dimensioner: `visuellt` (design och det visuella), `logik` (logik och problemlösning), `sakerhet` (säkerhet och hur system skyddas), `data` (data och siffror), `webb` (webb), `manniskor` (leda, samarbeta och prata med kunder).
+Utan parametrar visar sidan en knapp till quizet. Knappen "Simulera quizresultat" visas bara utanför GitHub Pages, eller med `?demo` i adressen.
