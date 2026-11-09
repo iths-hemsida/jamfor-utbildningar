@@ -18,9 +18,9 @@ Lägg ett block av typen Anpassad HTML på en WordPress-sida:
 Koden ovan räcker om sidan inte ska kopplas till quizet. För quizkopplingen, använd i stället den här varianten, som skickar vidare parametrarna i adressen till iframen:
 
 ```html
-<iframe id="jamfor" title="Jämför utbildningar" style="width:100%; height:1600px; border:0;" loading="lazy"></iframe>
+<iframe id="jamfor" src="https://iths-hemsida.github.io/jamfor-utbildningar/" title="Jämför utbildningar" style="width:100%; height:1600px; border:0;"></iframe>
 <script>
-  document.getElementById("jamfor").src = "https://iths-hemsida.github.io/jamfor-utbildningar/" + location.search;
+  if (location.search) document.getElementById("jamfor").src = "https://iths-hemsida.github.io/jamfor-utbildningar/" + location.search;
 </script>
 ```
 
