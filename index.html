@@ -547,7 +547,7 @@ function rows(sel) {
     { label: "Kurser", cell: p => ({ key: p.id, html: `<ul class="courses">${p.courses.map(([n, pts, tags]) => {
         return `<li><button class="course" type="button" data-pid="${p.id}" data-c="${esc(n)}" aria-haspopup="dialog">${esc(n)}</button><span class="pts">${pts} p</span></li>`;
       }).join("")}</ul><div class="sub" style="margin-top:8px">Plus LIA och examensarbete</div>` }) },
-    { label: "AI i utbildningen", cell: p => { const a = AI_INFO[p.id]; return a ? { key: p.id, html: `${esc(a[0])}<div class="sub">Källa: ${esc(a[1])}</div>` } : { key: "", html: `<span class="sub">Uppgift saknas</span>` }; } },
+    { label: "AI i utbildningen", cell: p => { const a = AI_INFO[p.id]; return a ? { key: p.id, html: esc(a[0]) } : { key: "", html: `<span class="sub">Uppgift saknas</span>` }; } },
     { label: "Behörighet", cell: p => ({
         key: p.eligibility.courses.join() + (p.eligibility.experience || ""),
         html: `<ul class="req">${p.eligibility.courses.map(r => commonReqs.includes(r) && sel.length > 1 ? `<li class="common">${esc(r)}</li>` : `<li class="${sel.length > 1 ? "unique" : ""}">${esc(r)}</li>`).join("")}</ul>${p.eligibility.experience ? `<div class="unique" style="font-weight:700">+ ${esc(p.eligibility.experience)}</div>` : ""}<div class="sub" style="margin-top:6px">Gymnasieexamen eller motsvarande. Saknar du något finns andra vägar till behörighet.</div>`
