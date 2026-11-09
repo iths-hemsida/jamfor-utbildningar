@@ -770,16 +770,25 @@ function render() { renderQuizbox(); renderPicker(); renderTray(); renderTable()
 function updateSticky() {
   const bar = document.getElementById("stickyname"), table = document.getElementById("table"), thead = table.querySelector("thead");
   const sel = state.selected.map(id => byId[id]);
-  if (!thead || !sel.length || !matchMedia("(max-width: 640px)").matches) { bar.hidden = true; return; }
+  const mobile = thead && sel.length && matchMedia("(max-width: 640px)").matches;
+  const w = document.getElementById("tablewrap"), at = Math.min(Math.max(sel.length - 1, 0), Math.round(w.scrollLeft / Math.max(1, w.clientWidth)));
+  const y = r => r + window.pageYOffset;
+  // Ny iframe-kod på iths.se visar rutan själv (ligger still när man skrollar). Skicka bara namn och var tabellen börjar och slutar.
+  if (EMBEDDED && hostSticky) {
+    bar.hidden = true;
+    const msg = mobile ? { type: "jamfor-sticky", names: sel.map(p => p.name), at, left: Math.round(w.getBoundingClientRect().left), width: Math.round(w.clientWidth), start: y(thead.getBoundingClientRect().bottom), end: y(table.getBoundingClientRect().bottom) - 60 } : { type: "jamfor-sticky", names: [] };
+    const key = JSON.stringify(msg);
+    if (key !== lastSticky) { lastSticky = key; window.parent.postMessage(msg, "*"); }
+    return;
+  }
+  if (!mobile) { bar.hidden = true; return; }
   // Översta synliga punkten i sidans koordinater: egen skroll, eller vad iths.se berättar (plus marginal för sidhuvudet).
   let vt = null;
   if (!EMBEDDED || selfScrolls()) vt = window.pageYOffset + 8;
   else if (parentView) vt = parentView.top + 16;
   if (vt === null) { bar.hidden = true; return; }
-  const y = r => r + window.pageYOffset;
   const start = y(thead.getBoundingClientRect().bottom), end = y(table.getBoundingClientRect().bottom) - 60;
   if (vt < start - 40 || vt > end) { bar.hidden = true; return; }
-  const w = document.getElementById("tablewrap"), at = Math.min(sel.length - 1, Math.round(w.scrollLeft / Math.max(1, w.clientWidth)));
   bar.firstElementChild.textContent = sel[at].name;
   bar.lastElementChild.innerHTML = sel.length > 1 ? sel.map((_, i) => `<span class="${i === at ? "on" : ""}"></span>`).join("") : "";
   bar.style.top = Math.round(vt - y(document.getElementById("compare").getBoundingClientRect().top)) + "px";
@@ -800,7 +809,8 @@ document.getElementById("tablewrap").addEventListener("scroll", updateDots, { pa
 /* Inbäddning på iths.se: iframen kan inte skrolla själv eftersom den är lika hög som innehållet.
    Sidan berättar därför sin höjd för iths.se, ber iths.se skrolla, och får veta vilken del av iframen som syns. */
 const EMBEDDED = window.self !== window.top;
-let parentView = null; // { top, h }: synlig del av iframen, i iframens koordinater
+let parentView = null;
+let hostSticky = false, lastSticky = ""; // { top, h }: synlig del av iframen, i iframens koordinater
 // Skrollar iframen själv (t.ex. i förhandsvisningen, eller med gammal iframe-kod som inte växer)? Då funkar vanlig skroll och centrering.
 const selfScrolls = () => document.documentElement.scrollHeight > window.innerHeight + 4;
 function scrollToEl(el) {
@@ -828,6 +838,7 @@ if (EMBEDDED) {
     const b = document.body, cs = getComputedStyle(b);
     const h = Math.ceil(b.getBoundingClientRect().height + parseFloat(cs.marginTop) + parseFloat(cs.marginBottom));
     window.parent.postMessage({ type: "jamfor-height", h }, "*");
+    updateSticky();
   };
   new ResizeObserver(sendHeight).observe(document.body);
   window.addEventListener("load", sendHeight);
@@ -836,6 +847,7 @@ if (EMBEDDED) {
     try { host = new URL(e.origin).hostname; } catch (_) {}
     if (!/(^|\.)iths\.se$/.test(host) || !e.data || e.data.type !== "jamfor-viewport") return;
     parentView = { top: Math.max(0, e.data.top), h: e.data.h };
+    if (e.data.sticky && !hostSticky) { hostSticky = true; lastSticky = ""; }
     updateSticky();
   });
 }
