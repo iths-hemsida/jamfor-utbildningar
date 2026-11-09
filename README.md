@@ -38,3 +38,11 @@ Quizet på iths.se/vilken-utbildning-passar-mig har en knapp på resultatsidan, 
 Giltiga utbildningar: `frontend`, `javautvecklare`, `ux-designer`, `it-sakerhetsspecialist`, `fullstack`, `net`, `net-cloud`, `mjukvarutestare`, `it-projektledare`, `account-manager`, `it-sakerhetstestare`.
 
 Utan parametrar visar sidan en knapp till quizet. Knappen "Simulera quizresultat" visas bara utanför GitHub Pages, eller med `?demo` i adressen.
+
+## Direkt på sidan med WPCode (utan iframe)
+
+`wordpress/jamfor-utbildningar-wpcode.html` är samma sida som en WPCode-snutt, på samma sätt som quizet. All CSS är avgränsad till `#iths-jamfor` så att den inte påverkar resten av iths.se. Bygg om snutten efter ändringar i `index.html`:
+
+```
+python3 tools/build-wpcode.py
+```

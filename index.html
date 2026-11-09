@@ -412,7 +412,7 @@ function renderQuizbox() {
       <button class="btn" id="quizoff">Dölj quizresultatet</button>`;
     el.querySelector("#quizoff").onclick = () => { state.fromQuiz = false; render(); };
   } else {
-    const demo = location.hostname !== "iths-hemsida.github.io" || new URLSearchParams(location.search).has("demo");
+    const demo = !/(^|\.)iths\.se$|github\.io$/.test(location.hostname) || new URLSearchParams(location.search).has("demo");
     el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet så väljer vi dina tre bästa matchningar.</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap"><a class="btn primary" href="https://www.iths.se/vilken-utbildning-passar-mig/" target="_top">Gör quizet</a>${demo ? `<button class="btn" id="quizon">Simulera quizresultat</button>` : ""}</div>`;
     const sim = el.querySelector("#quizon");
