@@ -772,13 +772,15 @@ document.getElementById("tablewrap").addEventListener("scroll", updateDots, { pa
    Sidan berättar därför sin höjd för iths.se, ber iths.se skrolla, och får veta vilken del av iframen som syns. */
 const EMBEDDED = window.self !== window.top;
 let parentView = null; // { top, h }: synlig del av iframen, i iframens koordinater
+// Skrollar iframen själv (t.ex. i förhandsvisningen, eller med gammal iframe-kod som inte växer)? Då funkar vanlig skroll och centrering.
+const selfScrolls = () => document.documentElement.scrollHeight > window.innerHeight + 4;
 function scrollToEl(el) {
   const y = el.getBoundingClientRect().top + window.pageYOffset;
-  if (EMBEDDED) { window.parent.postMessage({ type: "jamfor-scroll", y }, "*"); return; }
+  if (EMBEDDED && !selfScrolls()) { window.parent.postMessage({ type: "jamfor-scroll", y }, "*"); return; }
   el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 function placeDialog(dlg, from) {
-  if (!EMBEDDED) return;
+  if (!EMBEDDED || selfScrolls()) return;
   // Utan hjälp från iths.se vet vi inte var besökaren är, så då lägger vi rutan vid kursen man klickade på.
   const view = parentView || (from ? { top: Math.max(0, from.getBoundingClientRect().top + window.pageYOffset - 200), h: 640 } : null);
   if (!view) return;
