@@ -819,16 +819,20 @@ function scrollToEl(el) {
   el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 function placeDialog(dlg, from) {
-  if (!EMBEDDED || selfScrolls()) return;
-  // Utan hjälp från iths.se vet vi inte var besökaren är, så då lägger vi rutan vid kursen man klickade på.
-  const view = parentView || (from ? { top: Math.max(0, from.getBoundingClientRect().top + window.pageYOffset - 200), h: 640 } : null);
-  if (!view) return;
-  const maxH = Math.max(260, Math.min(view.h - 32, 720));
+  if (!EMBEDDED) return;
+  // Var på skärmen är besökaren? Helst enligt iths.se (ny iframe-kod), annars runt kursen/rollen man klickade på.
+  const vh = window.innerHeight;
+  let viewTop, viewH;
+  if (parentView && !selfScrolls()) { viewTop = parentView.top - window.pageYOffset; viewH = parentView.h; }
+  else if (from) { const r = from.getBoundingClientRect(); viewH = Math.min(vh, 720); viewTop = r.top + r.height / 2 - viewH / 2; }
+  else return;
+  const maxH = Math.max(260, Math.min(viewH - 32, 720));
   dlg.style.maxHeight = maxH + "px";
   const h = Math.min(dlg.getBoundingClientRect().height, maxH);
-  const top = Math.max(view.top + 16, view.top + (view.h - h) / 2);
+  let top = viewTop + Math.max(16, (viewH - h) / 2);
+  top = Math.min(Math.max(8, top), Math.max(8, vh - h - 8));
   dlg.style.margin = "0 auto";
-  dlg.style.top = Math.round(Math.max(8, top)) + "px";
+  dlg.style.top = Math.round(top) + "px";
   dlg.style.bottom = "auto";
 }
 if (EMBEDDED) {
