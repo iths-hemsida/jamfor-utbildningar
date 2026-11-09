@@ -776,7 +776,10 @@ function updateSticky() {
   // Ny iframe-kod på iths.se visar rutan själv (ligger still när man skrollar). Skicka bara namn och var tabellen börjar och slutar.
   if (EMBEDDED && hostSticky) {
     bar.hidden = true;
-    const msg = mobile ? { type: "jamfor-sticky", names: sel.map(p => p.name), at, left: Math.round(w.getBoundingClientRect().left), width: Math.round(w.clientWidth), start: y(thead.getBoundingClientRect().bottom), end: y(table.getBoundingClientRect().bottom) - 60 } : { type: "jamfor-sticky", names: [] };
+    const base = thead && sel.length ? { type: "jamfor-sticky", names: sel.map(p => p.name), at, left: Math.round(w.getBoundingClientRect().left), width: Math.round(w.clientWidth), start: y(thead.getBoundingClientRect().bottom), end: y(table.getBoundingClientRect().bottom) - 60 } : null;
+    // Dator: alla namn, placerade över sina kolumner.
+    if (base && !mobile) base.cols = [...thead.querySelectorAll("th")].slice(1).map(th => { const r = th.getBoundingClientRect(); return { left: Math.round(r.left - base.left), width: Math.round(r.width) }; });
+    const msg = base || { type: "jamfor-sticky", names: [] };
     const key = JSON.stringify(msg);
     if (key !== lastSticky) { lastSticky = key; window.parent.postMessage(msg, "*"); }
     return;
