@@ -820,12 +820,20 @@ function scrollToEl(el) {
 }
 function placeDialog(dlg, from) {
   if (!EMBEDDED) return;
-  // Var på skärmen är besökaren? Helst enligt iths.se (ny iframe-kod), annars runt kursen/rollen man klickade på.
+  // Var på skärmen är besökaren? Helst enligt iths.se (ny iframe-kod). Annars frågar vi webbläsaren vilken del av iframen som syns.
+  if (parentView && !selfScrolls()) { putDialog(dlg, parentView.top - window.pageYOffset, parentView.h); return; }
+  dlg.style.visibility = "hidden";
+  const io = new IntersectionObserver(([e]) => {
+    io.disconnect();
+    const ir = e.intersectionRect;
+    if (ir.height > 0) { const pad = ir.top < 80 ? 90 : 0; putDialog(dlg, ir.top + pad, ir.height - pad); }
+    else if (from) { const r = from.getBoundingClientRect(); putDialog(dlg, r.top - 300, 600); }
+    dlg.style.visibility = "";
+  });
+  io.observe(document.body);
+}
+function putDialog(dlg, viewTop, viewH) {
   const vh = window.innerHeight;
-  let viewTop, viewH;
-  if (parentView && !selfScrolls()) { viewTop = parentView.top - window.pageYOffset; viewH = parentView.h; }
-  else if (from) { const r = from.getBoundingClientRect(); viewH = Math.min(vh, 720); viewTop = r.top + r.height / 2 - viewH / 2; }
-  else return;
   const maxH = Math.max(260, Math.min(viewH - 32, 720));
   dlg.style.maxHeight = maxH + "px";
   const h = Math.min(dlg.getBoundingClientRect().height, maxH);
