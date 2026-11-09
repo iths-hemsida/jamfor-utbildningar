@@ -37,4 +37,4 @@ Quizets resultatsida länkar till jämförelsesidan med två parametrar:
 
 Giltiga utbildningar: `frontend`, `javautvecklare`, `ux-designer`, `it-sakerhetsspecialist`, `fullstack`, `net`, `net-cloud`, `mjukvarutestare`, `it-projektledare`, `account-manager`, `it-sakerhetstestare`.
 
-Dimensioner: `visuellt` (design och det visuella), `logik` (logik och problemlösning), `sakerhet` (IT-säkerhet), `data` (data och system), `webb` (webb), `manniskor` (leda, samarbeta och prata med kunder).
+Dimensioner: `visuellt` (design och det visuella), `logik` (logik och problemlösning), `sakerhet` (säkerhet och hur system skyddas), `data` (data och siffror), `webb` (webb), `manniskor` (leda, samarbeta och prata med kunder).
