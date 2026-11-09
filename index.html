@@ -1,0 +1,529 @@
+<title>Jämför utbildningar</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: kort-väljare överst, jämförelsetabell med fast radkolumn, jämförelselist fast i botten.
+   Färger och typsnitt enligt IT-Högskolans varumärke & grafisk profil v2.0:
+   Kod #662247 (primär), Moln #F9F9F9 (bakgrund), Terminal #2D1A2E (djup/text),
+   Server (sekundär, detaljer), Pixel #FFB547 (sparsam accent, CTA). Avenir Heavy/Book, fallback Helvetica/Arial. */
+:root {
+  --kod: #662247;
+  --moln: #F9F9F9;
+  --terminal: #2D1A2E;
+  --server: #9C4F77;
+  --pixel: #FFB547;
+  --on-band: #FFFFFF;
+  --bg: var(--moln);
+  --surface: #ffffff;
+  --ink: var(--terminal);
+  --muted: #6e5d6f;
+  --line: #e7dfe5;
+  --accent: var(--kod);
+  --accent-soft: #f4e9ef;
+  --detail: var(--server);
+  --warn: #7a4d00;
+  --warn-soft: #fff0d6;
+  --closed: #6e5d6f;
+  --closed-soft: #f0eaee;
+  --bar: #ece3e9;
+  --font-display: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: var(--terminal); --surface: #3a2540; --ink: var(--moln); --muted: #c7b6c5; --line: #533a57;
+    --accent: #f0b3d2; --accent-soft: #4d2a45; --detail: #e597bd; --warn: var(--pixel); --warn-soft: #4a3820;
+    --closed: #c7b6c5; --closed-soft: #4a3350; --bar: #533a57; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: var(--terminal); --surface: #3a2540; --ink: var(--moln); --muted: #c7b6c5; --line: #533a57;
+  --accent: #f0b3d2; --accent-soft: #4d2a45; --detail: #e597bd; --warn: var(--pixel); --warn-soft: #4a3820;
+  --closed: #c7b6c5; --closed-soft: #4a3350; --bar: #533a57; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: clamp(48px, 8vw, 80px) 120px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--font-display); font-weight: 800; text-wrap: balance; margin: 0; letter-spacing: -0.02em; line-height: 1.05; }
+h1 { color: var(--accent); }
+h1 { font-size: clamp(26px, 4vw, 36px); }
+h2 { font-size: 20px; }
+header .eyebrow { margin-bottom: 10px; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.lead { color: var(--muted); max-width: 62ch; margin: 6px 0 0; }
+.proto { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: var(--pixel); color: var(--terminal); font-size: 12px; font-weight: 700; vertical-align: middle; font-family: var(--font-body); }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible + .switch { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--pixel); border-color: var(--pixel); color: var(--terminal); font-weight: 800; }
+.btn.primary:hover { border-color: var(--terminal); }
+.btn.ghost { background: transparent; }
+
+.picker { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 8px; align-content: start; }
+.pcard.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.pcard h3 { margin: 0; font-size: 16px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; }
+.pcard .meta { color: var(--muted); font-size: 13px; }
+.pcard .btn { justify-self: start; padding: 6px 12px; font-size: 14px; }
+.pcard.on .btn { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.pcard .btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+.quizbox { background: var(--kod); color: var(--on-band); border-radius: 10px; padding: 14px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.quizbox p { margin: 0; max-width: 60ch; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.toggle { display: inline-flex; gap: 10px; align-items: center; cursor: pointer; user-select: none; }
+.toggle input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.switch { width: 38px; height: 22px; border-radius: 999px; background: var(--line); position: relative; transition: background .15s; flex: none; }
+.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); transition: transform .15s; }
+.toggle input:checked + .switch { background: var(--accent); }
+.toggle input:checked + .switch::after { transform: translateX(16px); }
+
+.tablewrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+table { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 640px; }
+th, td { text-align: left; vertical-align: top; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+tbody tr:last-child > * { border-bottom: 0; }
+thead th { position: sticky; top: 0; background: var(--surface); z-index: 2; font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: -0.01em; color: var(--accent); }
+th[scope="row"] { position: sticky; left: 0; background: var(--surface); z-index: 1; width: 150px; min-width: 130px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+thead th:first-child { left: 0; z-index: 3; }
+td { min-width: 200px; width: 30%; }
+.colhead { display: grid; gap: 4px; }
+.colhead a { color: var(--accent); font-size: 13px; font-family: var(--font-body); font-weight: 400; }
+.colhead .rm { justify-self: start; border: 0; background: none; padding: 0; color: var(--muted); font-size: 13px; text-decoration: underline; }
+tr.quizrow td, tr.quizrow th { background: var(--accent-soft); }
+.match { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.reasons { margin: 4px 0 0; padding-left: 18px; color: var(--ink); font-size: 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 13px; }
+.num { font-variant-numeric: tabular-nums; font-weight: 700; }
+.sub { color: var(--muted); font-size: 13px; }
+.liabar { height: 8px; border-radius: 4px; background: var(--bar); overflow: hidden; margin-top: 8px; max-width: 220px; }
+.liabar span { display: block; height: 100%; background: var(--detail); }
+.courses { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.courses li { display: grid; grid-template-columns: 1fr auto; gap: 8px; font-size: 14px; }
+.courses .course { all: unset; cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; text-decoration-thickness: 2px; }
+.courses .course:hover { text-decoration-color: var(--detail); color: var(--accent); }
+.courses .course:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+dialog#coursedlg { border: 0; border-radius: 12px; padding: 0; width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 64px); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgb(45 26 46 / .35); }
+dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
+.dlg-body { padding: 28px 28px 24px; display: grid; gap: 10px; overflow-y: auto; }
+.dlg-body h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 24px; line-height: 1.1; letter-spacing: -0.02em; color: var(--accent); padding-right: 32px; }
+.dlg-body h4 { margin: 6px 0 0; font-size: 14px; font-weight: 800; }
+.dlg-body p { margin: 0; }
+.dlg-body ul { margin: 0; padding-left: 20px; display: grid; gap: 2px; }
+.dlg-body .src { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 10px; }
+.dlg-body a { color: var(--accent); font-weight: 800; }
+.dlg-close { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 20px; line-height: 1; }
+.courses .pts { color: var(--muted); font-variant-numeric: tabular-nums; }
+.courses .ov { grid-column: 1 / -1; font-size: 12px; color: var(--detail); margin-top: -4px; }
+.courses .ov::before { content: "↔ "; }
+.req { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.req .common { color: var(--muted); }
+.req .unique { font-weight: 700; }
+.req .unique::before { content: "+ "; color: var(--accent); }
+.pill { display: inline-block; border-radius: 999px; padding: 2px 10px; font-size: 13px; font-weight: 700; }
+.pill.closed { background: var(--closed-soft); color: var(--closed); }
+.pill.open { background: var(--accent-soft); color: var(--accent); }
+.pill.none { background: var(--warn-soft); color: var(--warn); }
+.missing { color: var(--muted); font-style: italic; }
+.actions { display: grid; gap: 6px; }
+.actions a { color: var(--accent); font-weight: 700; }
+.empty { padding: 40px 20px; text-align: center; color: var(--muted); }
+
+.tray {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line);
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.tray-inner { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 4px 6px 4px 12px; font-size: 14px; font-weight: 700; }
+.chip button { border: 0; background: none; color: inherit; width: 22px; height: 22px; border-radius: 50%; line-height: 1; }
+.slot { border: 1px dashed var(--line); color: var(--muted); border-radius: 999px; padding: 4px 12px; font-size: 14px; }
+.sources { color: var(--muted); font-size: 13px; }
+.sources a { color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">IT-Högskolan · utbildningar</div>
+    <h1>Jämför utbildningar <span class="proto">Prototyp</span></h1>
+    <p class="lead">Välj upp till tre utbildningar och se dem sida vid sida. Datan är hämtad från iths.se den 6 november 2026 och gäller kursstart augusti 2027.</p>
+  </header>
+
+  <section class="quizbox" id="quizbox" aria-live="polite"></section>
+
+  <section aria-labelledby="pick-h" style="display:grid; gap:12px">
+    <div class="toolbar">
+      <h2 id="pick-h">Välj utbildningar</h2>
+      <span class="sub" id="pickcount"></span>
+    </div>
+    <div class="picker" id="picker"></div>
+  </section>
+
+  <section aria-labelledby="cmp-h" style="display:grid; gap:12px" id="compare">
+    <div class="toolbar">
+      <h2 id="cmp-h">Jämförelse</h2>
+      <div class="controls">
+        <label class="toggle"><input type="checkbox" id="diffonly"><span class="switch" aria-hidden="true"></span>Visa bara skillnader</label>
+      </div>
+    </div>
+    <div class="tablewrap"><table id="table"></table></div>
+    <p class="sources">Källor: utbildningssidorna på iths.se, länkade i varje kolumn. Sista ansökningsdag publiceras inte förrän ansökan öppnar i februari 2027.</p>
+  </section>
+</div>
+
+<dialog id="coursedlg" aria-labelledby="dlg-title">
+  <button class="dlg-close" type="button" aria-label="Stäng" onclick="this.closest('dialog').close()">×</button>
+  <div class="dlg-body"></div>
+</dialog>
+
+<div class="tray" role="region" aria-label="Valda för jämförelse">
+  <div class="tray-inner">
+    <div class="chips" id="chips"></div>
+    <div style="display:flex; gap:8px">
+      <button class="btn ghost" id="clear">Rensa</button>
+      <button class="btn primary" id="go">Jämför</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BASE_REQ = ["Engelska 6", "Matematik 2", "Svenska 2"];
+const PROGRAMS = [
+  {
+    id: "frontend", name: "Frontend-utvecklare", url: "https://www.iths.se/utbildningar/frontend/",
+    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 24, points: 120 },
+    courses: [
+      ["HTML & CSS", 25, ["webb"]], ["Native JavaScript", 40, ["javascript"]], ["UX & UI-design", 20, ["ux"]],
+      ["JavaScript med ramverk", 40, ["javascript"]], ["Agil utveckling", 20, ["agilt"]], ["Fullstack-utveckling", 60, ["webb", "backend"]],
+      ["Kravarbete och kommunikation med kravställare", 20, ["krav"]], ["CMS", 40, ["webb"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Webbutveckling 1"], test: "Digitalt antagningsprov" },
+    careers: ["Frontend-utvecklare", "Webbutvecklare", "Webbdesigner"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .7, logik: .5, sakerhet: .1, data: .2, webb: 1, manniskor: .3 }
+  },
+  {
+    id: "javautvecklare", name: "Javautvecklare", url: "https://www.iths.se/utbildningar/javautvecklare/",
+    yhPoints: 400, years: 2, locations: ["Stockholm", "Distans"], studyForm: "På plats i Stockholm eller på distans",
+    lia: { weeks: 24, points: 120 },
+    courses: [
+      ["Javaprogrammering", 60, ["programmering"]], ["Utveckling mot databaser", 35, ["databaser"]], ["Javaverktyg och byggmiljöer", 30, ["verktyg"]],
+      ["Komplex Javautveckling", 40, ["programmering"]], ["Web services och integrationer", 30, ["backend"]],
+      ["Utveckling av webbapplikationer", 45, ["webb"]], ["Agil utveckling", 20, ["agilt"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
+    careers: ["Javautvecklare", "Systemutvecklare", "Mjukvaruutvecklare"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .1, logik: .9, sakerhet: .2, data: .4, webb: .5, manniskor: .2 }
+  },
+  {
+    id: "ux-designer", name: "UX-designer", url: "https://www.iths.se/utbildningar/ux-designer/",
+    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 24, points: 120 },
+    courses: [
+      ["Introduktion till UX-design", 5, ["ux"]], ["Användarcentrerad design", 70, ["ux"]], ["Agila metoder", 35, ["agilt"]],
+      ["Gränssnittsdesign och prototyper", 45, ["ux"]], ["Webbdesign, appdesign & fysisk usability", 40, ["ux", "webb"]],
+      ["Programmering för UX-design", 30, ["programmering"]], ["Branding, affär och organisation", 35, ["affar"]]
+    ],
+    eligibility: { courses: [...BASE_REQ], test: "Digitalt antagningsprov", extra: "Workshop på plats v. 19–21" },
+    careers: ["UX-designer", "UI-designer", "Produktdesigner", "Interaction designer"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: 1, logik: .3, sakerhet: 0, data: .2, webb: .6, manniskor: .6 }
+  },
+  {
+    id: "it-sakerhetsspecialist", name: "IT-säkerhetsspecialist", url: "https://www.iths.se/utbildningar/it-sakerhetsspecialist/",
+    yhPoints: 400, years: 2, locations: ["Stockholm", "Göteborg"], studyForm: "På plats i Stockholm, eller satellitklassrum i Göteborg",
+    lia: { weeks: 22, points: 110 },
+    courses: [
+      ["Introduktion till IT-säkerhet", 5, ["sakerhet"]], ["Operativsystem: Linux och Windows", 35, ["system"]], ["Python", 20, ["python"]],
+      ["Nätverk", 25, ["natverk"]], ["Virtualisering och cloud", 50, ["moln"]], ["Kryptologi", 30, ["sakerhet"]],
+      ["Visusanalys", 30, ["sakerhet"]], ["Omvärldsbevakning", 20, ["sakerhet"]], ["Spårbarhet", 30, ["sakerhet"]], ["Incidenthantering", 30, ["sakerhet"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Dator- och nätverksteknik 1"], test: "Digitalt antagningsprov" },
+    careers: ["IT-säkerhetsspecialist", "IT-säkerhetsanalytiker", "IT-säkerhetstekniker"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: 0, logik: .7, sakerhet: 1, data: .3, webb: .1, manniskor: .2 }
+  },
+  {
+    id: "fullstack", name: "Fullstackutvecklare", url: "https://www.iths.se/utbildningar/fullstackutvecklare/",
+    yhPoints: 400, years: 2, locations: ["Göteborg", "Stockholm"], studyForm: "På plats",
+    lia: { weeks: 26, points: 130 },
+    courses: [
+      ["HTML och CSS", 20, ["webb"]], ["Native JavaScript", 50, ["javascript"]], ["Backend-programmering och databaser", 60, ["backend", "databaser"]],
+      ["Agil utveckling", 20, ["agilt"]], ["Frontend-programmering", 60, ["javascript", "webb"]], ["Software life cycle management", 40, ["verktyg"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Webbutveckling 1"], test: "Digitalt antagningsprov" },
+    careers: ["Fullstack-utvecklare", "JavaScript-utvecklare", "Webbutvecklare", "Apputvecklare"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .5, logik: .7, sakerhet: .1, data: .3, webb: 1, manniskor: .3 }
+  },
+  {
+    id: "net", name: ".NET-utvecklare", url: "https://www.iths.se/utbildningar/netutvecklare/",
+    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 28, points: 140 },
+    courses: [
+      ["Programmering C#", 60, ["programmering", "csharp"]], ["Utveckling mot databas och databasadministration", 45, ["databaser"]],
+      ["Webbutveckling med .NET", 60, ["webb", "backend", "csharp"]], ["Agil utveckling", 30, ["agilt"]],
+      ["Kundförståelse, konsultmässighet och rapportering", 15, ["kund"]], ["Clean code", 30, ["programmering"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
+    careers: [".NET-utvecklare", "Systemutvecklare", "Programutvecklare"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .1, logik: .9, sakerhet: .2, data: .4, webb: .5, manniskor: .3 }
+  },
+  {
+    id: "net-cloud", name: ".NET Cloud Developer", url: "https://www.iths.se/utbildningar/net-cloud-developer/",
+    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 24, points: 120 },
+    courses: [
+      ["Programmering med C#", 50, ["programmering", "csharp"]], ["Databashantering", 30, ["databaser"]], ["Webbutveckling", 50, ["webb", "csharp"]],
+      ["Designa molnlösningar", 30, ["moln"]], ["Agila metoder", 30, ["agilt"]], ["Administrera molnlösningar", 40, ["moln"]], ["Utveckla molnlösningar", 30, ["moln"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
+    careers: [".NET Cloud Developer", "Systemutvecklare", "Cloud Developer (Azure)"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .1, logik: .8, sakerhet: .3, data: .4, webb: .4, manniskor: .2 }
+  },
+  {
+    id: "mjukvarutestare", name: "Mjukvarutestare med testautomation", url: "https://www.iths.se/utbildningar/mjukvarutestare/",
+    yhPoints: 320, years: 1.5, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 16, points: 80 },
+    courses: [
+      ["Introduktion till mjukvarutestning", 15, ["test"]], ["Programmering, enhetstestning och testdriven utveckling", 65, ["programmering", "test"]],
+      ["Kravhantering", 15, ["krav"]], ["Testning i agila team", 35, ["agilt", "test"]], ["Testautomation för Continuous testning", 50, ["test", "verktyg"]],
+      ["Embedded systems and AI Testing", 40, ["test"]], ["ISTQB software tester", 10, ["test"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
+    careers: ["Mjukvarutestare", "Testledare", "Kvalitetssäkrare inom kravhantering"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .1, logik: .8, sakerhet: .3, data: .4, webb: .3, manniskor: .3 }
+  },
+  {
+    id: "it-projektledare", name: "IT-projektledare", url: "https://www.iths.se/utbildningar/it-projektledare/",
+    yhPoints: 300, years: 1.5, locations: ["Stockholm"], studyForm: "På plats",
+    lia: { weeks: 20, points: 100 },
+    courses: [
+      ["Agil projektledning", 40, ["agilt", "ledning"]], ["IT-projektledning", 60, ["ledning"]], ["Kundförståelse och konsultmässighet", 20, ["kund"]],
+      ["Projektledning, projektmodeller och grupp-processer", 40, ["ledning"]], ["Projektverktyg och dokumentation", 20, ["ledning"]]
+    ],
+    eligibility: { courses: [...BASE_REQ], test: "Digitalt antagningsprov" },
+    careers: ["IT-projektledare", "Teknisk projektledare", "Scrum Master"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .2, logik: .4, sakerhet: .1, data: .2, webb: .2, manniskor: 1 }
+  },
+  {
+    id: "account-manager", name: "Account Manager inom IT", url: "https://www.iths.se/utbildningar/account-manager-inom-it/",
+    yhPoints: 300, years: 1.5, locations: ["Stockholm"], studyForm: "På plats",
+    lia: { weeks: 20, points: 100 },
+    courses: [
+      ["Förhandling och avtalskunskap för Account Managers", 50, ["affar"]], ["Försäljningsprocesser och relationer på marknaden", 30, ["affar", "kund"]],
+      ["Presentationsteknik och nätverksbyggande för Account Managers", 20, ["kund"]], ["Strategisk IT-försäljning och kundvärde", 30, ["affar", "kund"]],
+      ["Teknisk kunskap och marknadsföring för Account Managers", 50, ["affar"]]
+    ],
+    eligibility: { courses: [], experience: "Minst ett års yrkeserfarenhet på heltid inom IT, eller erfarenhet av att sälja IT-tjänster", test: "Anges inte på utbildningssidan" },
+    careers: ["Account Manager inom IT", "Teknisk säljare / IT-säljare", "B2B-säljare inom SaaS och IT-tjänster"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: .3, logik: .3, sakerhet: .1, data: .3, webb: .2, manniskor: 1 }
+  },
+  {
+    id: "it-sakerhetstestare", name: "IT-säkerhetstestare", url: "https://www.iths.se/utbildningar/it-sakerhetstestare/",
+    yhPoints: 400, years: 2, locations: ["Distans"], studyForm: "Distans",
+    lia: { weeks: 24, points: 120 },
+    courses: [
+      ["Introduktion till penetrationstest", 20, ["sakerhet"]], ["Nätverk och nätverkssäkerhet", 20, ["natverk", "sakerhet"]],
+      ["Säker konfiguration av operativsystem", 25, ["system"]], ["Programmering för penetrationstestare", 35, ["programmering"]],
+      ["Hacking & sårbarhetsanalys", 30, ["sakerhet"]], ["Active Directory", 25, ["system"]],
+      ["Applikationssäkerhet & penetrationstest av web", 50, ["webb", "sakerhet"]], ["Avancerad penetrationstest av nätverk", 60, ["natverk", "sakerhet"]]
+    ],
+    eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
+    careers: ["IT-säkerhetstestare", "Penetrationstestare", "Ethical Hacker"],
+    intake: { status: "closed", opens: "februari 2027", start: "30 augusti 2027" },
+    quiz: { visuellt: 0, logik: .8, sakerhet: 1, data: .2, webb: .3, manniskor: .1 }
+  }
+];
+// Kursbeskrivningar från IT-Högskolans YH-ansökningar 2026 (kunskapsbasen i SharePoint)
+const COURSE_INFO = {"frontend|HTML & CSS": {"appName": "HTML och CSS", "appPts": 20, "desc": "Du lär dig bygga och publicera moderna webbplatser med HTML5 och CSS3. Fokus ligger på responsiv layout, tillgänglighet och sökmotoroptimering.", "moments": ["HTML5 och CSS3", "Syntax, semantik och struktur i HTML", "Moderna layouttekniker, exempelvis Flexbox och Grid", "Responsiv webbdesign", "Publicering av webbplatser"]}, "frontend|Native JavaScript": {"appName": "Native JavaScript", "appPts": 35, "desc": "Du lär dig använda JavaScript för att göra webbsidor interaktiva. Du jobbar med DOM, asynkrona anrop och kommunikation med webbtjänster.", "moments": ["JavaScript i webbläsaren", "DOM och manipulering av innehåll", "Asynkrona anrop", "HTTP, JSON och XML", "Interaktiva gränssnitt med JavaScript"]}, "frontend|UX & UI-design": {"appName": "UX och UI-design", "appPts": 25, "desc": "Du lär dig designa användarvänliga gränssnitt utifrån användarens behov. Kursen tar upp layout, färg, typografi, prototyper och verktyg som Figma.", "moments": ["Människa– dator-interaktion (HCI)", "UX-design och UI-design", "Designprocesser och användarcentrerade arbetsmetoder", "Figma och andra verktyg för prototyping och design", "Layout, färglära, bildkomposition och typografi"]}, "frontend|JavaScript med ramverk": {"appName": "Javascript med ramverk", "appPts": 30, "desc": "Du bygger moderna webbapplikationer med JavaScript-ramverk och TypeScript. Kursen tar upp komponenter, routing, state management och Progressive Web Apps.", "moments": ["JavaScript-ramverk eller bibliotek, exempelvis Vue.js", "TypeScript och avancerad JavaScript", "Single Page Applications", "Node.js för frontendutveckling", "NPM och beroendehantering"]}, "frontend|Agil utveckling": {"appName": "Agil utveckling", "appPts": 20, "desc": "Du lär dig arbeta i agila team med Scrum och Kanban. Du övar på user stories, sprintplanering och retrospektiv.", "moments": ["Agila metoder och arbetsprocesser, exempelvis Scrum och Kanban", "Iterativ utveckling och design", "Product backlog, sprint backlog och user stories", "Sprintplanering, sprint review och retrospektiv", "Estimering och definition of done"]}, "frontend|Fullstack-utveckling": {"appName": "Fullstackutveckling", "appPts": 50, "desc": "Du bygger kompletta webbapplikationer där frontend, backend och databas samverkar. Kursen tar upp Node.js, Express, SQL och NoSQL-databaser.", "moments": ["Moderna ramverk och bibliotek för webbapplikationer, ex. React", "Backendutveckling med Node.js och Express", "Databaskopplingar i Node.js", "SQL Server och CRUD", "Icke-relationsdatabaser, exempelvis MongoDB, Firestore eller Neo4j"]}, "frontend|Kravarbete och kommunikation med kravställare": {"appName": "Kravarbete och kommunikation med kravställare", "appPts": 20, "desc": "Du lär dig ta fram, prioritera och dokumentera krav tillsammans med beställare. Fokus ligger på tydlig kommunikation och affärsnytta.", "moments": ["Kravarbete i förstudie, behovsinventering, planering, genomförande och avslut", "Krav i relation till affärsnytta", "Metoder för uppföljning och styrning av kravarbete", "Riskanalys, rapportering och kvalitetssäkring", "Teamarbete och kommunikation mellan olika projektroller"]}, "frontend|CMS": {"appName": "CMS-utveckling", "appPts": 40, "desc": "Du lär dig bygga och anpassa webbplatser i innehållshanteringssystem som WordPress och Drupal, och i headless CMS. Du använder PHP för att vidareutveckla funktioner.", "moments": ["Traditionella CMS, exempelvis WordPress och Drupal", "Headless CMS", "PHP för CMS-utveckling", "Grundläggande PHP-koncept", "Rendering på serversidan, exempelvis SSR och SSG"]}, "javautvecklare|Javaprogrammering": {"appName": "Java-Programmering", "appPts": 60, "desc": "Du lär dig objektorienterad programmering i Java från grunden. Fokus ligger på tydlig, testbar och underhållbar kod.", "moments": ["Objektorienterad programmering i Java: klasser, objekt, arv och inkapsling", "Datastrukturer och grundläggande algoritmiskt tänkande", "Fil- och strömhantering (I/O) och felhantering", "Samlingar och generics", "Enhetstestning och testbar kod"]}, "javautvecklare|Utveckling mot databaser": {"appName": "Utveckling mot databaser", "appPts": 35, "desc": "Du lär dig modellera data och skriva SQL. Du kopplar dina Javaprogram till relationsdatabaser.", "moments": ["Datamodellering och design av relationsdatabaser (inkl. normalisering)", "SQL: frågor, filtrering, joinar och aggregering", "Dataintegritet och kvalitet (constraints, transaktionstänk på"]}, "javautvecklare|Javaverktyg och byggmiljöer": {"appName": "Javaverktyg och byggmiljöer", "appPts": 30, "desc": "Du arbetar med verktygen som används i professionell Javautveckling, som Maven, Gradle och Git. Du automatiserar bygg- och testflöden.", "moments": ["Bygg- och beroendehantering (t.ex. Maven/Gradle)", "Versionshantering och samarbete: branchstrategier, pull requests och kodgranskning", "Automatiserade flöden för bygg och test (grundläggande CIprinciper)", "Kodkvalitet, refaktorisering och arbetssätt för underhållbar kod i team", "Grundläggande container-/miljötänk och reproducerbara körningar"]}, "javautvecklare|Komplex Javautveckling": {"appName": "Komplex Java-programmering", "appPts": 40, "desc": "Du bygger säkra och skalbara backendtjänster. Kursen tar upp felhantering, prestanda och designmönster.", "moments": ["Servernära utveckling och moderna backendprinciper", "Skalbarhet, feltolerans och prestandatänk", "Säker applikationsutveckling (t.ex. OWASPprinciper)", "Loggning, monitorering och felsökning (observabilitygrund)", "Testning och kvalitetssäkring i komplexa applikationer"]}, "javautvecklare|Web services och integrationer": {"appName": "Web services och integrationer", "appPts": 30, "desc": "Du lär dig bygga och använda API:er som kopplar ihop system. Fokus ligger på säkerhet, testning och felhantering.", "moments": ["APIdesign och kontrakt (t.ex. RESTprinciper, versionering)", "Integrationer och dataformat: struktur, validering och felhantering", "Säkerhet i integrationer (auth/behörighet på relevant nivå)", "Testning av API:er och integrationer", "Driftbarhet/observability: loggning, fel, mätning (grund)"]}, "javautvecklare|Utveckling av webbapplikationer": {"appName": "Utveckling av webbapplikationer", "appPts": 45, "desc": "Du bygger webbapplikationer som hämtar data från en backend och visar den tydligt. Du lär dig också driftsätta och underhålla dem i team.", "moments": ["Utveckla moderna webbapplikationer och koppla gränssnitt till data från backend/API", "Versionshantering och samarbete i webbprojekt: Gitflöden, pull requests, kodgranskning", "Grundläggande testning och kvalitet i webblösningar", "Driftsättning och underhåll av webbapplikationer", "Skapa visuella element för presentation av kundens data"]}, "javautvecklare|Agil utveckling": {"appName": "Agil utveckling och kundförståelse", "appPts": 25, "desc": "Du lär dig arbeta agilt och förstå kundens behov. Du övar på att omsätta krav till prioriteringar som ger kunden mest nytta.", "moments": ["Agila arbetsprocesser och kvalitetskriterier (t.ex. Scrum och Kanban)", "Roller, ansvar och samarbete i agila team", "Kravförståelse i praktiken", "Planering och genomförande i iterationer", "Agil projekthantering i praktiken"]}, "ux-designer|Introduktion till UX-design": {"appName": "Introduktion till UX-design och kompetensportfölj", "appPts": 15, "desc": "Du får en introduktion till UX-design och designprocessens fyra steg. Kursen tar också upp yrkesrollen och hur du förbereder dig för LIA.", "moments": ["Grundläggande begrepp inom UX-design", "UX-designens historia och utveckling", "UX i dagens samhälle och vardag", "Introduktion till design thinking", "Introduktion till service design"]}, "ux-designer|Användarcentrerad design": {"appName": "Användarcentrerad design", "appPts": 70, "desc": "Du lär dig ta reda på vad användare behöver genom intervjuer, tester och dataanalys. Du arbetar med personas, kundresor och verktyg som Hotjar och Google Analytics.", "moments": ["Användarcentrerad design i produktutveckling", "Digitala analys- och statistikverktyg, exempelvis Hotjar och Google Analytics", "Digitala och analoga användartester", "Intervjuer och datainsamling", "Analys av enkäter, tester och intervjuer"]}, "ux-designer|Agila metoder": {"appName": "Agila metoder", "appPts": 35, "desc": "Du lär dig arbeta agilt i designprojekt med Scrum och user stories. Du övar på att samarbeta nära utvecklare och beställare.", "moments": ["Agila arbetsmetoder och tillämpning inom UX", "Scrum och andra agila ramverk", "Product backlog, sprintplanering och sprintbacklogg", "User stories, acceptanskriterier och definition of done", "Sprint review, sprint retrospective och iterationer"]}, "ux-designer|Gränssnittsdesign och prototyper": {"appName": "Gränssnittsdesign och prototype", "appPts": 45, "desc": "Du gör om idéer och skisser till prototyper som går att testa. Du arbetar med wireframes och verktyg som Balsamiq och Figma.", "moments": ["Designprogramvara, exempelvis Balsamiq och Figma", "Wireframing", "Analoga prototyper", "Digitala prototypverktyg", "Iterativa designprocesser"]}, "ux-designer|Webbdesign, appdesign & fysisk usability": {"appName": "Webbdesign, appdesign och fysisk usability", "appPts": 40, "desc": "Du lär dig designa för webb, appar och fysiska gränssnitt. Kursen tar upp responsiv design, designsystem, WCAG och Apples och Googles riktlinjer.", "moments": ["Responsiv design", "Webbdesign och appdesign", "Fysisk usability och användning i olika miljöer", "Googles och Apples riktlinjer för appdesign", "Etablerade designmönster för webb och appar"]}, "ux-designer|Programmering för UX-design": {"appName": "Programmering för UX-design", "appPts": 30, "desc": "Du lär dig grunderna i HTML, CSS och JavaScript. Det hjälper dig att bygga tekniska prototyper och samarbeta med utvecklare.", "moments": ["HTML och CSS", "Grundläggande JavaScript", "Frontendutveckling för UX-design", "Moderna utvecklingsmiljöer", "Översikt av JavaScript-ramverk"]}, "ux-designer|Branding, affär och organisation": {"appName": "Branding, affär och organisation", "appPts": 35, "desc": "Du lär dig koppla designbeslut till affärsnytta och varumärke. Du övar också på att presentera och motivera din design.", "moments": ["UX-design i ett kommersiellt perspektiv", "Affärsnytta och värdeskapande med UX", "Branding och dess påverkan på design", "Kunder, målgrupper och kundbeteenden", "Intressenter i design- och utvecklingsprojekt"]}, "it-sakerhetsspecialist|Operativsystem: Linux och Windows": {"appName": "Operativsystem – Linux och Windows", "appPts": 40, "desc": "Du lär dig analysera och säkra Linux- och Windowsmiljöer. Kursen tar upp behörigheter, tjänster, brandväggar och hur du hittar sårbarheter.", "moments": ["Linux- och Windowsmiljöer", "Navigering i operativsystem", "Känsliga systemfiler och konfigurationsfiler", "Host-filer och cache-filer", "Registernycklar i Windows"]}, "it-sakerhetsspecialist|Python": {"appName": "Python", "appPts": 20, "desc": "Du lär dig grunderna i Python för att automatisera säkerhetsarbete. Du skriver till exempel skript som filtrerar loggar.", "moments": ["Python som programmeringsspråk", "Grundläggande syntax och struktur", "Automatisering av säkerhetsrelaterade uppgifter", "Filhantering och sökning i filer", "Indexering av data"]}, "it-sakerhetsspecialist|Nätverk": {"appName": "Nätverk", "appPts": 20, "desc": "Du lär dig hur nätverk fungerar och hur de skyddas. Kursen tar upp OSI-modellen, protokoll, brandväggar och intrångsdetektering.", "moments": ["OSI-modellen", "Nätverksprotokoll", "Klient-servermodellen", "Transport av data", "Routrar och switchar"]}, "it-sakerhetsspecialist|Virtualisering och cloud": {"appName": "Virtualisering och cloud", "appPts": 50, "desc": "Du lär dig arbeta med virtuella maskiner, molntjänster och containrar. Du lär dig också risker i sådana miljöer och hur du testar misstänkt kod säkert.", "moments": ["Virtualiseringens roll i modern IT", "Hypervisors och ESXi", "VirtualBox och VMware", "OpenStack", "IaaS, PaaS och SaaS"]}, "it-sakerhetsspecialist|Kryptologi": {"appName": "Kryptering", "appPts": 30, "desc": "Du lär dig hur kryptering skyddar information och kommunikation. Kursen tar upp symmetrisk och asymmetrisk kryptering, nyckelhantering och digitala certifikat.", "moments": ["Kryptografins historia och utveckling", "Kryptering kopplat till OSI-modellen", "Symmetrisk kryptering", "Asymmetrisk kryptering", "Krypteringsalgoritmer"]}, "it-sakerhetsspecialist|Visusanalys": {"appName": "Virusanalys", "appPts": 30, "desc": "Du lär dig analysera skadlig kod som trojaner och ransomware i säkra testmiljöer. Du använder både statisk och dynamisk analys.", "moments": ["Introduktion till skadlig kod", "Trojaner, keyloggers och ransomware", "Statisk analys av skadliga filer", "Dynamisk analys av skadliga filer", "Analys av legitima filer och avvikelseidentifiering"]}, "it-sakerhetsspecialist|Omvärldsbevakning": {"appName": "Omvärldsbevakning", "appPts": 20, "desc": "Du lär dig följa nya hot och sårbarheter, till exempel via CVE och CERT. Du övar på att sammanfatta risker och föreslå åtgärder.", "moments": ["Omvärldsbevakning inom IT-säkerhet", "Produktspecifika och generiska informationskällor", "CERT och andra säkerhetskanaler", "CVE och CVSS", "CMDB och informationsstruktur"]}, "it-sakerhetsspecialist|Spårbarhet": {"appName": "Spårbarhet", "appPts": 30, "desc": "Du lär dig samla in och analysera loggar från nätverk, klienter och servrar. Det hjälper dig att följa händelseförlopp och hitta avvikelser.", "moments": ["Loggkällor och loggformat", "Loggstandarder", "Syslog", "Windowsloggar", "Loggar från nätverk, klienter och servrar"]}, "it-sakerhetsspecialist|Incidenthantering": {"appName": "Incidenthantering", "appPts": 30, "desc": "Du lär dig hantera säkerhetsincidenter steg för steg, från upptäckt till rapport. Du arbetar med etablerade standarder och verktyg som SIEM och SOAR.", "moments": ["Incidenthanteringsprocesser", "CERT, MSB, NIST och ISO som ramverk", "SIEM och SOAR i incidenthantering", "Från säkerhetshändelse till incident", "Klassificering och prioritering av incidenter"]}, "mjukvarutestare|Introduktion till mjukvarutestning": {"appName": "Introduktion till mjukvarutestning", "appPts": 15, "desc": "Du lär dig vad en mjukvarutestare gör och hur testning passar in i utvecklingen. Du övar på att skriva bra testfall och göra utforskande tester.", "moments": []}, "mjukvarutestare|Programmering, enhetstestning och testdriven utveckling": {"appName": "Programmering, enhetstestning och testdriven utveckling", "appPts": 65, "desc": "Du lär dig programmera och skriva tester för din egen kod. Du arbetar testdrivet (TDD) och använder Git.", "moments": []}, "mjukvarutestare|Kravhantering": {"appName": "Kravhantering", "appPts": 15, "desc": "Du lär dig skriva och granska krav så att de går att testa. Du övar på att samla in krav och kommunicera dem till en beställare.", "moments": []}, "mjukvarutestare|Testning i agila team": {"appName": "Testning i agila team", "appPts": 35, "desc": "Du lär dig hur testning fungerar i agila team som arbetar med Scrum. Du övar på att planera tester och följa upp kvalitet.", "moments": []}, "mjukvarutestare|Testautomation för Continuous testning": {"appName": "Testautomation för Continuous Testing", "appPts": 50, "desc": "Du lär dig automatisera tester så att du snabbt ser om koden fungerar. Kursen tar upp TDD, BDD och testflöden i CI/CD.", "moments": []}, "mjukvarutestare|Embedded systems and AI Testing": {"appName": "Embedded Systems and AI Testing", "appPts": 40, "desc": "Du lär dig testa inbyggda system och AI-baserad mjukvara. Kursen tar upp test på riktig hårdvara, simuleringar och hur AI kan förbättra testarbetet.", "moments": []}, "mjukvarutestare|ISTQB software tester": {"appName": "Förberedelser certifiering ISTQB Software Tester", "appPts": 10, "desc": "Du förbereder dig för certifieringen ISTQB Certified Tester Foundation Level. Du lär dig testningens begrepp, roller och metoder.", "moments": []}, "it-projektledare|Agil projektledning": {"appName": "Agil projektledning", "appPts": 40, "desc": "Du lär dig leda IT-projekt med agila metoder. Kursen tar upp rollerna Scrum Master och produktägare samt CI/CD och DevOps.", "moments": ["Agila utvecklingsprocesser och leveransmodeller", "Scrum Master och Produktägar-rollen", "Continuous Deployment/Continuous Integration", "DevOps för projektledare", "Arbetsprocesser och kvalitetskriterier inom agil ITprojektledning"]}, "it-projektledare|IT-projektledning": {"appName": "IT-projektledning", "appPts": 30, "desc": "Du lär dig planera och leda IT-projekt och samarbeta med utvecklingsteam. Kursen tar också upp test, kvalitet och GDPR.", "moments": ["Utvecklingsprocesser för webb, applikationer och mobila lösningar", "Testningens och kvalitetssäkringens roll i ITprojekt", "Grundläggande principer i programmering", "ITbegrepp, terminologi och branschens struktur", "Livscykelmodeller för ITsystem (påverkan på planering och genomförande)"]}, "it-projektledare|Kundförståelse och konsultmässighet": {"appName": "Kundförståelse och konsultmässighet", "appPts": 25, "desc": "Du lär dig förstå kundens behov och göra om dem till tydliga krav. Du övar på att ta fram business case och kommunicera professionellt.", "moments": ["Kravhantering och identifiering av kundbehov", "Affärsnytta och ekonomiska termer kopplade till Business Case", "Konsultbranschens organisation och arbetssätt", "Kommunikationsmodeller och värdeskapande kommunikation", "Avtalsrätt och juridiska aspekter i kunddialoger"]}, "it-projektledare|Projektledning, projektmodeller och grupp-processer": {"appName": "Projektledning - modeller, verktyg och processer", "appPts": 60, "desc": "Du lär dig använda projektmodeller och digitala verktyg för att styra projekt. Du övar också på att leda grupper, workshops och ge feedback.", "moments": ["Projektmodeller: vattenfall, agilt och hybrid", "Ramverk för ITtjänsteleverans (t.ex. ITIL)", "Grupputvecklingsmodeller, personlighetstyper och teamdynamik", "Konflikthanteringsstrategier och verktyg", "Projektledarrollen och dess funktion i team"]}, "account-manager|Förhandling och avtalskunskap för Account Managers": {"appName": "Förhandling och avtalskunskap för IT-säljare", "appPts": 50, "desc": "Du lär dig förhandla och skriva avtal inom IT-försäljning. Kursen tar upp prismodeller, avtalsformer som SLA och etisk försäljning.", "moments": ["Förhandlingsteknik och förhandlingsstrategier", "Förhandling i olika affärsscenarier", "Avtalskunskap och avtalsstruktur", "T&C, SLA och kommersiella villkor", "Prisstrategier och bonusupplägg"]}, "account-manager|Försäljningsprocesser och relationer på marknaden": {"appName": "Försäljningsprocesser och relationer på marknaden", "appPts": 30, "desc": "Du lär dig hela säljprocessen, från prospektering till avslut. Du arbetar med CRM-system och långsiktiga kundrelationer.", "moments": ["Försäljningsprocessens olika faser", "Prospektering och kundbearbetning", "Mötesbokning och kunddialog", "Relationsbyggande med kunder och partners", "Försäljningsmodeller, exempelvis AIDA"]}, "account-manager|Presentationsteknik och nätverksbyggande för Account Managers": {"appName": "Presentationsteknik och nätverksbyggande för IT-säljare", "appPts": 20, "desc": "Du övar på att presentera IT-lösningar och visa deras affärsnytta, till exempel med ROI. Du lär dig också bygga professionella nätverk.", "moments": ["Presentationsteknik i affärssammanhang", "Muntlig framställning och lösningspresentation", "ROI och affärsnytta i kunddialog", "Problemlösning och lösningsorienterad kommunikation", "Professionellt nätverksbyggande"]}, "account-manager|Strategisk IT-försäljning och kundvärde": {"appName": "Strategisk IT-försäljning och kundvärde", "appPts": 30, "desc": "Du lär dig koppla försäljning till kundens mål och ta fram värdeförslag. Kursen tar upp business case, marginaler och partnerskap.", "moments": ["Strategisk försäljning i IT-branschen", "Kundvärde och värdeanalys", "Identifiering av kundens strategiska mål", "Framtagning av värdeförslag", "Kommersiella upplägg och partnerskap"]}, "account-manager|Teknisk kunskap och marknadsföring för Account Managers": {"appName": "Teknisk kunskap och marknadsföring för IT-säljare", "appPts": 50, "desc": "Du får den tekniska förståelse du behöver för att prata trovärdigt om IT-lösningar. Kursen tar också upp marknadsföring, sociala medier och GDPR.", "moments": ["Grundläggande förståelse för systemutveckling och programmering", "Hur IT-system skapas, fungerar och förvaltas", "Marknadsföringsstrategier i IT-branschen", "Varumärkesbyggande och positionering", "Sociala medier och digital försäljning"]}, "net|Programmering C#": {"appName": "Programmering med C#", "appPts": 60, "desc": "Du lär dig programmera i C# och .NET. Du bygger och felsöker applikationer i en professionell utvecklingsmiljö.", "moments": ["Grundläggande programmering i C# och .NET", "Objektorienterad programmering och kodstruktur", "Utveckling av konsol och grafiska applikationer", "Datahantering, fil och JSONhantering", "Grundläggande designmönster, felsökning och kvalitet"]}, "net|Utveckling mot databas och databasadministration": {"appName": "Utveckling mot databas och databasadministration", "appPts": 45, "desc": "Du lär dig designa och använda både relationsdatabaser och NoSQL-databaser. Du kopplar dem till dina egna applikationer, också i molnet.", "moments": ["Databasdesign och modellering för relations och dokumentdatabaser", "Grundläggande databasteori, normalisering, transaktioner och ACID", "Skillnader mellan databastyper samt val av databaslösning", "Programmering mot databaser i .NET med Entity Framework Core och LINQ", "Code First, Database First samt Repository Pattern och DDD"]}, "net|Webbutveckling med .NET": {"appName": "Webbutveckling med .NET", "appPts": 60, "desc": "Du bygger webbapplikationer och API:er med C# och .NET. Kursen tar också upp felsökning och GDPR.", "moments": ["Avancerad webbutveckling med C# och .NET med och utan AI-verktyg", "Backendutveckling och APIutveckling med och utan AI- verktyg", "Samspel mellan frontend och backend", "Asynkron programmering, dependency injection och designmönster", "Webbstandarder, säkerhet och autentisering (HTTP, JWT, CORS, GDPR)"]}, "net|Agil utveckling": {"appName": "Agil utveckling", "appPts": 30, "desc": "Du lär dig arbeta i sprintar med Scrum och user stories. Kursen tar också upp CI/CD och hur kontinuerliga releaser fungerar.", "moments": ["Agila arbetssätt och iterativ utveckling", "Scrumramverket och dess ceremonier, artefakter och roller", "User stories, estimering och Definition of Done", "Val och tillämpning av agila metoder utifrån projektets behov", "Versionshantering och samarbete i utvecklingsteam (Git)"]}, "net|Kundförståelse, konsultmässighet och rapportering": {"appName": "Kundförståelse, konsultmässighet och rapportering", "appPts": 15, "desc": "Du lär dig hur det är att arbeta som konsult. Du övar på att kommunicera med kunder och ta fram rapporter.", "moments": ["Konsultrollen, konsultmässighet och professionellt förhållningssätt", "Kundförståelse, affärsnytta och arbete utifrån kundens behov", "Kommunikation med kund samt framtagande av kommunikationsplaner", "Rapportering och presentation av relevant information", "Självledarskap, självkännedom och personlig utveckling i yrkesrollen"]}, "net|Clean code": {"appName": "Clean code", "appPts": 30, "desc": "Du lär dig skriva kod som är lätt att läsa, underhålla och bygga vidare på. Du använder designmönster för att höja kvaliteten.", "moments": ["Principer för Clean Code, kodkvalitet och refaktorering", "Objektorienterad design med SOLID och designmönster", "Testdriven utveckling (TDD) och enhetstester", "Programvaruarkitektur och microservices", "CI/CD, Docker och automatiserad testning"]}, "net-cloud|Programmering med C#": {"appName": "Programmering med C#", "appPts": 50, "desc": "Du lär dig programmera i C# och .NET med Visual Studio och Git. Kursen ger grunden för att senare bygga API:er och molnlösningar.", "moments": ["Grundläggande programmering i C#", "Variabler, loopar och metoder", "Objektorienterad programmering med klasser, arv och interface", "Asynkron programmering", ".NET och .NET Core"]}, "net-cloud|Databashantering": {"appName": "Databashantering", "appPts": 30, "desc": "Du lär dig modellera och använda databaser, både SQL och NoSQL. Du arbetar med Entity Framework och databaser i molnet.", "moments": ["Relationsdatabaser", "SQL och CRUD-operationer", "NoSQL och dokumentdatabaser, exempelvis MongoDB", "Databasdesign och modellering", "Normalisering och dataintegritet"]}, "net-cloud|Webbutveckling": {"appName": "Webbutveckling", "appPts": 50, "desc": "Du bygger webbapplikationer med HTML, CSS, JavaScript och ASP.NET Core. Kursen tar upp REST-API:er och säkerhet på webben.", "moments": ["HTML, CSS och JavaScript", "Responsiv webbdesign och mobile first", "Responsiva bibliotek, exempelvis Bootstrap", "HTTP och JSON", "Single Page Applications"]}, "net-cloud|Designa molnlösningar": {"appName": "Designa molnlösningar", "appPts": 30, "desc": "Du lär dig utforma lösningar i Microsoft Azure. Kursen tar upp PaaS, IaaS och SaaS, behörigheter och säkerhet i molnet.", "moments": ["Molntjänstmodeller: PaaS, IaaS och SaaS", "Microsoft Azure och dess tjänster", "Azure Functions", "Azure Active Directory och åtkomsthantering", "App Services och virtuella maskiner"]}, "net-cloud|Agila metoder": {"appName": "Agila metoder", "appPts": 30, "desc": "Du lär dig arbeta agilt med Scrum och Kanban. Du övar också på parprogrammering, Git och CI/CD.", "moments": ["Agila metoder och ramverk, exempelvis Scrum och Kanban", "Product backlog och sprint backlog", "User stories och kravhantering", "Sprintplanering, sprint review och retrospektiv", "Iterationer och estimering"]}, "net-cloud|Administrera molnlösningar": {"appName": "Administrera molnlösningar", "appPts": 40, "desc": "Du lär dig driftsätta och övervaka molnlösningar i Azure. Kursen tar upp containrar, infrastruktur som kod och Azure DevOps.", "moments": ["Microsoft Azure och dess tjänster", "Cloud-native, multi-cloud och hybrid-cloud", "Cloud-agnostiska principer", "Containerteknik, exempelvis Docker", "Containerorkestrering, exempelvis Kubernetes"]}, "net-cloud|Utveckla molnlösningar": {"appName": "Utveckla molnlösningar", "appPts": 30, "desc": "Du lär dig välja och motivera en molnstrategi utifrån företagets behov. Kursen tar upp skalbarhet, automation, riskbedömning och kostnader.", "moments": ["Cloudstrategier och cloud management", "Build, buy eller modify som beslutsmodell", "Skalbarhet och kapacitetsplanering", "KPI, ROI och framgångsfaktorer", "Dataflödesdiagram"]}, "it-sakerhetstestare|Introduktion till penetrationstest": {"appName": "Introduktion till penetrationstest", "appPts": 10, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du får en första bild av vad en penetrationstestare gör och hur ett enkelt pentest går till. Du lär dig också vilka lagar som styr hur företag ska skydda information och persondata.", "moments": ["Sätta upp din dator och VPN för utbildningen", "Hitta en sårbarhet i en testmiljö", "Skriva en professionell pentestrapport", "NIS2, Cybersäkerhetslagen och GDPR"]}, "it-sakerhetstestare|Nätverk och nätverkssäkerhet": {"appName": "Nätverk och nätverkssäkerhet", "appPts": 20, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig hur datorer kommunicerar i ett nätverk och hur trafiken kan analyseras. Du jobbar med verktyg för nätverksanalys och skanning.", "moments": ["Internetprotokoll, OSI- och TCP/IP-modellen", "Kommunikation mellan datorer", "Felsökning i Linux och Windows", "Verktyg som Wireshark, Nmap, netstat och ping"]}, "it-sakerhetstestare|Säker konfiguration av operativsystem": {"appName": "Säker konfiguration av operativsystem", "appPts": 25, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig hur Windows och Linux fungerar ur ett säkerhetsperspektiv. Du övar på att hitta vanliga konfigurationsbrister och sätta upp säkra virtuella miljöer.", "moments": ["Sätta upp en dator för säkerhetsarbete", "Kryptering av lagrad och överförd data", "Terminaler i Windows och Linux", "Virtualisering med bland annat KVM och VMware", "Rättigheter och behörigheter i operativsystem"]}, "it-sakerhetstestare|Programmering för penetrationstestare": {"appName": "Programmering för penetrationstestare", "appPts": 35, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig Python för att automatisera steg i ett penetrationstest. Du använder också AI-agenter för att skriva och anpassa kod.", "moments": ["Grunder i programmering och Python", "Pythonmiljöer, paket och bibliotek", "AI-agenter som stöd när du kodar", "Grunder i API:er", "Automatiserade rapporter och webbläsare"]}, "it-sakerhetstestare|Hacking & sårbarhetsanalys": {"appName": "Hacking & sårbarhetsanalys", "appPts": 30, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig genomföra en grundläggande sårbarhetsgranskning av en organisation. Du övar på att presentera resultatet både i text och muntligt.", "moments": ["Metoder för sårbarhets- och riskbedömning", "Manuell och automatiserad analys av resultat", "Granskningsverktyg som Nessus", "Att skriva en pentestrapport", "Sårbarhetsbedömning av nätverksinfrastruktur"]}, "it-sakerhetstestare|Active Directory": {"appName": "Active Directory", "appPts": 25, "src": "Källa: IT-Högskolans kursplan, beslutad 2024.", "desc": "Du lär dig hur Active Directory används för att styra användare och datorer i en organisation. Du övar på att hitta och utnyttja brister och på att skydda miljön.", "moments": ["Windows och Active Directory ur ett säkerhetsperspektiv", "PowerShell för administration och automatisering", "Grupprinciper, servicekonton och Kerberos", "Vanliga attacker mot Active Directory", "Verktyg som BloodHound, Rubeus och Impacket"]}, "it-sakerhetstestare|Applikationssäkerhet & penetrationstest av web": {"appName": "Applikationssäkerhet & penetrationstest av web", "appPts": 50, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig granska säkerheten i webbapplikationer och API:er. Du arbetar efter OWASP och lär dig hitta de vanligaste hoten mot moderna webblösningar.", "moments": ["Webbapplikationers arkitektur och kommunikation", "Hitta och utnyttja sårbarheter i applikationer och API:er", "Säkerhetstestning enligt OWASP", "Burp Suite"]}, "it-sakerhetstestare|Avancerad penetrationstest av nätverk": {"appName": "Avancerad penetrationstest av nätverk", "appPts": 60, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du fördjupar dig i allt du lärt dig tidigare under utbildningen och förbereder dig inför LIA. Du övar på realistiska attackscenarier och på att redovisa resultatet för en kund.", "moments": ["Scenariobaserade attacker", "Ta sig förbi säkerhetslösningar med ett C2-ramverk", "Skadlig kod i .NET, Python och C", "Spear phishing mot användare"]}, "fullstack|HTML och CSS": {"appName": "HTML och CSS", "appPts": 20, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig bygga semantiska, responsiva och tillgängliga webbplatser med HTML och modern CSS. Kursen tar också upp sökmotoroptimering och publicering.", "moments": ["Semantisk HTML, formulär och media", "CSS, layout och responsiv design", "Tillgänglighet enligt WCAG", "Grunderna i Sass", "Hållbar och energieffektiv frontend"]}, "fullstack|Native JavaScript": {"appName": "Native JavaScript", "appPts": 50, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig JavaScript för att göra webbsidor dynamiska och interaktiva. Du jobbar med DOM, händelser och asynkron kommunikation med webbtjänster.", "moments": ["JavaScript i webbläsaren", "DOM och händelsehantering", "Asynkron kommunikation, HTTP och JSON", "Designprinciper för kod", "AI-verktyg för lärande och felsökning"]}, "fullstack|Backend-programmering och databaser": {"appName": "Backend-programmering och databaser", "appPts": 60, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig bygga backend-tjänster med JavaScript, Node.js och TypeScript. Du kopplar ihop dem med både relations- och dokumentdatabaser.", "moments": ["Node.js och ramverk som Express", "REST och WebSockets", "Relations- och dokumentdatabaser", "Datasäkerhet och GDPR", "AI-verktyg i utvecklingsarbetet"]}, "fullstack|Agil utveckling": {"appName": "Agil utveckling", "appPts": 20, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig planera och följa upp utvecklingsarbete i team med agila metoder. Kursen tar upp Scrum, Kanban och hur ni skapar värde för kunden.", "moments": ["Agila principer och värderingar", "Scrum och Kanban", "Backlog, estimering och user stories", "Sprintplanering, review och retrospektiv", "Projektverktyg och versionshantering"]}, "fullstack|Frontend-programmering": {"appName": "Frontend-programmering", "appPts": 60, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig bygga komponentbaserade webbapplikationer med JavaScript och TypeScript. Kursen leder fram till en responsiv PWA som du publicerar.", "moments": ["Komponentbaserade ramverk", "Single Page Applications och routing", "TypeScript och Node.js-verktyg", "Git, CI och publicering", "Tillgänglighet och prestanda"]}, "fullstack|Software life cycle management": {"appName": "Software life cycle management", "appPts": 50, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "Du lär dig hur webbapplikationer driftsätts, testas och förvaltas över tid. Kursen tar upp CI/CD, containrar och publicering i molnet.", "moments": ["CI/CD och versionshantering", "Containrar, till exempel Docker", "Molntjänster (IaaS och PaaS)", "Testning och övervakning", "AI-verktyg i utvecklingskedjan"]}, "it-sakerhetsspecialist|Introduktion till IT-säkerhet": {"appName": "Introduktion till IT-säkerhet", "appPts": 5, "src": "Källa: IT-Högskolans kursplan, beslutad 2025.", "desc": "Du får en överblick över IT-säkerhetsbranschen och vad du kan jobba med där. Du lär dig också varför IT-säkerhet är viktigt för samhället, organisationer och individer.", "moments": ["IT-säkerhetsbranschens olika områden", "Viktiga begrepp inom IT-säkerhet", "IT-säkerhetens roll i samhället", "Gästföreläsningar från arbetslivet"]}, "it-projektledare|Projektverktyg och dokumentation": {"appName": "Projektledning – modeller, verktyg och processer", "appPts": 55, "src": "Källa: IT-Högskolans kursplan, fastställd 2026.", "desc": "I den senaste kursplanen ingår projektverktyg och dokumentation i en större kurs om projektledning. Du lär dig använda digitala verktyg för att planera, följa upp och dokumentera IT-projekt.", "moments": ["Digitala projektverktyg för planering och uppföljning", "Dokumentationsprocesser i IT-projekt", "AI-verktyg för analys, planering och riskidentifiering", "Hållbara arbetsprocesser"]}};
+const OVERLAP_TAGS = new Set(["agilt", "databaser", "python", "programmering", "webb", "ux", "javascript", "backend", "csharp", "moln", "test", "natverk", "system", "sakerhet", "ledning", "kund", "affar", "krav"]);
+const DIM_LABEL = {
+  visuellt: "Du gillar visuellt arbete och design",
+  logik: "Du gillar att lösa logiska problem",
+  sakerhet: "Du är nyfiken på säkerhet och hur system skyddas",
+  data: "Du tycker om att arbeta med data och siffror",
+  webb: "Du vill bygga saker som syns på webben",
+  manniskor: "Du gillar att leda, samarbeta och prata med kunder"
+};
+// Exempelsvar från quizet (simulerat)
+const QUIZ_ANSWERS = { visuellt: .9, logik: .5, sakerhet: .1, data: .2, webb: .9, manniskor: .4 };
+
+const state = { selected: ["frontend", "javautvecklare", "ux-designer"], fromQuiz: false, diffOnly: false };
+const byId = Object.fromEntries(PROGRAMS.map(p => [p.id, p]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function matchScore(p) {
+  const dims = Object.keys(QUIZ_ANSWERS);
+  const diff = dims.reduce((s, d) => s + Math.abs(QUIZ_ANSWERS[d] - p.quiz[d]), 0) / dims.length;
+  return Math.round((1 - diff) * 100);
+}
+function reasons(p) {
+  return Object.keys(QUIZ_ANSWERS)
+    .map(d => [d, QUIZ_ANSWERS[d] * p.quiz[d]])
+    .sort((a, b) => b[1] - a[1]).slice(0, 2).filter(r => r[1] > .3).map(r => DIM_LABEL[r[0]]);
+}
+
+function toggle(id) {
+  const i = state.selected.indexOf(id);
+  if (i >= 0) state.selected.splice(i, 1);
+  else if (state.selected.length < 3) state.selected.push(id);
+  render();
+}
+
+function renderQuizbox() {
+  const el = document.getElementById("quizbox");
+  if (state.fromQuiz) {
+    el.innerHTML = `<p><strong>Du kom hit från quizet.</strong> Dina tre bästa matchningar är valda, och tabellen visar hur väl varje utbildning stämmer med dina svar.</p>
+      <button class="btn" id="quizoff">Dölj quizresultatet</button>`;
+    el.querySelector("#quizoff").onclick = () => { state.fromQuiz = false; render(); };
+  } else {
+    el.innerHTML = `<p><strong>Osäker på vilka du ska jämföra?</strong> Gör quizet så väljer vi dina tre bästa matchningar. I prototypen kan du simulera ett quizresultat.</p>
+      <button class="btn primary" id="quizon">Simulera quizresultat</button>`;
+    el.querySelector("#quizon").onclick = () => {
+      state.fromQuiz = true;
+      state.selected = [...PROGRAMS].sort((a, b) => matchScore(b) - matchScore(a)).slice(0, 3).map(p => p.id);
+      render();
+      document.getElementById("compare").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    };
+  }
+}
+
+function renderPicker() {
+  const full = state.selected.length >= 3;
+  document.getElementById("pickcount").textContent = `${state.selected.length} av 3 valda`;
+  document.getElementById("picker").innerHTML = PROGRAMS.map(p => {
+    const on = state.selected.includes(p.id);
+    return `<article class="pcard${on ? " on" : ""}">
+      <h3>${esc(p.name)}</h3>
+      <div class="meta">${String(p.years).replace(".", ",")} år · ${esc(p.locations.join(", "))}</div>
+      <button class="btn" data-id="${p.id}" aria-pressed="${on}" ${!on && full ? "disabled title='Ta bort en utbildning först'" : ""}>${on ? "✓ Vald" : "Lägg till i jämförelse"}</button>
+    </article>`;
+  }).join("");
+  document.querySelectorAll("#picker button").forEach(b => b.onclick = () => toggle(b.dataset.id));
+}
+
+function renderTray() {
+  const chips = state.selected.map(id => `<span class="chip">${esc(byId[id].name)}<button aria-label="Ta bort ${esc(byId[id].name)}" data-id="${id}">×</button></span>`);
+  for (let i = state.selected.length; i < 3; i++) chips.push(`<span class="slot">Tom plats</span>`);
+  document.getElementById("chips").innerHTML = chips.join("");
+  document.querySelectorAll("#chips button").forEach(b => b.onclick = () => toggle(b.dataset.id));
+  const go = document.getElementById("go");
+  go.textContent = `Jämför (${state.selected.length})`;
+  go.disabled = state.selected.length < 2;
+}
+
+const AI_INFO = {"frontend": ["AI-stöd ingår i alla programmeringskurser, från HTML och CSS till JavaScript. Du använder också AI i design och prototyper och lär dig bedöma AI-genererad kod.", "Ansökan till MYH 2026"], "javautvecklare": ["AI-verktyg används i nästan alla kurser, till exempel kodassistenter för kodgranskning och testgenerering. Även under LIA lär du dig använda AI för att effektivisera arbetet.", "Ansökan till MYH 2026"], "ux-designer": ["Du lär dig använda AI-verktyg i designprocessen för att höja kvaliteten i användarcentrerad design. Du får också en introduktion till AI i yrkesrollen.", "Ansökan till MYH 2026"], "it-sakerhetsspecialist": ["Du får en introduktion till AI i branschen och yrkesrollen. Under LIA använder du AI som stöd i säkerhetsarbetet.", "Ansökan till MYH 2026"], "fullstack": ["AI-verktyg ingår i alla programmeringskurser, till exempel kodassistenter, testgenerering och logganalys. Du lär dig också använda AI på ett ansvarsfullt sätt.", "Kursplaner 2026"], "net": ["AI-stöd ingår i programmering, webbutveckling, agil utveckling och clean code. Du lär dig också hur databaser används i AI-lösningar och hur du använder AI etiskt.", "Ansökan till MYH 2026"], "net-cloud": ["Du använder AI-verktyg som stöd i C#, webbutveckling och molnlösningar. AI ingår också i LIA och examensarbetet.", "Ansökan till MYH 2026"], "mjukvarutestare": ["En hel kurs handlar om att testa inbyggda system och AI-baserad mjukvara. Du lär dig också använda AI-verktyg för att stötta testdesign.", "Ansökan till MYH 2025"], "it-projektledare": ["AI ingår i alla kurser, både praktiskt, säkerhetsmässigt och etiskt. Du lär dig AI-stödd projektstyrning och vad som gäller juridiskt kring AI.", "Ansökan till MYH 2026"], "account-manager": ["Du får en introduktion till AI i branschen och yrkesrollen. Under LIA lär du dig använda AI-verktyg för att effektivisera arbetet.", "Ansökan till MYH 2026"], "it-sakerhetstestare": ["Du använder AI-agenter för att skriva kod och automatisera steg i penetrationstester. AI används också som stöd när du konfigurerar och felsöker nätverk.", "Kursplaner 2026"]};
+
+function rows(sel) {
+  const allReqs = sel.map(p => p.eligibility.courses).filter(l => l.length);
+  const commonReqs = allReqs.length ? allReqs[0].filter(r => allReqs.every(list => list.includes(r))) : [];
+  const tagOwners = {};
+  sel.forEach(p => p.courses.forEach(([n, , tags]) => tags.forEach(t => {
+    if (OVERLAP_TAGS.has(t)) (tagOwners[t] ||= new Set()).add(p.id);
+  })));
+
+  const R = [];
+  if (state.fromQuiz) R.push({
+    label: "Matchning med dina svar", cls: "quizrow", noDiff: true,
+    cell: p => { const rs = reasons(p); return { key: "", html: `<div class="match">${matchScore(p)} %</div>${rs.length ? `<ul class="reasons">${rs.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}` }; }
+  });
+  R.push(
+    { label: "Längd", cell: p => ({ key: `${p.yhPoints}`, html: `<span class="num">${p.yhPoints} YH-poäng</span><div class="sub">${String(p.years).replace(".", ",")} år, heltid</div>` }) },
+    { label: "Ort", cell: p => ({ key: p.locations.join(), html: `<div class="tags">${p.locations.map(l => `<span class="tag">${esc(l)}</span>`).join("")}</div>` }) },
+    { label: "Studieform", cell: p => ({ key: p.studyForm, html: esc(p.studyForm) }) },
+    { label: "LIA (lärande i arbete)", cell: p => {
+      const share = Math.round(p.lia.points / p.yhPoints * 100);
+      return { key: `${p.lia.weeks}`, html: `<span class="num">${p.lia.weeks} veckor</span><div class="sub">${p.lia.points} poäng, ${share} % av utbildningen</div><div class="liabar" role="img" aria-label="${share} procent LIA"><span style="width:${share}%"></span></div>` };
+    } },
+    { label: "Kurser", cell: p => ({ key: p.id, html: `<ul class="courses">${p.courses.map(([n, pts, tags]) => {
+        return `<li><button class="course" type="button" data-pid="${p.id}" data-c="${esc(n)}" aria-haspopup="dialog">${esc(n)}</button><span class="pts">${pts} p</span></li>`;
+      }).join("")}</ul><div class="sub" style="margin-top:8px">Plus LIA och examensarbete</div>` }) },
+    { label: "AI i utbildningen", cell: p => { const a = AI_INFO[p.id]; return a ? { key: p.id, html: `${esc(a[0])}<div class="sub">Källa: ${esc(a[1])}</div>` } : { key: "", html: `<span class="sub">Uppgift saknas</span>` }; } },
+    { label: "Behörighet", cell: p => ({
+        key: p.eligibility.courses.join() + (p.eligibility.experience || ""),
+        html: `<ul class="req">${p.eligibility.courses.map(r => commonReqs.includes(r) && sel.length > 1 ? `<li class="common">${esc(r)}</li>` : `<li class="${sel.length > 1 ? "unique" : ""}">${esc(r)}</li>`).join("")}</ul>${p.eligibility.experience ? `<div class="unique" style="font-weight:700">+ ${esc(p.eligibility.experience)}</div>` : ""}<div class="sub" style="margin-top:6px">Gymnasieexamen eller motsvarande. Saknar du något finns andra vägar till behörighet.</div>`
+      }) },
+    { label: "Antagning", cell: p => ({ key: p.eligibility.test + (p.eligibility.extra || ""), html: `${esc(p.eligibility.test)}${p.eligibility.extra ? `<div class="unique" style="font-weight:700">+ ${esc(p.eligibility.extra)}</div>` : ""}` }) },
+    { label: "Yrkesroller", cell: p => ({ key: p.careers.join(), html: `<div class="tags">${p.careers.map(c => `<span class="tag">${esc(c)}</span>`).join("")}</div>` }) },
+    { label: "Ansökan", cell: p => {
+      const i = p.intake;
+      if (i.status === "none") return { key: "none", html: `<span class="pill none">Ingen antagning just nu</span><div class="sub" style="margin-top:6px">${esc(i.start)}. Gör en intresseanmälan för att få besked.</div>` };
+      return { key: i.status + i.opens + i.start, html: `<span class="pill ${i.status}">${i.status === "open" ? "Öppen" : "Stängd"}</span>
+        <div style="margin-top:6px">Öppnar ${esc(i.opens)}</div>
+        <div class="sub">Sista ansökningsdag: <span class="missing">publiceras när ansökan öppnar</span></div>
+        <div class="sub">Kursstart ${esc(i.start)}</div>` };
+    } },
+    { label: "Nästa steg", noDiff: true, cell: p => ({ key: "", html: `<div class="actions"><a href="${p.url}" target="_blank" rel="noopener">Läs mer på iths.se</a><a href="${p.url}" target="_blank" rel="noopener">Gör intresseanmälan</a></div>` }) }
+  );
+  return R;
+}
+
+function renderTable() {
+  const table = document.getElementById("table");
+  const sel = state.selected.map(id => byId[id]);
+  if (sel.length === 0) {
+    table.innerHTML = `<tbody><tr><td class="empty">Välj minst två utbildningar ovan för att jämföra dem.</td></tr></tbody>`;
+    return;
+  }
+  const head = `<thead><tr><th scope="col"><span class="sub" style="font-family:var(--font-body)">${sel.length} valda</span></th>${sel.map(p => `
+    <th scope="col"><div class="colhead">${esc(p.name)}<a href="${p.url}" target="_blank" rel="noopener">iths.se</a><button class="rm" data-id="${p.id}">Ta bort</button></div></th>`).join("")}</tr></thead>`;
+  let hidden = 0;
+  const body = rows(sel).map(r => {
+    const cells = sel.map(r.cell);
+    const same = sel.length > 1 && !r.noDiff && cells.every(c => c.key === cells[0].key);
+    if (state.diffOnly && same) { hidden++; return ""; }
+    return `<tr class="${r.cls || ""}"><th scope="row">${esc(r.label)}${same ? `<div class="sub" style="text-transform:none;letter-spacing:0">Samma för alla</div>` : ""}</th>${cells.map(c => `<td>${c.html}</td>`).join("")}</tr>`;
+  }).join("");
+  const note = hidden ? `<tr><th scope="row"></th><td colspan="${sel.length}" class="sub">${hidden} rader är dolda eftersom de är lika för alla valda utbildningar.</td></tr>` : "";
+  table.innerHTML = head + `<tbody>${body}${note}</tbody>`;
+  table.querySelectorAll(".rm").forEach(b => b.onclick = () => toggle(b.dataset.id));
+  table.querySelectorAll(".course").forEach(b => b.onclick = () => openCourse(b.dataset.pid, b.dataset.c));
+}
+
+function openCourse(pid, name) {
+  const p = byId[pid];
+  const course = p.courses.find(c => c[0] === name);
+  const info = COURSE_INFO[pid + "|" + name];
+  const dlg = document.getElementById("coursedlg");
+  let body;
+  if (info) {
+    const renamed = info.appName !== name || info.appPts !== course[1];
+    body = `<p>${esc(info.desc)}</p>
+      ${info.moments.length ? `<h4>Det här ingår bland annat</h4><ul>${info.moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}
+      <p class="src">${esc(info.src || "Källa: IT-Högskolans ansökan till Myndigheten för yrkeshögskolan 2026.")}${renamed ? ` Där heter kursen <strong>${esc(info.appName)}</strong> och omfattar ${info.appPts} poäng, så detaljer kan skilja sig från utbildningssidan på iths.se.` : ""}</p>`;
+  } else {
+    body = `<p>Det finns ingen kursbeskrivning för den här kursen ännu. Läs mer på utbildningssidan eller kontakta IT-Högskolan.</p>`;
+  }
+  dlg.querySelector(".dlg-body").innerHTML = `
+    <div class="eyebrow">${esc(p.name)}</div>
+    <h3 id="dlg-title">${esc(name)}</h3>
+    <div class="sub">${course[1]} YH-poäng · cirka ${Math.round(course[1] / 5)} veckor</div>
+    ${body}
+    <a href="${p.url}" target="_blank" rel="noopener">Se hela utbildningen på iths.se</a>`;
+  dlg.showModal();
+}
+
+function render() { renderQuizbox(); renderPicker(); renderTray(); renderTable(); }
+
+document.getElementById("coursedlg").addEventListener("click", e => { if (e.target.id === "coursedlg") e.target.close(); });
+document.getElementById("diffonly").onchange = e => { state.diffOnly = e.target.checked; renderTable(); };
+document.getElementById("clear").onclick = () => { state.selected = []; state.fromQuiz = false; render(); };
+document.getElementById("go").onclick = () => document.getElementById("compare").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+render();
+</script>
