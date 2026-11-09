@@ -553,7 +553,7 @@ function rows(sel) {
         html: `<ul class="req">${p.eligibility.courses.map(r => commonReqs.includes(r) && sel.length > 1 ? `<li class="common">${esc(r)}</li>` : `<li class="${sel.length > 1 ? "unique" : ""}">${esc(r)}</li>`).join("")}</ul>${p.eligibility.experience ? `<div class="unique" style="font-weight:700">+ ${esc(p.eligibility.experience)}</div>` : ""}<div class="sub" style="margin-top:6px">Gymnasieexamen eller motsvarande. Saknar du något finns andra vägar till behörighet.</div>`
       }) },
     { label: "Antagning", cell: p => ({ key: p.eligibility.test + (p.eligibility.extra || ""), html: `${esc(p.eligibility.test)}${p.eligibility.extra ? `<div class="unique" style="font-weight:700">+ ${esc(p.eligibility.extra)}</div>` : ""}` }) },
-    { label: "Yrkesroller", cell: p => ({ key: p.careers.join(), html: `<div class="tags">${p.careers.map(c => ROLE_INFO[c] ? `<button type="button" class="tag role" data-role="${esc(c)}" data-pid="${p.id}" aria-haspopup="dialog">${esc(c)}</button>` : `<span class="tag">${esc(c)}</span>`).join("")}</div><div class="sub" style="margin-top:6px">Klicka på en roll för att läsa mer</div>` }) },
+    { label: "Yrkesroller", cell: p => ({ key: p.careers.join(), html: `<div class="tags">${p.careers.map(c => ROLE_INFO[c] ? `<button type="button" class="tag role" data-role="${esc(c)}" data-pid="${p.id}" aria-haspopup="dialog">${esc(c)}</button>` : `<span class="tag">${esc(c)}</span>`).join("")}</div>` }) },
     { label: "Ansökan", cell: p => {
       const i = p.intake;
       if (i.status === "none") return { key: "none", html: `<span class="pill none">Ingen antagning just nu</span><div class="sub" style="margin-top:6px">${esc(i.start)}. Gör en intresseanmälan för att få besked.</div>` };
