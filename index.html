@@ -171,6 +171,11 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
 .sources a { color: var(--muted); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 .pcard .short { display: none; }
+.swipehint { display: none; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 13px; margin: -4px 0 0; }
+.swipehint[hidden] { display: none !important; }
+.dots { display: inline-flex; gap: 6px; }
+.dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); }
+.dots span.on { background: var(--accent); }
 
 /* Mobil: kompakta kort och en jämförelse där varje rad har rubriken överst och utbildningarna bredvid varandra under. */
 @media (max-width: 640px) {
@@ -185,14 +190,17 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
   .pcard .short { display: inline; }
   .tray-inner { gap: 8px; }
   .chip, .slot { font-size: 13px; }
-  .tablewrap { overflow: visible; }
-  table { display: block; min-width: 0; }
+  /* Två utbildningar syns i taget; vid tre sveper man i sidled. Radrubriken följer med. */
+  .tablewrap { overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+  table { display: block; min-width: 0; width: var(--w, 100%); }
+  td, thead th { scroll-snap-align: start; }
+  .swipehint { display: flex; }
   thead, tbody { display: block; }
   tr { display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); }
   th, td { overflow-wrap: break-word; hyphens: auto; }
   thead th:first-child { display: none; }
   thead th { position: static; font-size: 15px; padding: 12px 10px; }
-  th[scope="row"] { grid-column: 1 / -1; position: static; width: auto; min-width: 0; padding: 12px 10px 2px; border-bottom: 0; font-size: 12px; }
+  th[scope="row"] { grid-column: 1 / -1; justify-self: start; position: sticky; left: 0; width: auto; min-width: 0; padding: 12px 10px 2px; border-bottom: 0; font-size: 12px; }
   td { width: auto; min-width: 0; padding: 6px 10px 12px; font-size: 13px; }
   td[colspan], td.empty { grid-column: 1 / -1; }
   tr > :not(:first-child) + td, thead th + th + th { border-left: 1px solid var(--line); }
@@ -230,7 +238,8 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
         <label class="toggle"><input type="checkbox" id="diffonly"><span class="switch" aria-hidden="true"></span>Visa bara skillnader</label>
       </div>
     </div>
-    <div class="tablewrap"><table id="table"></table></div>
+    <p class="swipehint" id="swipehint" hidden><span>Svep i sidled för att se alla tre →</span><span class="dots" aria-hidden="true"><span class="on"></span><span class="on"></span><span></span></span></p>
+    <div class="tablewrap" id="tablewrap"><table id="table"></table></div>
     <p class="sources">Källor: utbildningssidorna på iths.se, länkade i varje kolumn. Sista ansökningsdag publiceras inte förrän ansökan öppnar i februari 2027.</p>
   </section>
 </div>
@@ -558,6 +567,10 @@ function renderTable() {
   const table = document.getElementById("table");
   const sel = state.selected.map(id => byId[id]);
   table.style.setProperty("--n", Math.max(sel.length, 1));
+  table.style.setProperty("--w", sel.length > 2 ? sel.length * 50 + "%" : "100%");
+  document.getElementById("swipehint").hidden = sel.length < 3;
+  document.getElementById("tablewrap").scrollLeft = 0;
+  updateDots();
   if (sel.length === 0) {
     table.innerHTML = `<tbody><tr><td class="empty">Välj minst två utbildningar ovan för att jämföra dem.</td></tr></tbody>`;
     return;
@@ -726,6 +739,14 @@ function openQuiz() {
 }
 
 function render() { renderQuizbox(); renderPicker(); renderTray(); renderTable(); }
+
+function updateDots() {
+  const w = document.getElementById("tablewrap"), d = document.querySelectorAll("#swipehint .dots span");
+  const end = w.scrollLeft > (w.scrollWidth - w.clientWidth) / 2;
+  d.forEach((el, i) => el.classList.toggle("on", end ? i > 0 : i < 2));
+  document.querySelector("#swipehint > span").textContent = end ? "← Svep tillbaka" : "Svep i sidled för att se alla tre →";
+}
+document.getElementById("tablewrap").addEventListener("scroll", updateDots, { passive: true });
 
 /* Inbäddning på iths.se: iframen kan inte skrolla själv eftersom den är lika hög som innehållet.
    Sidan berättar därför sin höjd för iths.se, ber iths.se skrolla, och får veta vilken del av iframen som syns. */
