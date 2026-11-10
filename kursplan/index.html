@@ -77,8 +77,10 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .ticks { grid-column: 2; position: relative; height: 18px; font-size: 11px; color: var(--muted); }
 .ticks span { position: absolute; top: 0; padding-left: 4px; border-left: 1px solid var(--line); white-space: nowrap; }
 .seg.ai { padding-right: 30px; }
-.seg.ai::after { content: "AI"; position: absolute; top: 4px; right: 4px; font-size: 10px; font-weight: 800; line-height: 1; padding: 3px 4px; border-radius: 4px; background: var(--ai-bg); color: var(--ai-ink); }
-.aitag { display: inline-block; font-size: 10px; font-weight: 800; line-height: 1; padding: 3px 4px; border-radius: 4px; background: var(--ai-bg); color: var(--ai-ink); box-shadow: inset 0 0 0 1px var(--ai-line); vertical-align: 1px; }
+.seg.ai.aidot { padding-right: 8px; }
+.seg.ai.aidot::after { top: 4px; right: 50%; transform: translateX(50%); width: 6px; height: 6px; font-size: 0; border-radius: 50%; }
+.seg.ai::after { content: "AI"; position: absolute; top: 4px; right: 4px; display: flex; align-items: center; justify-content: center; width: 20px; height: 16px; font-size: 10px; font-weight: 800; line-height: 1; letter-spacing: .02em; border-radius: 4px; background: var(--ai-bg); color: var(--ai-ink); }
+.aitag { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 16px; font-size: 10px; font-weight: 800; line-height: 1; letter-spacing: .02em; border-radius: 4px; vertical-align: middle; background: var(--ai-bg); color: var(--ai-ink); box-shadow: inset 0 0 0 1px var(--ai-line); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
 
@@ -130,7 +132,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
   .track { height: 36px; gap: 1px; }
   .seg { padding: 0; font-size: 0; border-radius: 4px; }
   .seg.ai { padding-right: 0; }
-  .seg.ai::after { top: 3px; right: 50%; transform: translateX(50%); width: 6px; height: 6px; padding: 0; font-size: 0; border-radius: 50%; }
+  .seg.ai::after { top: 3px; right: 50%; transform: translateX(50%); width: 6px; height: 6px; font-size: 0; border-radius: 50%; }
   .detail { padding: 14px; }
   .detail h3 { font-size: 19px; }
   .step { grid-template-columns: 12px minmax(0, 1fr); gap: 2px 10px; padding: 8px; }
@@ -169,35 +171,35 @@ const PROGRAMS = [
   { id: "frontend", name: "Frontend-utvecklare", url: "https://www.iths.se/utbildningar/frontend/", yh: 400, place: "Göteborg", years: [44, 36], y2: "2028-08-14",
     plan: [["HTML & CSS", 25], ["Native JavaScript", 40], ["UX & UI-design", 20], ["JavaScript med ramverk", 40], ["Agil utveckling", 20], ["Fullstack-utveckling", 60],
       ["LIA 1", 40, "l"], ["Kravarbete och kommunikation med kravställare", 20], ["CMS", 40], ["LIA 2", 80, "l"], ["Examensarbete", 20, "e"]] },
-  { id: "javautvecklare", name: "Javautvecklare", url: "https://www.iths.se/utbildningar/javautvecklare/", yh: 400, place: "Stockholm eller distans", years: [44, 36], y2: "2028-08-14",
-    plan: [["Javaprogrammering", 60], ["Utveckling mot databaser", 35], ["Javaverktyg och byggmiljöer", 30], ["Komplex Javautveckling", 40], ["Web services och integrationer", 30],
-      ["Utveckling av webbapplikationer", 45], ["Agil utveckling", 20], ["LIA", 120, "l"], ["Examensarbete", 20, "e"]] },
+  { id: "javautvecklare", name: "Javautvecklare", url: "https://www.iths.se/utbildningar/javautvecklare/", yh: 425, place: "Stockholm eller distans", years: [44, 41], y2: "2028-08-14", src: "app",
+    plan: [["Kompetensportfölj och hållbar utveckling", 10], ["Javaprogrammering", 60], ["Utveckling mot databaser", 35], ["Javaverktyg och byggmiljöer", 30], ["Komplex Javautveckling", 40], ["Web services och integrationer", 30],
+      ["Utveckling av webbapplikationer", 45], ["Agil utveckling och kundförståelse", 25], ["LIA", 120, "l"], ["Examensarbete", 30, "e"]] },
   { id: "ux-designer", name: "UX-designer", url: "https://www.iths.se/utbildningar/ux-designer/", yh: 400, place: "Göteborg", years: [44, 36], y2: "2028-08-14",
     plan: [["Introduktion till UX-design", 5], ["Användarcentrerad design", 70], ["Agila metoder", 35], ["Gränssnittsdesign och prototyper", 45], ["Webbdesign, appdesign & fysisk usability", 40],
       ["LIA 1", 40, "l"], ["Programmering för UX-design", 30], ["Branding, affär och organisation", 35], ["LIA 2", 80, "l"], ["Examensarbete", 20, "e"]] },
-  { id: "it-sakerhetsspecialist", name: "IT-säkerhetsspecialist", url: "https://www.iths.se/utbildningar/it-sakerhetsspecialist/", yh: 400, place: "Stockholm, eller satellitklassrum i Göteborg", years: [44, 36], y2: "2028-08-14",
-    plan: [["Introduktion till IT-säkerhet", 5], ["Operativsystem: Linux och Windows", 35], ["Python", 20], ["Nätverk", 25], ["Virtualisering och cloud", 50], ["Kryptologi", 30],
-      ["Visusanalys", 30], ["Omvärldsbevakning", 20], ["LIA 1", 40, "l"], ["Spårbarhet", 30], ["Incidenthantering", 30], ["LIA 2", 70, "l"], ["Examensarbete", 15, "e"]] },
+  { id: "it-sakerhetsspecialist", name: "IT-säkerhetsspecialist", url: "https://www.iths.se/utbildningar/it-sakerhetsspecialist/", yh: 420, place: "Stockholm och Göteborg", years: [44, 40], y2: "2028-08-14", src: "app",
+    plan: [["Kompetensportfölj och hållbar utveckling", 10], ["Operativsystem: Linux och Windows", 35], ["Python", 20], ["Nätverk", 25], ["Virtualisering och cloud", 50], ["Kryptering", 30],
+      ["Virusanalys", 30], ["Omvärldsbevakning", 20], ["LIA 1", 40, "l"], ["Spårbarhet", 30], ["Incidenthantering", 30], ["LIA 2", 70, "l"], ["Examensarbete", 30, "e"]] },
   { id: "fullstack", name: "Fullstackutvecklare", url: "https://www.iths.se/utbildningar/fullstackutvecklare/", yh: 400, place: "Göteborg och Stockholm", years: [44, 36], y2: "2028-08-14",
     plan: [["HTML och CSS", 20], ["Native JavaScript", 50], ["Backend-programmering och databaser", 60], ["Agil utveckling", 20], ["Frontend-programmering", 60],
       ["LIA 1", 50, "l"], ["Software life cycle management", 40], ["LIA 2", 80, "l"], ["Examensarbete", 20, "e"]] },
-  { id: "net", name: ".NET-utvecklare", url: "https://www.iths.se/utbildningar/netutvecklare/", yh: 400, place: "Göteborg", years: [39, 41], y2: "2028-08-14",
-    plan: [["Programmering C#", 60], ["Utveckling mot databas och databasadministration", 45], ["Webbutveckling med .NET", 60], ["Agil utveckling", 30],
-      ["Kundförståelse, konsultmässighet och rapportering", 15], ["LIA 1", 60, "l"], ["Clean code", 30], ["LIA 2", 80, "l"], ["Examensarbete", 20, "e"]] },
+  { id: "net", name: ".NET-utvecklare", url: "https://www.iths.se/utbildningar/netutvecklare/", yh: 420, place: "Göteborg", years: [41, 43], y2: "2028-08-14", src: "app",
+    plan: [["Kompetensportfölj och hållbar utveckling", 10], ["Programmering C#", 60], ["Utveckling mot databas och databasadministration", 45], ["Webbutveckling med .NET", 60], ["Agil utveckling", 30],
+      ["Kundförståelse, konsultmässighet och rapportering", 15], ["LIA 1", 60, "l"], ["Clean code", 30], ["LIA 2", 80, "l"], ["Examensarbete", 30, "e"]] },
   { id: "net-cloud", name: ".NET Cloud Developer", url: "https://www.iths.se/utbildningar/net-cloud-developer/", yh: 400, place: "Göteborg", years: [40, 40], y2: "2028-08-21",
     plan: [["Programmering med C#", 50], ["Databashantering", 30], ["Webbutveckling", 50], ["Designa molnlösningar", 30], ["Agila metoder", 30], ["Administrera molnlösningar", 40],
       ["LIA 1", 40, "l"], ["Utveckla molnlösningar", 30], ["LIA 2", 80, "l"], ["Examensarbete", 20, "e"]] },
   { id: "mjukvarutestare", name: "Mjukvarutestare med testautomation", url: "https://www.iths.se/utbildningar/mjukvarutestare/", yh: 320, place: "Göteborg", years: [44, 20], y2: "2028-08-21", guessed: true,
     plan: [["Introduktion till mjukvarutestning", 15], ["Programmering, enhetstestning och testdriven utveckling", 65], ["Kravhantering", 15], ["Testning i agila team", 35],
       ["Testautomation för Continuous testning", 50], ["Embedded systems and AI Testing", 40], ["ISTQB software tester", 10], ["LIA", 80, "l"], ["Examensarbete", 10, "e"]] },
-  { id: "it-projektledare", name: "IT-projektledare", url: "https://www.iths.se/utbildningar/it-projektledare/", yh: 300, place: "Stockholm", years: [43, 17], y2: "2028-08-07", guessed: true,
-    plan: [["Projektledning, projektmodeller och grupp-processer", 40], ["Agil projektledning", 40], ["IT-projektledning", 60], ["Projektverktyg och dokumentation", 20],
-      ["Kundförståelse och konsultmässighet", 20], ["LIA", 100, "l"], ["Examensarbete", 20, "e"]] },
+  { id: "it-projektledare", name: "IT-projektledare", url: "https://www.iths.se/utbildningar/it-projektledare/", yh: 320, place: "Stockholm", years: [43, 21], y2: "2028-08-07", src: "app",
+    plan: [["Kompetensportfölj och hållbar utveckling", 10], ["IT-orientering", 10], ["Projektledning – modeller, verktyg och processer", 60], ["Agil projektledning", 40], ["IT-projektledning", 30],
+      ["Ekonomi för IT-projektledare", 15], ["Kundförståelse och konsultmässighet", 25], ["LIA", 100, "l"], ["Examensarbete", 30, "e"]] },
   { id: "account-manager", name: "Account Manager inom IT", url: "https://www.iths.se/utbildningar/account-manager-inom-it/", yh: 300, place: "Stockholm", years: [43, 17], y2: "2028-08-07", guessed: true,
     plan: [["Försäljningsprocesser och relationer på marknaden", 30], ["Teknisk kunskap och marknadsföring för Account Managers", 50], ["Strategisk IT-försäljning och kundvärde", 30],
       ["Förhandling och avtalskunskap för Account Managers", 50], ["Presentationsteknik och nätverksbyggande för Account Managers", 20], ["LIA", 100, "l"], ["Examensarbete", 20, "e"]] },
-  { id: "it-sakerhetstestare", name: "IT-säkerhetstestare", url: "https://www.iths.se/utbildningar/it-sakerhetstestare/", yh: 400, place: "Distans", years: [44, 36], y2: "2028-08-14",
-    plan: [["Introduktion till penetrationstest", 20], ["Nätverk och nätverkssäkerhet", 20], ["Säker konfiguration av operativsystem", 25], ["Programmering för penetrationstestare", 35],
+  { id: "it-sakerhetstestare", name: "IT-säkerhetstestare", url: "https://www.iths.se/utbildningar/it-sakerhetstestare/", yh: 400, place: "Distans", years: [44, 36], y2: "2028-08-14", src: "kp",
+    plan: [["Kompetensportfölj och hållbar utveckling", 10], ["Introduktion till penetrationstest", 10], ["Nätverk och nätverkssäkerhet", 20], ["Säker konfiguration av operativsystem", 25], ["Programmering för penetrationstestare", 35],
       ["Hacking & sårbarhetsanalys", 30], ["Active Directory", 25], ["Applikationssäkerhet & penetrationstest av web", 50], ["Avancerad penetrationstest av nätverk", 60],
       ["LIA", 120, "l"], ["Examensarbete", 15, "e"]] }
 ];
@@ -209,30 +211,28 @@ const COURSE_INFO = {"frontend|HTML & CSS": {"appName": "HTML och CSS", "appPts"
 // END COURSE_INFO
 
 // BEGIN AI_INFO
-const AI_INFO = {"frontend": ["AI-stöd ingår i alla programmeringskurser, från HTML och CSS till JavaScript. Du använder också AI i design och prototyper och lär dig bedöma AI-genererad kod.", "Ansökan till MYH 2026"], "javautvecklare": ["AI-verktyg används i nästan alla kurser, till exempel kodassistenter för kodgranskning och testgenerering. Även under LIA lär du dig använda AI för att effektivisera arbetet.", "Ansökan till MYH 2026"], "ux-designer": ["Du lär dig använda AI-verktyg i designprocessen för att höja kvaliteten i användarcentrerad design. Du får också en introduktion till AI i yrkesrollen.", "Ansökan till MYH 2026"], "it-sakerhetsspecialist": ["Du får en introduktion till AI i branschen och yrkesrollen. Under LIA använder du AI som stöd i säkerhetsarbetet.", "Ansökan till MYH 2026"], "fullstack": ["AI-verktyg ingår i alla programmeringskurser, till exempel kodassistenter, testgenerering och logganalys. Du lär dig också använda AI på ett ansvarsfullt sätt.", "Kursplaner 2026"], "net": ["AI-stöd ingår i programmering, webbutveckling, agil utveckling och clean code. Du lär dig också hur databaser används i AI-lösningar och hur du använder AI etiskt.", "Ansökan till MYH 2026"], "net-cloud": ["Du använder AI-verktyg som stöd i C#, webbutveckling och molnlösningar. AI ingår också i LIA och examensarbetet.", "Ansökan till MYH 2026"], "mjukvarutestare": ["En hel kurs handlar om att testa inbyggda system och AI-baserad mjukvara. Du lär dig också använda AI-verktyg för att stötta testdesign.", "Ansökan till MYH 2025"], "it-projektledare": ["AI ingår i alla kurser, både praktiskt, säkerhetsmässigt och etiskt. Du lär dig AI-stödd projektstyrning och vad som gäller juridiskt kring AI.", "Ansökan till MYH 2026"], "account-manager": ["Du får en introduktion till AI i branschen och yrkesrollen. Under LIA lär du dig använda AI-verktyg för att effektivisera arbetet.", "Ansökan till MYH 2026"], "it-sakerhetstestare": ["Du använder AI-agenter för att skriva kod och automatisera steg i penetrationstester. AI används också som stöd när du konfigurerar och felsöker nätverk.", "Kursplaner 2026"]};
+const AI_INFO = {"frontend": ["AI-stöd ingår i alla programmeringskurser, från HTML och CSS till JavaScript. Du använder också AI i design och prototyper och lär dig bedöma AI-genererad kod.", "Ansökan till MYH 2026"], "javautvecklare": ["AI-verktyg används i nästan alla kurser, till exempel kodassistenter för kodgranskning och testgenerering. Även under LIA lär du dig använda AI för att effektivisera arbetet.", "Ansökan till MYH 2026"], "ux-designer": ["Du lär dig använda AI-verktyg i designprocessen för att höja kvaliteten i användarcentrerad design. Du får också en introduktion till AI i yrkesrollen.", "Ansökan till MYH 2026"], "it-sakerhetsspecialist": ["AI-verktyg används som stöd i nästan alla kurser, till exempel för logganalys, incidenthantering och virusanalys. Under LIA använder du AI som stöd i säkerhetsarbetet.", "Ansökan till MYH 2026"], "fullstack": ["AI-verktyg ingår i alla programmeringskurser, till exempel kodassistenter, testgenerering och logganalys. Du lär dig också använda AI på ett ansvarsfullt sätt.", "Kursplaner 2026"], "net": ["AI-stöd ingår i programmering, webbutveckling, agil utveckling och clean code. Du lär dig också hur databaser används i AI-lösningar och hur du använder AI etiskt.", "Ansökan till MYH 2026"], "net-cloud": ["Du använder AI-verktyg som stöd i C#, webbutveckling och molnlösningar. AI ingår också i LIA och examensarbetet.", "Ansökan till MYH 2026"], "mjukvarutestare": ["En hel kurs handlar om att testa inbyggda system och AI-baserad mjukvara. Du lär dig också använda AI-verktyg för att stötta testdesign.", "Ansökan till MYH 2025"], "it-projektledare": ["Du lär dig använda AI-verktyg för analys, planering och riskhantering i projekt, och vad som gäller juridiskt och etiskt kring AI.", "Ansökan till MYH 2026"], "account-manager": ["Du får en introduktion till AI i branschen och yrkesrollen. Under LIA lär du dig använda AI-verktyg för att effektivisera arbetet.", "Ansökan till MYH 2026"], "it-sakerhetstestare": ["Du använder AI-agenter för att skriva kod och automatisera steg i penetrationstester. AI används också som stöd när du konfigurerar och felsöker nätverk.", "Kursplaner 2026"]};
 // END AI_INFO
 
 // AI i kurserna: bara där kursplanen eller ansökan till MYH uttryckligen nämner AI. Nyckel "program|kurs" som i PROGRAMS.
 // Andra värdet är källan. Saknas en kurs här står det inget om AI i underlaget, vilket inte betyder att AI aldrig används.
 const SRC_APP = s => `IT-Högskolans ansökan till Myndigheten för yrkeshögskolan ${s}`;
 const COURSE_AI = {
-  "frontend|HTML & CSS": ["Du använder AI som stöd när du bygger webbgränssnitt i HTML och CSS.", SRC_APP(2026)],
-  "frontend|Native JavaScript": ["Du skriver JavaScript både med och utan AI-stöd, så att du förstår koden du får hjälp med.", SRC_APP(2026)],
-  "frontend|UX & UI-design": ["Du använder AI som stöd i design- och prototyparbetet.", SRC_APP(2026)],
-  "frontend|Agil utveckling": ["Du jobbar med versionshantering i Git och använder AI-stöd i utvecklingsprocessen.", SRC_APP(2026)],
-  "frontend|Fullstack-utveckling": ["Du lär dig bedöma hur AI-genererade lösningar passar in i helheten.", SRC_APP(2026)],
+  "frontend|HTML & CSS": ["Du använder AI som stöd när du bygger webbgränssnitt i HTML och CSS.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Native JavaScript": ["Du skriver JavaScript både med och utan AI-stöd, så att du förstår koden du får hjälp med.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|UX & UI-design": ["Du använder AI som stöd i design- och prototyparbetet.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Agil utveckling": ["Du jobbar med versionshantering i Git och använder AI-stöd i utvecklingsprocessen.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Fullstack-utveckling": ["Du lär dig bedöma hur AI-genererade lösningar passar in i helheten.", SRC_APP("2026 (för utbildningen i Stockholm)")],
 
   "javautvecklare|Javaprogrammering": ["Du använder kodassistenter för idéer, kodgranskning och att generera tester, med fokus på källkritik, integritet och upphovsrätt.", SRC_APP(2026)],
   "javautvecklare|Utveckling mot databaser": ["Du använder AI-verktyg för felsökning, dokumentation och för att ta fram SQL.", SRC_APP(2026)],
   "javautvecklare|Javaverktyg och byggmiljöer": ["Du använder AI för kodgranskning, för att generera testfall och för att sätta upp pipelines.", SRC_APP(2026)],
   "javautvecklare|Web services och integrationer": ["Du använder kodassistenter, tar fram testdata med AI och får AI-stöd i felsökning.", SRC_APP(2026)],
   "javautvecklare|Utveckling av webbapplikationer": ["Du använder kodassistenter för kod, tester och dokumentation och följer policys för etik och kvalitet.", SRC_APP(2026)],
-  "javautvecklare|Agil utveckling": ["Du använder AI-verktyg för planering, analys och kodstöd i teamet.", SRC_APP(2026)],
   "javautvecklare|LIA": ["Du lär dig använda AI-verktyg och automatisering för att effektivisera arbetsuppgifterna.", SRC_APP(2026)],
 
-  "ux-designer|Användarcentrerad design": ["Du använder AI-verktyg i den användarcentrerade designprocessen för att höja kvaliteten.", SRC_APP(2026)],
+  "ux-designer|Användarcentrerad design": ["Du använder AI-verktyg i den användarcentrerade designprocessen för att höja kvaliteten.", SRC_APP("2026 (för utbildningen i Stockholm)")],
 
-  "it-sakerhetsspecialist|LIA 1": ["Du använder AI som stöd i arbetet med IT-säkerhet.", SRC_APP(2026)],
 
   "fullstack|HTML och CSS": ["Du använder AI ansvarsfullt för kodstöd, dokumentation och förslag på alt-texter, med källkritik och dataskydd.", "Kursplan 2026"],
   "fullstack|Native JavaScript": ["Du använder AI-verktyg för att lära dig och för att felsöka kod.", "Kursplan 2026"],
@@ -247,25 +247,69 @@ const COURSE_AI = {
   "net|Agil utveckling": ["Du använder AI-stöd i planering, dokumentation och kvalitetssäkring.", SRC_APP(2026)],
   "net|Clean code": ["Du använder AI-verktyg för kodgranskning, testning och refaktorering och diskuterar etisk användning av AI.", SRC_APP(2026)],
 
-  "net-cloud|Programmering med C#": ["Du använder AI som stöd när du programmerar i C#.", SRC_APP(2026)],
-  "net-cloud|Webbutveckling": ["Du använder AI som stöd i webbutvecklingen.", SRC_APP(2026)],
-  "net-cloud|Utveckla molnlösningar": ["Du använder AI som stöd när du förvaltar och distribuerar molnlösningar.", SRC_APP(2026)],
-  "net-cloud|LIA 2": ["Du lär dig använda AI-verktyg och automatisering för att effektivisera arbetsuppgifterna.", SRC_APP(2026)],
-  "net-cloud|Examensarbete": ["Du använder AI-verktyg i examensarbetet.", SRC_APP(2026)],
+  "net-cloud|Programmering med C#": ["Du använder AI som stöd när du programmerar i C#.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Webbutveckling": ["Du använder AI som stöd i webbutvecklingen.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Utveckla molnlösningar": ["Du använder AI som stöd när du förvaltar och distribuerar molnlösningar.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|LIA 2": ["Du lär dig använda AI-verktyg och automatisering för att effektivisera arbetsuppgifterna.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Examensarbete": ["Du använder AI-verktyg i examensarbetet.", SRC_APP("2026 (för utbildningen i Stockholm)")],
 
   "mjukvarutestare|Embedded systems and AI Testing": ["Du lär dig testa AI-baserade system, ta fram teststrategier för AI och hantera bias, datakvalitet och etik. Du ser också hur AI kan förbättra testprocessen.", SRC_APP(2025)],
   "mjukvarutestare|Testautomation för Continuous testning": ["Du använder AI-verktyg som stöd i testdesign och lär dig AI:s möjligheter och risker i testdesign och felsökning.", SRC_APP(2025)],
   "mjukvarutestare|LIA": ["Du ska kunna förklara hur AI kan användas som stöd i testprocessen.", SRC_APP(2025)],
 
-  "it-projektledare|Projektledning, projektmodeller och grupp-processer": ["Du använder relevanta AI-verktyg i projekt.", SRC_APP(2026)],
-  "it-projektledare|IT-projektledning": ["Du använder AI-verktyg i projektledningen och lär dig juridiska och etiska frågor kring AI.", SRC_APP(2026)],
-  "it-projektledare|Projektverktyg och dokumentation": ["Du använder AI-verktyg för analys, planering och att hitta risker.", SRC_APP(2026)],
 
-  "account-manager|LIA": ["Du lär dig använda AI-verktyg och automatisering för att effektivisera arbetsuppgifterna.", SRC_APP(2026)],
+  "account-manager|LIA": ["Du lär dig använda AI-verktyg och automatisering för att effektivisera arbetsuppgifterna.", SRC_APP("2026 (IT-säljare i Göteborg)")],
 
   "it-sakerhetstestare|Nätverk och nätverkssäkerhet": ["Du använder AI-agenter som hjälp när du konfigurerar, felsöker och övar på det du lär dig.", "Kursplan 2026"],
   "it-sakerhetstestare|Programmering för penetrationstestare": ["Du använder AI-agenter för att skriva och anpassa Python-kod, automatisera sårbarhetsgranskning och bygga automatiserade webbläsare.", "Kursplan 2026"],
-  "it-sakerhetstestare|Applikationssäkerhet & penetrationstest av web": ["Du hittar sårbarheter i kod med hjälp av AI-agenter.", "Kursplan 2026"]
+  "it-sakerhetstestare|Applikationssäkerhet & penetrationstest av web": ["Du hittar sårbarheter i kod med hjälp av AI-agenter.", "Kursplan 2026"],
+
+  "javautvecklare|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "javautvecklare|Agil utveckling och kundförståelse": ["Du använder AI-verktyg för planering, analys och kodstöd i teamet.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Nätverk": ["Du använder AI-verktyg som stöd för analys, felsökning och lärande.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Python": ["Du använder AI-verktyg som stöd i programmering, felsökning och analys.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Virtualisering och cloud": ["Du använder AI-verktyg för analys, konfiguration, felsökning och dokumentation.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Kryptering": ["Du använder AI-verktyg som stöd för analys, felsökning och lärande inom kryptografi.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Virusanalys": ["Du använder AI-verktyg för att analysera, identifiera och tolka skadlig kod.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Omvärldsbevakning": ["Du använder AI-verktyg för att hämta in, analysera och sammanställa information.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|LIA 1": ["Du använder AI som stöd i arbetet med IT-säkerhet.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Spårbarhet": ["Du använder AI-verktyg för att analysera, bearbeta och tolka loggdata.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Incidenthantering": ["Du använder AI-verktyg för analys, prioritering och dokumentation när du hanterar incidenter.", SRC_APP(2026)],
+  "net|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-projektledare|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-projektledare|Projektledning – modeller, verktyg och processer": ["Du använder relevanta AI-verktyg i projekt, bland annat för analys, planering och att hitta risker.", SRC_APP(2026)],
+  "it-projektledare|IT-projektledning": ["Du använder AI-verktyg i projektledningen och lär dig juridiska och etiska frågor kring AI.", SRC_APP(2026)],
+  "it-sakerhetstestare|Kompetensportfölj och hållbar utveckling": ["Du lär dig om lärandeteknik och AI och får en introduktion till AI i studierna och i yrkesrollen.", "Kursplan 2026"]
+};
+
+// Kurser som har bytt namn i senaste underlaget: beskrivningen i COURSE_INFO ligger kvar under det gamla namnet.
+const INFO_ALIAS = {
+  "javautvecklare|Agil utveckling och kundförståelse": "javautvecklare|Agil utveckling",
+  "it-sakerhetsspecialist|Kryptering": "it-sakerhetsspecialist|Kryptologi",
+  "it-sakerhetsspecialist|Virusanalys": "it-sakerhetsspecialist|Visusanalys",
+  "it-projektledare|Projektledning – modeller, verktyg och processer": "it-projektledare|Projektledning, projektmodeller och grupp-processer"
+};
+// Nya kurser som inte finns i jämförelsen. Nyckel = kursnamn (gäller alla utbildningar) eller "program|kurs".
+const EXTRA_INFO = {
+  "Kompetensportfölj och hållbar utveckling": { appName: "Kompetensportfölj och hållbar utveckling", appPts: 10,
+    desc: "Du lär dig vad arbetslivet kräver av yrkesrollen och hur du tar ansvar för ditt eget lärande under studierna, LIA och i jobbet. Du får också en introduktion till branschen, AI och hållbar utveckling.",
+    moments: ["CV, LinkedIn och nätverkande", "LIA-processen", "Värdegrund och diskrimineringslagstiftning", "Strategier för studier och självledarskap", "AI i studierna och yrkesrollen", "Hållbarhet och Agenda 2030 i yrkesrollen"] },
+  "it-projektledare|IT-orientering": { appName: "IT-orientering", appPts: 10,
+    desc: "En bred introduktion till IT-landskapet, centrala roller och hur IT samspelar med verksamheten. Du lär dig grundläggande tekniska begrepp, IT-systemens livscykel och grunderna i informationssäkerhet.",
+    moments: ["Grundläggande tekniska begrepp, till exempel server, klient, moln och nätverk", "Grunderna i ITIL: incident, problem och change", "IT Service Management och tjänsteleveranser i en IT-organisation"] },
+  "it-projektledare|Ekonomi för IT-projektledare": { appName: "Ekonomi för IT-Projektledare", appPts: 15,
+    desc: "Du lär dig projektledarens ansvar för upphandling, budget och affärsmässig styrning av IT-projekt, och hur du följer upp tid, kostnad och nytta.",
+    moments: ["Budget, resultat och effekt i IT-projekt", "Kostnadsbedömning, investering och drift, lönsamhet och risk", "Grundläggande avtalsrätt i IT-projekt", "Uppföljning och avvikelsehantering", "Digitala verktyg för budget och resursstyrning"] }
+};
+// Kompetensportföljen i IT-säkerhetstestare har en egen kursplan.
+EXTRA_INFO["it-sakerhetstestare|Kompetensportfölj och hållbar utveckling"] = { ...EXTRA_INFO["Kompetensportfölj och hållbar utveckling"], src: "Källa: IT-Högskolans kursplan, fastställd 2026." };
+const courseInfo = (pid, name) => COURSE_INFO[pid + "|" + name] || COURSE_INFO[INFO_ALIAS[pid + "|" + name]] || EXTRA_INFO[pid + "|" + name] || EXTRA_INFO[name];
+
+// Var kurslistan kommer ifrån. Saknas src är det kursplanen på iths.se.
+const PLAN_SRC = {
+  app: { chip: "Enligt ansökan 2026", note: "Kurserna och poängen kommer från IT-Högskolans ansökan till Myndigheten för yrkeshögskolan 2026, som gäller start 2027. Där står kurserna i bokstavsordning, så ordningen bygger på iths.se och är ungefärlig för nya kurser" },
+  kp: { chip: "Enligt kursplanerna 2026", note: "Kurserna och poängen kommer från kursplanerna som fastställdes 2026. Ordningen bygger på iths.se och är ungefärlig för nya kurser" }
 };
 
 const LIA_TEXT = "LIA betyder lärande i arbete. Under LIA är du på en arbetsplats i branschen och jobbar med riktiga uppgifter tillsammans med yrkesverksamma. Det är en del av utbildningen, så du har kvar ditt studiemedel.";
@@ -325,7 +369,7 @@ function renderCard() {
     const segs = [];
     items.forEach((it, i) => it.parts.filter(pt => pt.year === y).forEach(pt => {
       const cls = [it.kind === "l" ? "lia" : it.kind === "e" ? "exam" : it.alt ? "alt" : "",
-        it.parts.length > 1 && y === 1 ? "cont" : "", it.parts.length > 1 && y === 0 ? "cut" : "", it.ai ? "ai" : ""].join(" ");
+        it.parts.length > 1 && y === 1 ? "cont" : "", it.parts.length > 1 && y === 0 ? "cut" : "", it.ai ? "ai" : "", it.ai && pt.to - pt.from < 4 ? "aidot" : ""].join(" ");
       const wPct = (pt.to - pt.from) / scale * 100;
       segs.push(`<button class="seg ${cls}" type="button" data-i="${i}" aria-pressed="${i === sel}" style="width:calc(${wPct}% - 2px)"
         aria-label="${esc(it.name)}, ${it.pts} poäng, ${weekLabel(it)}${it.ai ? ", AI ingår" : ""}" title="${esc(it.name)} · ${it.pts} p${it.ai ? " · AI ingår" : ""}">${esc(it.name)}${it.parts.length > 1 && y === 1 ? " (forts.)" : ""}</button>`);
@@ -360,7 +404,7 @@ function renderCard() {
     <div class="prog-head">
       <div style="display:grid; gap:8px">
         <h2>${esc(p.name)}</h2>
-        <div class="facts"><span class="fact">${p.yh} YH-poäng</span><span class="fact">${courseWeeks} veckor kurser</span><span class="fact">${liaWeeks} veckor LIA</span><span class="fact">${esc(p.place)}</span></div>
+        <div class="facts"><span class="fact">${p.yh} YH-poäng</span><span class="fact">${courseWeeks} veckor kurser</span><span class="fact">${liaWeeks} veckor LIA</span><span class="fact">${esc(p.place)}</span><span class="fact">${p.src ? PLAN_SRC[p.src].chip : "Enligt iths.se"}</span></div>
       </div>
       <a href="${p.url}" target="_blank" rel="noopener">Utbildningen på iths.se ↗</a>
     </div>
@@ -371,7 +415,7 @@ function renderCard() {
     <div><h2 style="font-size:17px; margin-bottom:8px">Alla moment i ordning</h2><ul class="steps">${list}</ul></div>`;
   renderDetail();
 
-  document.getElementById("note").innerHTML = `Ordningen kommer från kursplanen på <a href="${p.url}" target="_blank" rel="noopener">iths.se</a>${p.guessed ? ", men där står kurserna i bokstavsordning, så ordningen mellan kurserna här är ungefärlig" : ""}. Veckorna är räknade på 5 YH-poäng per vecka, och månaderna är ungefärliga. Kurser kan gå delvis parallellt, och lov ingår inte. Start augusti ${day(START).getFullYear()}.`;
+  document.getElementById("note").innerHTML = `${p.src ? PLAN_SRC[p.src].note : `Ordningen kommer från kursplanen på <a href="${p.url}" target="_blank" rel="noopener">iths.se</a>${p.guessed ? ", men där står kurserna i bokstavsordning, så ordningen mellan kurserna här är ungefärlig" : ""}`}. Veckorna är räknade på 5 YH-poäng per vecka, och månaderna är ungefärliga. Kurser kan gå delvis parallellt, och lov ingår inte. Start augusti ${day(START).getFullYear()}.`;
 }
 
 function aiBox(p) {
@@ -383,12 +427,12 @@ function aiBox(p) {
 }
 
 function renderDetail() {
-  const p = current, it = L.items[sel], info = COURSE_INFO[p.id + "|" + it.name];
+  const p = current, it = L.items[sel], info = courseInfo(p.id, it.name);
   let body;
   if (it.kind === "l") body = `<p>${esc(LIA_TEXT)}</p>`;
   else if (it.kind === "e") body = `<p>${esc(EXAM_TEXT)}</p>`;
   else if (info) body = `<p>${esc(info.desc)}</p>${info.moments && info.moments.length ? `<h4>Det här ingår bland annat</h4><ul>${info.moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}
-    <p class="src">Källa: IT-Högskolans ansökan till Myndigheten för yrkeshögskolan.${info.appName !== it.name || info.appPts !== it.pts ? ` Där heter kursen ${esc(info.appName)} och omfattar ${info.appPts} poäng, så detaljer kan skilja sig från iths.se.` : ""}</p>`;
+    <p class="src">${esc(info.src || "Källa: IT-Högskolans ansökan till Myndigheten för yrkeshögskolan.")}${info.appName !== it.name || info.appPts !== it.pts ? ` Där heter kursen ${esc(info.appName)} och omfattar ${info.appPts} poäng, så detaljer kan skilja sig.` : ""}</p>`;
   else body = `<p>Det finns ingen beskrivning av kursen här ännu. Läs mer på utbildningssidan på iths.se.</p>`;
   const kind = it.kind === "l" ? "LIA" : it.kind === "e" ? "Examensarbete" : `Kurs ${L.items.slice(0, sel + 1).filter(i => i.kind === "c").length} av ${L.items.filter(i => i.kind === "c").length}`;
   const yearTxt = it.parts.length > 1 ? "läsår 1 och 2" : `läsår ${it.parts[0].year + 1}`;
