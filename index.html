@@ -778,7 +778,13 @@ function updateSticky() {
     bar.hidden = true;
     const base = thead && sel.length ? { type: "jamfor-sticky", names: sel.map(p => p.name), at, left: Math.round(w.getBoundingClientRect().left), width: Math.round(w.clientWidth), start: y(thead.getBoundingClientRect().bottom), end: y(table.getBoundingClientRect().bottom) - 60 } : null;
     // Dator: alla namn, placerade över sina kolumner.
-    if (base && !mobile) base.cols = [...thead.querySelectorAll("th")].slice(1).map(th => { const r = th.getBoundingClientRect(); return { left: Math.round(r.left - base.left), width: Math.round(r.width) }; });
+    if (base && !mobile) {
+      // Rutan börjar vid första programkolumnen, inte över radrubrikerna.
+      const ths = [...thead.querySelectorAll("th")].slice(1), first = ths[0].getBoundingClientRect(), last = ths[ths.length - 1].getBoundingClientRect();
+      base.left = Math.round(first.left);
+      base.width = Math.round(Math.min(last.right, w.getBoundingClientRect().right) - first.left);
+      base.cols = ths.map(th => { const r = th.getBoundingClientRect(); return { left: Math.round(r.left - base.left), width: Math.round(r.width) }; });
+    }
     const msg = base || { type: "jamfor-sticky", names: [] };
     const key = JSON.stringify(msg);
     if (key !== lastSticky) { lastSticky = key; window.parent.postMessage(msg, "*"); }
