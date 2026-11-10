@@ -52,3 +52,31 @@ python3 tools/build-wpcode.py
 Knappen "Gör quizet" öppnar quizet direkt i jämförelsesidan, så att besökaren stannar kvar. Frågorna och poängen (`QZ` i `index.html`) är kopierade från quizets WPCode-snutt och behöver ändras på båda ställena om quizet ändras.
 
 `#jamfor` i slutet gör att iths.se hoppar direkt ner till iframen (som har `id="jamfor"`), så att besökaren slipper sidans header.
+
+## Kursplansutforskaren
+
+`kursplan/index.html` visar en utbildnings kurser, LIA och examensarbete som en klickbar tidslinje över läsåren. Den publiceras på https://iths-hemsida.github.io/jamfor-utbildningar/kursplan/.
+
+- Kursordningen och poängen kommer från kursplanerna på utbildningssidorna på iths.se (hämtade 10 november 2026), i `PROGRAMS` i filen. Veckorna räknas på 5 YH-poäng per vecka, och läsårens längd kommer från tabellen "Terminstider".
+- Mjukvarutestare, IT-projektledare och Account Manager listar kurserna i bokstavsordning på iths.se. För dem är ordningen en bedömning (`guessed: true`), och sidan säger det.
+- Kursbeskrivningarna är samma som i jämförelsen. Kopiera dem efter ändringar i `index.html`:
+
+```
+python3 tools/build-kursplan.py
+```
+
+- `?program=frontend` öppnar en viss utbildning (samma id:n som i jämförelsen).
+
+Bädda in med ett block av typen Anpassad HTML. Iframen växer med innehållet:
+
+```html
+<iframe id="kursplan" src="https://iths-hemsida.github.io/jamfor-utbildningar/kursplan/" title="Utforska kursplanen" style="width:100%; height:1500px; border:0;" loading="lazy"></iframe>
+<script>
+  window.addEventListener("message", function(e){
+    var fr = document.getElementById("kursplan");
+    if (e.origin === "https://iths-hemsida.github.io" && e.source === fr.contentWindow && e.data && e.data.type === "kursplan-height") fr.style.height = e.data.h + "px";
+  });
+</script>
+```
+
+På en programsida kan iframen få `data-program="frontend"` för att visa just den utbildningen; den fullständiga koden finns i projektmappen (`kursplan/iframe-kod.txt`).
