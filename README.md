@@ -59,7 +59,8 @@ Knappen "Gör quizet" öppnar quizet direkt i jämförelsesidan, så att besöka
 
 - Kursordningen och poängen kommer från kursplanerna på utbildningssidorna på iths.se (hämtade 10 november 2026), i `PROGRAMS` i filen. Veckorna räknas på 5 YH-poäng per vecka, och läsårens längd kommer från tabellen "Terminstider".
 - Mjukvarutestare, IT-projektledare och Account Manager listar kurserna i bokstavsordning på iths.se. För dem är ordningen en bedömning (`guessed: true`), och sidan säger det.
-- Kursbeskrivningarna är samma som i jämförelsen. Kopiera dem efter ändringar i `index.html`:
+- AI i kurserna står i `COURSE_AI`, bara för de moment där ansökan till MYH eller kursplanen nämner AI, med källa. Saknas ett moment där står det inget om AI i underlaget.
+- Kursbeskrivningarna och AI-sammanfattningen per utbildning (`AI_INFO`) är samma som i jämförelsen. Kopiera dem efter ändringar i `index.html`:
 
 ```
 python3 tools/build-kursplan.py
