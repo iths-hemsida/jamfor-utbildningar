@@ -404,7 +404,7 @@ function renderCard() {
     <div class="prog-head">
       <div style="display:grid; gap:8px">
         <h2>${esc(p.name)}</h2>
-        <div class="facts"><span class="fact">${p.yh} YH-poäng</span><span class="fact">${courseWeeks} veckor kurser</span><span class="fact">${liaWeeks} veckor LIA</span><span class="fact">${esc(p.place)}</span><span class="fact">${p.src ? PLAN_SRC[p.src].chip : "Enligt iths.se"}</span></div>
+        <div class="facts"><span class="fact">${p.yh} YH-poäng</span><span class="fact">${courseWeeks} veckor kurser</span><span class="fact">${liaWeeks} veckor LIA</span><span class="fact">${esc(p.place)}</span></div>
       </div>
       <a href="${p.url}" target="_blank" rel="noopener">Utbildningen på iths.se ↗</a>
     </div>
@@ -415,7 +415,7 @@ function renderCard() {
     <div><h2 style="font-size:17px; margin-bottom:8px">Alla moment i ordning</h2><ul class="steps">${list}</ul></div>`;
   renderDetail();
 
-  document.getElementById("note").innerHTML = `${p.src ? PLAN_SRC[p.src].note : `Ordningen kommer från kursplanen på <a href="${p.url}" target="_blank" rel="noopener">iths.se</a>${p.guessed ? ", men där står kurserna i bokstavsordning, så ordningen mellan kurserna här är ungefärlig" : ""}`}. Veckorna är räknade på 5 YH-poäng per vecka, och månaderna är ungefärliga. Kurser kan gå delvis parallellt, och lov ingår inte. Start augusti ${day(START).getFullYear()}.`;
+  document.getElementById("note").innerHTML = `${p.src || p.guessed ? "Ordningen mellan kurserna är ungefärlig. " : ""}Veckorna är räknade på 5 YH-poäng per vecka, och månaderna är ungefärliga. Kurser kan gå delvis parallellt, och lov ingår inte. Start augusti ${day(START).getFullYear()}.`;
 }
 
 function aiBox(p) {
@@ -423,7 +423,7 @@ function aiBox(p) {
   if (!a && !n) return "";
   return `<div class="progai"><h3><span class="aitag">AI</span> AI i utbildningen</h3>
     ${a ? `<p>${esc(a[0])}</p>` : ""}
-    <p class="src">${n ? `AI nämns i ${n} av ${L.items.length} moment, markerade med AI nedan. ` : ""}Källa: ${esc(a ? a[1] : "kursplanerna")}.</p></div>`;
+    ${n ? `<p class="src">AI nämns i ${n} av ${L.items.length} moment, markerade med AI nedan.</p>` : ""}</div>`;
 }
 
 function renderDetail() {
@@ -431,8 +431,7 @@ function renderDetail() {
   let body;
   if (it.kind === "l") body = `<p>${esc(LIA_TEXT)}</p>`;
   else if (it.kind === "e") body = `<p>${esc(EXAM_TEXT)}</p>`;
-  else if (info) body = `<p>${esc(info.desc)}</p>${info.moments && info.moments.length ? `<h4>Det här ingår bland annat</h4><ul>${info.moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}
-    <p class="src">${esc(info.src || "Källa: IT-Högskolans ansökan till Myndigheten för yrkeshögskolan.")}${info.appName !== it.name || info.appPts !== it.pts ? ` Där heter kursen ${esc(info.appName)} och omfattar ${info.appPts} poäng, så detaljer kan skilja sig.` : ""}</p>`;
+  else if (info) body = `<p>${esc(info.desc)}</p>${info.moments && info.moments.length ? `<h4>Det här ingår bland annat</h4><ul>${info.moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}`;
   else body = `<p>Det finns ingen beskrivning av kursen här ännu. Läs mer på utbildningssidan på iths.se.</p>`;
   const kind = it.kind === "l" ? "LIA" : it.kind === "e" ? "Examensarbete" : `Kurs ${L.items.slice(0, sel + 1).filter(i => i.kind === "c").length} av ${L.items.filter(i => i.kind === "c").length}`;
   const yearTxt = it.parts.length > 1 ? "läsår 1 och 2" : `läsår ${it.parts[0].year + 1}`;
@@ -441,7 +440,7 @@ function renderDetail() {
     <h3>${esc(it.name)}</h3>
     <div class="when">${it.pts} YH-poäng · cirka ${it.weeks} veckor · ${weekLabel(it)}, ${yearTxt} · ungefär ${period(it)}</div>
     ${body}
-    ${it.ai ? `<div class="aibox"><h4><span class="aitag">AI</span> AI i ${it.kind === "c" ? "kursen" : it.kind === "l" ? "LIA" : "examensarbetet"}</h4><p>${esc(it.ai[0])}</p><p class="src">Källa: ${esc(it.ai[1])}.</p></div>` : ""}
+    ${it.ai ? `<div class="aibox"><h4><span class="aitag">AI</span> AI i ${it.kind === "c" ? "kursen" : it.kind === "l" ? "LIA" : "examensarbetet"}</h4><p>${esc(it.ai[0])}</p></div>` : ""}
     <div class="nav"><button class="btn" type="button" data-step="-1"${sel === 0 ? " disabled" : ""}>← Föregående</button><button class="btn" type="button" data-step="1"${sel === L.items.length - 1 ? " disabled" : ""}>Nästa →</button></div>`;
 }
 
