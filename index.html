@@ -829,29 +829,47 @@ function scrollToEl(el) {
   el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
 }
 function placeDialog(dlg, from) {
-  if (!EMBEDDED) return;
-  // Var på skärmen är besökaren? Helst enligt iths.se (ny iframe-kod). Annars frågar vi webbläsaren vilken del av iframen som syns.
-  if (parentView && !selfScrolls()) { putDialog(dlg, parentView.top - window.pageYOffset, parentView.h); return; }
+  // Rutan läggs intill det man klickade på (under, eller över om det inte får plats), inom den del av sidan som syns.
+  if (!EMBEDDED) { putDialog(dlg, 0, window.innerHeight, from); return; }
+  if (parentView) { putDialog(dlg, parentView.top - window.pageYOffset, parentView.h, from); return; }
   dlg.style.visibility = "hidden";
   const io = new IntersectionObserver(([e]) => {
     io.disconnect();
     const ir = e.intersectionRect;
-    if (ir.height > 0) { const pad = ir.top < 80 ? 90 : 0; putDialog(dlg, ir.top + pad, ir.height - pad); }
-    else if (from) { const r = from.getBoundingClientRect(); putDialog(dlg, r.top - 300, 600); }
+    if (ir.height > 0) { const pad = ir.top > 0 ? 90 : 0; /* iframens topp är ovanför skärmen: plats för sidhuvudet */ putDialog(dlg, ir.top + pad, ir.height - pad, from); }
+    else if (from) { const r = from.getBoundingClientRect(); putDialog(dlg, r.top - 300, 600, from); }
     dlg.style.visibility = "";
   });
   io.observe(document.body);
 }
-function putDialog(dlg, viewTop, viewH) {
-  const vh = window.innerHeight;
+function putDialog(dlg, viewTop, viewH, from) {
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
   const maxH = Math.max(260, Math.min(viewH - 32, 720));
   dlg.style.maxHeight = maxH + "px";
-  const h = Math.min(dlg.getBoundingClientRect().height, maxH);
-  let top = viewTop + Math.max(16, (viewH - h) / 2);
+  const box = dlg.getBoundingClientRect(), w = box.width;
+  let h = Math.min(box.height, maxH);
+  const viewBottom = Math.min(viewTop + viewH, vh);
+  viewTop = Math.max(viewTop, 0);
+  let top, left = null;
+  if (from) {
+    const r = from.getBoundingClientRect();
+    const below = viewBottom - 8 - (r.bottom + 8), above = (r.top - 8) - (viewTop + 8);
+    if (h <= below) top = r.bottom + 8;                                     // under
+    else if (h <= above) top = r.top - 8 - h;                               // över
+    else if (Math.max(below, above) >= 240) {                               // lägre ruta som skrollar, på den sida där det finns mest plats
+      const room = Math.max(below, above);
+      h = Math.floor(room);
+      dlg.style.maxHeight = h + "px";
+      top = below >= above ? r.bottom + 8 : r.top - 8 - h;
+    } else top = viewTop + Math.max(16, (viewBottom - viewTop - h) / 2);    // får inte plats: mitt i synfältet
+    left = Math.min(Math.max(16, r.left + r.width / 2 - w / 2), Math.max(16, vw - w - 16));
+  } else top = viewTop + Math.max(16, (viewH - h) / 2);
   top = Math.min(Math.max(8, top), Math.max(8, vh - h - 8));
-  dlg.style.margin = "0 auto";
+  dlg.style.margin = "0";
   dlg.style.top = Math.round(top) + "px";
   dlg.style.bottom = "auto";
+  if (left !== null) { dlg.style.left = Math.round(left) + "px"; dlg.style.right = "auto"; }
+  else { dlg.style.left = "0"; dlg.style.right = "0"; dlg.style.margin = "0 auto"; }
 }
 if (EMBEDDED) {
   const tray = document.querySelector(".tray");
