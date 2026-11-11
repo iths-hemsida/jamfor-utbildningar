@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Kopierar kursbeskrivningarna (COURSE_INFO) och AI-sammanfattningarna (AI_INFO)
 från jämförelsen (index.html) till kursplansutforskaren (kursplan/index.html),
-så att båda visar samma texter.
+och sedan alla data från kursplansutforskaren till version B (kursplan/b/index.html),
+så att alla sidor visar samma texter.
 
-Kör från repots rot efter att COURSE_INFO eller AI_INFO har ändrats i index.html:
+Kör från repots rot efter att data har ändrats i index.html eller kursplan/index.html:
     python3 tools/build-kursplan.py
 """
 import pathlib, re
@@ -23,3 +24,12 @@ for name in ("COURSE_INFO", "AI_INFO"):
 
 target.write_text(page, encoding="utf-8")
 print("Uppdaterade", target.relative_to(root))
+
+# Version B delar data och hjälpfunktioner med kursplan/index.html.
+shared = page[page.index("// Kursplanerna i den ordning"):page.index("const params = ")].rstrip() + "\n"
+b_page = root / "kursplan" / "b" / "index.html"
+text = b_page.read_text(encoding="utf-8")
+start, end = "// BEGIN SHARED (kopieras från ../index.html med tools/build-kursplan.py, ändra där)\n", "// END SHARED"
+a, b = text.index(start) + len(start), text.index(end)
+b_page.write_text(text[:a] + shared + "\n" + text[b:], encoding="utf-8")
+print("Uppdaterade", b_page.relative_to(root))
