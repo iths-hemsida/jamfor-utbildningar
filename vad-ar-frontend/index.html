@@ -109,6 +109,8 @@
 #iths-fe-demo .pv.styled .cart { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
 #iths-fe-demo .pv.styled .count { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; background: var(--pixel); color: var(--terminal); font-family: var(--font-display); font-weight: 800; font-size: 13px; }
 #iths-fe-demo .pv.styled .count.bump { animation: fe-bump .45s ease; }
+#iths-fe-demo .pv.styled .produkt.blink { animation: fe-blink 1.4s ease .3s; }
+@keyframes fe-blink { 0%, 100% { box-shadow: 0 8px 24px rgba(45, 26, 46, .12), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 8px 24px rgba(45, 26, 46, .12), 0 0 0 5px rgba(255, 181, 71, .9); } }
 @keyframes fe-bump { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
 #iths-fe-demo .pv.styled .produkt { display: grid; gap: 12px; margin: 0 18px; max-width: 340px; background: var(--surface); border-radius: 16px; padding: 16px; box-shadow: 0 8px 24px rgba(45, 26, 46, .12); }
 #iths-fe-demo .pv.styled .bild { display: grid; place-items: center; background: var(--soft); border-radius: 12px; padding: 22px 0 18px; position: relative; }
@@ -149,8 +151,6 @@
   #iths-fe-demo .stage { grid-template-columns: 1fr; }
   #iths-fe-demo .browser { position: static; }
   #iths-fe-demo .pv { min-height: 0; }
-  /* I AI-steget ligger förslagen ovanför kortet, så att ändringen syns direkt under knappen */
-  #iths-fe-demo .stage.ai-step .panel { order: -1; }
 }
 @container (max-width: 520px) {
   #iths-fe-demo .steps { gap: 6px; }
@@ -182,7 +182,7 @@
       <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span></button></li>
     </ol>
 
-    <div class="stage" id="fe-stage">
+    <div class="stage">
       <div class="browser" aria-label="Förhandsvisning">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
         <div class="pv" id="fe-pv">
@@ -297,7 +297,6 @@
     });
     pv.classList.toggle("styled", step >= 1);
     pv.classList.toggle("js", step >= 2);
-    $("fe-stage").classList.toggle("ai-step", step === 3);
     ["a", "b", "c"].forEach(function (k) { pv.classList.toggle("fix-" + k, step === 3 && fixes[k]); });
     $("fe-titel").textContent = s.titel;
     $("fe-text").textContent = s.text;
@@ -357,7 +356,10 @@
     if (fixes[k] && root.clientWidth <= 760) {
       var kort = pv.querySelector(".produkt");
       var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      setTimeout(function () { kort.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" }); }, 60);
+      setTimeout(function () {
+        kort.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+        kort.classList.remove("blink"); void kort.offsetWidth; kort.classList.add("blink");
+      }, 60);
     }
   });
 
