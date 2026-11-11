@@ -100,6 +100,8 @@
 #iths-fe-demo .pv.styled .cart { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
 #iths-fe-demo .pv.styled .count { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; background: var(--pixel); color: var(--terminal); font-family: var(--font-display); font-weight: 800; font-size: 13px; }
 #iths-fe-demo .pv.styled .count.bump { animation: fe-bump .45s ease; }
+#iths-fe-demo .pv.styled .produkt.blink { animation: fe-blink 1.4s ease .3s; }
+@keyframes fe-blink { 0%, 100% { box-shadow: 0 8px 24px rgba(45, 26, 46, .12), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 8px 24px rgba(45, 26, 46, .12), 0 0 0 5px rgba(255, 181, 71, .9); } }
 @keyframes fe-bump { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
 #iths-fe-demo .pv.styled .produkt { display: grid; gap: 12px; margin: 0 18px; max-width: 340px; background: var(--surface); border-radius: 16px; padding: 16px; box-shadow: 0 8px 24px rgba(45, 26, 46, .12); }
 #iths-fe-demo .pv.styled .bild { display: grid; place-items: center; background: var(--soft); border-radius: 12px; padding: 22px 0 18px; position: relative; }
@@ -147,7 +149,7 @@
   #iths-fe-demo .step .s { display: none; }
   #iths-fe-demo .step .l { font-size: 14px; }
   #iths-fe-demo .step .n { font-size: 11px; }
-  #iths-fe-demo .sug-top { flex-direction: column; }
+  #iths-fe-demo .sug-top { align-items: center; }
   #iths-fe-demo .pv.styled .produkt { margin: 0 12px; }
   #iths-fe-demo .code { font-size: 12px; }
 }
@@ -204,7 +206,7 @@
         <div id="fe-kod"></div>
         <div class="done-box" id="fe-klar" hidden>
           <b>Klart! Det här är frontend.</b>
-          <span>Det är precis det du lär dig på utbildningen.</span>
+          <span>Grunderna i det du lär dig på utbildningen.</span>
         </div>
         <div class="nav">
           <button type="button" class="btn ghost" id="fe-bak">Föregående</button>
@@ -245,7 +247,7 @@
       kod: 'knapp.addEventListener("click", () => {\n  antal++;\n  korg.textContent = antal;\n});'
     },
     {
-      titel: "AI hittar, du bestämmer",
+      titel: "AI hittar men du bestämmer",
       text: "AI granskar koden och föreslår förbättringar. Du bestämmer vilka som blir av.",
       ai: true
     }
@@ -340,7 +342,16 @@
     fixes[k] = !fixes[k];
     render();
     var nb = root.querySelector('.ok[data-fix="' + k + '"]');
-    if (nb) nb.focus();
+    if (nb) nb.focus({ preventScroll: true });
+    // På smal skärm: glid till kortet så att man ser vad förslaget ändrade
+    if (fixes[k] && root.clientWidth <= 760) {
+      var kort = pv.querySelector(".produkt");
+      var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(function () {
+        kort.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+        kort.classList.remove("blink"); void kort.offsetWidth; kort.classList.add("blink");
+      }, 60);
+    }
   });
 
   root.querySelectorAll('input[name="fe-farg"]').forEach(function (r) {
