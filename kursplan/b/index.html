@@ -404,7 +404,6 @@ function renderCard() {
   card.innerHTML = `
     <div class="head">
       <div><h2>${esc(p.name)}</h2><p>${p.yh} YH-poäng · ${esc(p.place)}</p></div>
-      <a href="${p.url}" target="_blank" rel="noopener">Utbildningen på iths.se ↗</a>
     </div>
     ${nAi || aiInfo ? `<div class="aibar">
       <button class="aitoggle" type="button" id="aitoggle" aria-pressed="${aiOn}">${aiTag} ${aiOn ? "Visar AI i utbildningen" : "Visa AI i utbildningen"}</button>
