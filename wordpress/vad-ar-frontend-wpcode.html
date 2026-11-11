@@ -140,6 +140,8 @@
   #iths-fe-demo .stage { grid-template-columns: 1fr; }
   #iths-fe-demo .browser { position: static; }
   #iths-fe-demo .pv { min-height: 0; }
+  /* I AI-steget ligger förslagen ovanför kortet, så att ändringen syns direkt under knappen */
+  #iths-fe-demo .stage.ai-step .panel { order: -1; }
 }
 @container (max-width: 520px) {
   #iths-fe-demo .steps { gap: 6px; }
@@ -147,7 +149,7 @@
   #iths-fe-demo .step .s { display: none; }
   #iths-fe-demo .step .l { font-size: 14px; }
   #iths-fe-demo .step .n { font-size: 11px; }
-  #iths-fe-demo .sug-top { flex-direction: column; }
+  #iths-fe-demo .sug-top { align-items: center; }
   #iths-fe-demo .pv.styled .produkt { margin: 0 12px; }
   #iths-fe-demo .code { font-size: 12px; }
 }
@@ -171,7 +173,7 @@
       <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span></button></li>
     </ol>
 
-    <div class="stage">
+    <div class="stage" id="fe-stage">
       <div class="browser" aria-label="Förhandsvisning">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
         <div class="pv" id="fe-pv">
@@ -286,6 +288,7 @@
     });
     pv.classList.toggle("styled", step >= 1);
     pv.classList.toggle("js", step >= 2);
+    $("fe-stage").classList.toggle("ai-step", step === 3);
     ["a", "b", "c"].forEach(function (k) { pv.classList.toggle("fix-" + k, step === 3 && fixes[k]); });
     $("fe-titel").textContent = s.titel;
     $("fe-text").textContent = s.text;
@@ -340,7 +343,13 @@
     fixes[k] = !fixes[k];
     render();
     var nb = root.querySelector('.ok[data-fix="' + k + '"]');
-    if (nb) nb.focus();
+    if (nb) nb.focus({ preventScroll: true });
+    // På smal skärm: glid till kortet så att man ser vad förslaget ändrade
+    if (fixes[k] && root.clientWidth <= 760) {
+      var kort = pv.querySelector(".produkt");
+      var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(function () { kort.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" }); }, 60);
+    }
   });
 
   root.querySelectorAll('input[name="fe-farg"]').forEach(function (r) {
