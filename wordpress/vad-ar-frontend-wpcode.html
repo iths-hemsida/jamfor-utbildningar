@@ -138,7 +138,18 @@
 #iths-fe-demo .pv.styled .sr[hidden] { display: none; }
 
 /* Smal yta: mobil eller smal innehållskolumn */
-@container (max-width: 760px) {
+/* Mellanbredd, t.ex. iths.se:s innehållsspalt bredvid sidomenyn: behåll två spalter men tätare */
+@container (max-width: 820px) {
+  #iths-fe-demo .stage { gap: 16px; }
+  #iths-fe-demo .code { font-size: 12px; padding: 12px 14px; }
+  #iths-fe-demo .pv.styled .produkt { margin: 0 12px; padding: 14px; }
+  #iths-fe-demo .pv.styled .shop { padding: 10px 12px; }
+  #iths-fe-demo .pv { padding: 10px 12px 14px; }
+  #iths-fe-demo .pv.styled { padding: 0 0 18px; }
+  #iths-fe-demo .sug-top { flex-direction: column; gap: 8px; }
+}
+@container (max-width: 600px) {
+  #iths-fe-demo .sug-top { flex-direction: row; align-items: center; }
   #iths-fe-demo .stage { grid-template-columns: 1fr; }
   #iths-fe-demo .browser { position: static; }
   #iths-fe-demo .pv { min-height: 0; }
@@ -344,7 +355,7 @@
     var nb = root.querySelector('.ok[data-fix="' + k + '"]');
     if (nb) nb.focus({ preventScroll: true });
     // På smal skärm: glid till kortet så att man ser vad förslaget ändrade
-    if (fixes[k] && root.clientWidth <= 760) {
+    if (fixes[k] && root.clientWidth <= 600) {
       var kort = pv.querySelector(".produkt");
       var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       setTimeout(function () {
