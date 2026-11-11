@@ -98,8 +98,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .detail h3 { color: var(--accent); font-size: 22px; padding-right: 36px; }
 .detail .when { font-weight: 700; font-size: 15px; }
 .detail p { margin: 0; max-width: 68ch; }
-.detail .ai { display: flex; gap: 8px; align-items: baseline; }
-.detail .ai .aitag { flex: none; transform: translateY(2px); }
+.detail .aibox { border-left: 4px solid var(--accent); background: var(--surface); border-radius: 0 8px 8px 0; padding: 10px 14px; display: grid; gap: 4px; max-width: 64ch; }
+.detail .aibox h4 { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.detail .aibox p { margin: 0; }
 .detail ul { margin: 0; padding-left: 20px; list-style: disc; display: grid; gap: 2px; }
 .detail .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .btn { border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 700; }
@@ -443,7 +444,7 @@ function renderDetail() {
     <h3>${esc(it.name)}</h3>
     <div class="when">${termText(it)} · ${period(it)} · ${it.pts} YH-poäng</div>
     <p>${esc(desc)}</p>
-    ${it.ai ? `<p class="ai">${aiTag}<span>${esc(it.ai[0])}</span></p>` : ""}
+    ${it.ai ? `<div class="aibox"><h4>${aiTag} AI i ${it.kind === "c" ? "kursen" : it.kind === "l" ? "LIA" : "examensarbetet"}</h4><p>${esc(it.ai[0])}</p></div>` : ""}
     ${moments.length ? `<button class="more" type="button" data-more aria-expanded="${showMore}">${showMore ? "Dölj vad som ingår" : `Visa vad som ingår (${moments.length})`}</button>
       ${showMore ? `<ul>${moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}` : ""}
     <div class="row"><button class="btn" type="button" data-step="-1"${sel === 0 ? " disabled" : ""}>← Föregående</button><button class="btn" type="button" data-step="1"${sel === L.items.length - 1 ? " disabled" : ""}>Nästa →</button></div>`;
