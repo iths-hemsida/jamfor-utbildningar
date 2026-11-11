@@ -170,14 +170,14 @@
     <div class="intro">
       <span class="eyebrow">Vad är frontend?</span>
       <h2 id="fe-demo-rubrik">Bygg en webbsida, lager för lager</h2>
-      <p>Allt du ser och klickar på i en app eller webbshop är frontend. Klicka dig igenom de fyra lagren och se hur ett produktkort går från rå kod till något människor faktiskt vill använda.</p>
+      <p>Allt du ser och klickar på i en app eller webbshop är frontend. Klicka igenom de fyra lagren.</p>
     </div>
 
     <ol class="steps" aria-label="Lager">
-      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">HTML</span><span class="s">Struktur</span></button></li>
-      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">CSS</span><span class="s">Design</span></button></li>
-      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">JavaScript</span><span class="s">Funktion</span></button></li>
-      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span><span class="s">Finputs</span></button></li>
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">HTML</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">CSS</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">JavaScript</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span></button></li>
     </ol>
 
     <div class="stage">
@@ -187,7 +187,6 @@
           <header class="shop"><span class="logo">Butiken</span> <span class="cart">Varukorg <b class="count" id="fe-count">0</b></span></header>
           <article class="produkt">
             <div class="bild">
-              <span class="ny">Nyhet</span>
               <svg viewBox="0 0 120 100" role="img" id="fe-img" aria-label=""><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="16" y="64" width="6" height="22" rx="3" fill="#fff" opacity=".35"/><rect x="90" y="64" width="6" height="22" rx="3" fill="#fff" opacity=".35"/></svg>
             </div>
             <p class="sr" id="fe-sr" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="fe-sr-txt"></span></p>
@@ -214,7 +213,7 @@
         <div id="fe-kod"></div>
         <div class="done-box" id="fe-klar" hidden>
           <b>Klart! Det här är frontend.</b>
-          <span>Struktur, design, funktion och användbarhet, med AI som verktyg och du som den som bestämmer. Det är precis det du lär dig på utbildningen till frontendutvecklare.</span>
+          <span>Det är precis det du lär dig på utbildningen.</span>
         </div>
         <div class="nav">
           <button type="button" class="btn ghost" id="fe-bak">Föregående</button>
@@ -238,35 +237,35 @@
   var STEPS = [
     {
       titel: "HTML ger strukturen",
-      text: "HTML talar om vad som finns på sidan: en bild, en rubrik, ett pris, färgval och en knapp. Allt innehåll är på plats, men utan design ser det ut som webben gjorde 1995.",
+      text: "HTML bestämmer vad som finns på sidan. Allt är på plats, men utan design.",
       file: "produkt.html", lang: "html",
-      kod: '<article class="produkt">\n  <img src="horlurar.png" alt="">\n  <h3>Pixel One</h3>\n  <p>Trådlösa hörlurar</p>\n  <p>1 299 kr</p>\n  <fieldset>\n    <legend>Färg</legend>\n    <label><input type="radio" name="farg"> Plommon</label>\n    <label><input type="radio" name="farg"> Gul</label>\n  </fieldset>\n  <button>Lägg i varukorgen</button>\n</article>'
+      kod: '<article>\n  <img src="horlurar.png">\n  <h3>Pixel One</h3>\n  <p>1 299 kr</p>\n  <button>Lägg i varukorgen</button>\n</article>'
     },
     {
       titel: "CSS ger designen",
-      text: "Med CSS bestämmer du färger, typsnitt, avstånd och layout. Nu ser kortet ut som i en riktig webbshop. Men prova att byta färg eller klicka på knappen: ingenting händer än.",
+      text: "CSS bestämmer hur det ser ut. Snyggt, men knappen gör ingenting än.",
       file: "produkt.css", lang: "css",
-      kod: '.produkt {\n  background: #fff;\n  border-radius: 16px;\n  box-shadow: 0 8px 24px rgb(45 26 46 / .12);\n}\n\n.knapp {\n  background: #662247;\n  color: #fff;\n  border-radius: 999px;\n}'
+      kod: '.knapp {\n  background: #662247;\n  color: #fff;\n  border-radius: 999px;\n}'
     },
     {
       titel: "JavaScript gör det levande",
-      text: "JavaScript reagerar på det användaren gör. Byt färg på hörlurarna och lägg dem i varukorgen. På utbildningen bygger du sådant här med ramverket React.",
+      text: "JavaScript får sidan att reagera. Byt färg och lägg i varukorgen.",
       file: "produkt.js", lang: "js",
-      kod: '// Byt färg på bilden när man väljer en färg\nfarger.forEach(f => f.addEventListener("change", () => {\n  bild.style.color = f.dataset.farg;\n}));\n\n// Räkna upp varukorgen vid klick\nknapp.addEventListener("click", () => {\n  antal++;\n  korg.textContent = antal;\n});'
+      kod: 'knapp.addEventListener("click", () => {\n  antal++;\n  korg.textContent = antal;\n});'
     },
     {
       titel: "AI hittar, du bestämmer",
-      text: "Du ber en AI-assistent granska koden. Den hittar tre saker som gör kortet svårare att använda. Det är du som bedömer förslagen, så godkänn dem och se skillnaden.",
+      text: "AI granskar koden och föreslår förbättringar. Du bestämmer vilka som blir av.",
       ai: true
     }
   ];
 
   var SUGS = [
-    { id: "a", titel: "Bekräfta när något händer", text: "Klickar man på knappen syns ingen bekräftelse, bara en liten siffra uppe i hörnet.",
+    { id: "a", titel: "Bekräfta klicket", text: "Visa att varan hamnade i korgen.",
       kod: '+ <p role="status" aria-live="polite"></p>\n+ status.textContent = "Tillagd i varukorgen";' },
-    { id: "b", titel: "Större klickytor för mobilen", text: "Färgprickarna är 20 pixlar och svåra att träffa med tummen. Visa också vilken färg som är vald.",
+    { id: "b", titel: "Större klickytor", text: "Färgprickarna är svåra att träffa med tummen.",
       kod: '- .farg { width: 20px; height: 20px; }\n+ .farg { width: 40px; height: 40px; }\n+ <span class="vald">Plommon</span>' },
-    { id: "c", titel: "Beskriv bilden för skärmläsare", text: "Bilden saknar alt-text, så den som använder skärmläsare får inte veta vad som säljs.",
+    { id: "c", titel: "Beskriv bilden", text: "Så att skärmläsare kan läsa upp den.",
       kod: '- <img src="horlurar.png" alt="">\n+ <img src="horlurar.png" alt="Hörlurar Pixel One i plommon">' }
   ];
 
@@ -301,11 +300,10 @@
     $("fe-text").textContent = s.text;
     var kod = $("fe-kod");
     if (s.ai) {
-      kod.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>Tre förslag från AI-granskningen</div>' +
+      kod.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår</div>' +
         SUGS.map(function (g) {
           return '<div class="sug' + (fixes[g.id] ? " on" : "") + '"><div class="sug-top"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
-            '<button type="button" class="ok" data-fix="' + g.id + '" aria-pressed="' + fixes[g.id] + '">' + (fixes[g.id] ? "Godkänt" : "Godkänn") + "</button></div>" +
-            codeBlock(g.kod, "", true) + "</div>";
+            '<button type="button" class="ok" data-fix="' + g.id + '" aria-pressed="' + fixes[g.id] + '">' + (fixes[g.id] ? "Godkänt" : "Godkänn") + "</button></div></div>";
         }).join("") + "</div>";
     } else {
       kod.innerHTML = codeBlock(s.kod, s.file, false);
