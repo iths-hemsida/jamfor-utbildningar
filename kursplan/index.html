@@ -66,7 +66,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .track { position: relative; display: flex; gap: 2px; height: 48px; }
 .seg { flex: none; position: relative; border: 0; border-radius: 6px; padding: 0 8px; min-width: 6px; height: 100%; background: var(--seg-a); color: var(--seg-ink);
   font-size: 12px; font-weight: 700; text-align: left; line-height: 1.15; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: transform .12s, box-shadow .12s; }
-.seg.alt { background: var(--seg-b); }
 .seg.lia { background: var(--seg-lia); color: var(--seg-lia-ink); }
 .seg.exam { background: var(--seg-exam); color: var(--seg-exam-ink); }
 .seg:hover { transform: translateY(-2px); }
@@ -112,7 +111,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .step:hover { border-color: var(--line); }
 .step[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .step i { width: 14px; height: 14px; border-radius: 4px; background: var(--seg-a); }
-.step i.alt { background: var(--seg-b); } .step i.lia { background: var(--seg-lia); } .step i.exam { background: var(--seg-exam); }
+.step i.lia { background: var(--seg-lia); } .step i.exam { background: var(--seg-exam); }
 .step b { font-weight: 700; }
 .step b .aitag { margin-left: 8px; }
 .step .w { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
