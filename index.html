@@ -223,7 +223,7 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
   <header>
     <div class="eyebrow">IT-Högskolan · utbildningar</div>
     <h1>Jämför utbildningar <span class="proto">Prototyp</span></h1>
-    <p class="lead">Välj upp till tre utbildningar och se dem sida vid sida. Datan gäller kursstart augusti 2027. Kurserna och poängen kommer från IT-Högskolans ansökningar till Myndigheten för yrkeshögskolan 2025, som gäller utbildningar med start 2026. Fullstackutvecklare bygger på kursplanerna från 2026 och IT-projektledare på iths.se den 6 november 2026.</p>
+    <p class="lead">Välj upp till tre utbildningar och se dem sida vid sida. Datan gäller kursstart augusti 2027. Kurserna och poängen kommer från IT-Högskolans ansökningar till Myndigheten för yrkeshögskolan 2025, som gäller utbildningar med start 2026. Fullstackutvecklare bygger på kursplanerna från 2026, och Frontend-utvecklare och IT-projektledare på iths.se den 6 november 2026.</p>
   </header>
 
   <section class="quizbox" id="quizbox" aria-live="polite"></section>
@@ -273,10 +273,10 @@ const PROGRAMS = [
   {
     id: "frontend", name: "Frontend-utvecklare", url: "https://www.iths.se/utbildningar/frontend/",
     yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
-    lia: { weeks: 28, points: 140 },
+    lia: { weeks: 24, points: 120 },
     courses: [
-      ["HTML & CSS", 20, ["webb"]], ["Native JavaScript", 35, ["javascript"]], ["UX & UI-design", 25, ["ux"]],
-      ["JavaScript med ramverk", 30, ["javascript"]], ["Agil utveckling", 20, ["agilt"]], ["Fullstack-utveckling", 50, ["webb", "backend"]],
+      ["HTML & CSS", 25, ["webb"]], ["Native JavaScript", 40, ["javascript"]], ["UX & UI-design", 20, ["ux"]],
+      ["JavaScript med ramverk", 40, ["javascript"]], ["Agil utveckling", 20, ["agilt"]], ["Fullstack-utveckling", 60, ["webb", "backend"]],
       ["Kravarbete och kommunikation med kravställare", 20, ["krav"]], ["CMS", 40, ["webb"]]
     ],
     eligibility: { courses: [...BASE_REQ, "Webbutveckling 1"], test: "Digitalt antagningsprov" },
