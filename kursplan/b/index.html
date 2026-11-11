@@ -8,7 +8,7 @@
   --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
   --bg: var(--moln); --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5;
   --accent: var(--kod); --accent-soft: #f4e9ef;
-  --seg: var(--kod); --seg-ink: #ffffff; --seg-lia: var(--pixel); --seg-lia-ink: var(--terminal);
+  --seg: var(--kod); --seg-b: var(--server); --seg-ink: #ffffff; --seg-lia: var(--pixel); --seg-lia-ink: var(--terminal);
   --seg-exam: var(--terminal); --seg-exam-ink: #ffffff; --track: #ece3e9;
   --ai-bg: #ffffff; --ai-ink: var(--kod); --ai-line: var(--kod);
   --font: Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
@@ -16,13 +16,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: var(--terminal); --surface: #3a2540; --ink: var(--moln); --muted: #c7b6c5; --line: #533a57;
-    --accent: #f0b3d2; --accent-soft: #4d2a45; --seg: #8a3562; --seg-exam: #f0b3d2; --seg-exam-ink: var(--terminal);
+    --accent: #f0b3d2; --accent-soft: #4d2a45; --seg: #8a3562; --seg-b: #b0628b; --seg-exam: #f0b3d2; --seg-exam-ink: var(--terminal);
     --track: #533a57; --ai-bg: var(--moln); --ai-ink: var(--kod); --ai-line: transparent; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: var(--terminal); --surface: #3a2540; --ink: var(--moln); --muted: #c7b6c5; --line: #533a57;
-  --accent: #f0b3d2; --accent-soft: #4d2a45; --seg: #8a3562; --seg-exam: #f0b3d2; --seg-exam-ink: var(--terminal);
+  --accent: #f0b3d2; --accent-soft: #4d2a45; --seg: #8a3562; --seg-b: #b0628b; --seg-exam: #f0b3d2; --seg-exam-ink: var(--terminal);
   --track: #533a57; --ai-bg: var(--moln); --ai-ink: var(--kod); --ai-line: transparent; color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -118,6 +118,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .step { width: 100%; display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 2px 12px; text-align: left; border: 1px solid transparent; background: none; border-radius: 10px; padding: 10px; }
 .step[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
 .step i { width: 12px; height: 12px; border-radius: 3px; background: var(--seg); grid-row: 1 / span 2; margin-top: 5px; }
+.seg.alt, .step i.alt { background: var(--seg-b); }
 .step i.lia { background: var(--seg-lia); } .step i.exam { background: var(--seg-exam); }
 .step b .aitag { margin-left: 8px; }
 .step span { color: var(--muted); font-size: 14px; }
@@ -366,7 +367,7 @@ function period(it) {
   if (a === b) return a;
   return it.start.getFullYear() === addWeeks(it.end, -0.2).getFullYear() ? `${MONTHS[it.start.getMonth()]}–${b}` : `${a}–${b}`;
 }
-const kindClass = it => it.kind === "l" ? "lia" : it.kind === "e" ? "exam" : "";
+const kindClass = it => it.kind === "l" ? "lia" : it.kind === "e" ? "exam" : it.alt ? "alt" : "";
 const aiTag = `<span class="aitag" aria-hidden="true">AI</span>`;
 
 function renderPicker() {
