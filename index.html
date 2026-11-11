@@ -223,7 +223,7 @@ dialog#coursedlg::backdrop { background: rgb(45 26 46 / .55); }
   <header>
     <div class="eyebrow">IT-Högskolan · utbildningar</div>
     <h1>Jämför utbildningar <span class="proto">Prototyp</span></h1>
-    <p class="lead">Välj upp till tre utbildningar och se dem sida vid sida. Datan gäller kursstart augusti 2027. För Javautvecklare, IT-säkerhetsspecialist, .NET-utvecklare och IT-projektledare kommer kurserna från IT-Högskolans ansökan till Myndigheten för yrkeshögskolan 2026. Övriga utbildningar är hämtade från iths.se den 6 november 2026.</p>
+    <p class="lead">Välj upp till tre utbildningar och se dem sida vid sida. Datan gäller kursstart augusti 2027. Kurserna och poängen kommer från IT-Högskolans ansökningar till Myndigheten för yrkeshögskolan 2026, utom för Fullstackutvecklare, Mjukvarutestare med testautomation och IT-säkerhetstestare, som är hämtade från iths.se den 6 november 2026.</p>
   </header>
 
   <section class="quizbox" id="quizbox" aria-live="polite"></section>
@@ -272,11 +272,11 @@ const BASE_REQ = ["Engelska 6", "Matematik 2", "Svenska 2"];
 const PROGRAMS = [
   {
     id: "frontend", name: "Frontend-utvecklare", url: "https://www.iths.se/utbildningar/frontend/",
-    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
-    lia: { weeks: 24, points: 120 },
+    yhPoints: 420, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    lia: { weeks: 28, points: 140 },
     courses: [
-      ["HTML & CSS", 25, ["webb"]], ["Native JavaScript", 40, ["javascript"]], ["UX & UI-design", 20, ["ux"]],
-      ["JavaScript med ramverk", 40, ["javascript"]], ["Agil utveckling", 20, ["agilt"]], ["Fullstack-utveckling", 60, ["webb", "backend"]],
+      ["Kompetensportfölj och hållbar utveckling", 10, []], ["HTML & CSS", 20, ["webb"]], ["Native JavaScript", 35, ["javascript"]], ["UX & UI-design", 25, ["ux"]],
+      ["JavaScript med ramverk", 30, ["javascript"]], ["Agil utveckling", 20, ["agilt"]], ["Fullstack-utveckling", 50, ["webb", "backend"]],
       ["Kravarbete och kommunikation med kravställare", 20, ["krav"]], ["CMS", 40, ["webb"]]
     ],
     eligibility: { courses: [...BASE_REQ, "Webbutveckling 1"], test: "Digitalt antagningsprov" },
@@ -300,10 +300,10 @@ const PROGRAMS = [
   },
   {
     id: "ux-designer", name: "UX-designer", url: "https://www.iths.se/utbildningar/ux-designer/",
-    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    yhPoints: 420, years: 2, locations: ["Göteborg"], studyForm: "På plats",
     lia: { weeks: 24, points: 120 },
     courses: [
-      ["Introduktion till UX-design", 5, ["ux"]], ["Användarcentrerad design", 70, ["ux"]], ["Agila metoder", 35, ["agilt"]],
+      ["Introduktion till UX-design och kompetensportfölj", 15, ["ux"]], ["Användarcentrerad design", 70, ["ux"]], ["Agila metoder", 35, ["agilt"]],
       ["Gränssnittsdesign och prototyper", 45, ["ux"]], ["Webbdesign, appdesign & fysisk usability", 40, ["ux", "webb"]],
       ["Programmering för UX-design", 30, ["programmering"]], ["Branding, affär och organisation", 35, ["affar"]]
     ],
@@ -355,10 +355,10 @@ const PROGRAMS = [
   },
   {
     id: "net-cloud", name: ".NET Cloud Developer", url: "https://www.iths.se/utbildningar/net-cloud-developer/",
-    yhPoints: 400, years: 2, locations: ["Göteborg"], studyForm: "På plats",
+    yhPoints: 420, years: 2, locations: ["Göteborg"], studyForm: "På plats",
     lia: { weeks: 24, points: 120 },
     courses: [
-      ["Programmering med C#", 50, ["programmering", "csharp"]], ["Databashantering", 30, ["databaser"]], ["Webbutveckling", 50, ["webb", "csharp"]],
+      ["Kompetensportfölj och hållbar utveckling", 10, []], ["Programmering med C#", 50, ["programmering", "csharp"]], ["Databashantering", 30, ["databaser"]], ["Webbutveckling", 50, ["webb", "csharp"]],
       ["Designa molnlösningar", 30, ["moln"]], ["Agila metoder", 30, ["agilt"]], ["Administrera molnlösningar", 40, ["moln"]], ["Utveckla molnlösningar", 30, ["moln"]]
     ],
     eligibility: { courses: [...BASE_REQ, "Programmering 1"], test: "Digitalt antagningsprov" },
@@ -396,10 +396,10 @@ const PROGRAMS = [
   },
   {
     id: "account-manager", name: "Account Manager inom IT", url: "https://www.iths.se/utbildningar/account-manager-inom-it/",
-    yhPoints: 300, years: 1.5, locations: ["Stockholm"], studyForm: "På plats",
+    yhPoints: 320, years: 1.5, locations: ["Stockholm"], studyForm: "På plats",
     lia: { weeks: 20, points: 100 },
     courses: [
-      ["Förhandling och avtalskunskap för Account Managers", 50, ["affar"]], ["Försäljningsprocesser och relationer på marknaden", 30, ["affar", "kund"]],
+      ["Kompetensportfölj och hållbar utveckling", 10, []], ["Förhandling och avtalskunskap för Account Managers", 50, ["affar"]], ["Försäljningsprocesser och relationer på marknaden", 30, ["affar", "kund"]],
       ["Presentationsteknik och nätverksbyggande för Account Managers", 20, ["kund"]], ["Strategisk IT-försäljning och kundvärde", 30, ["affar", "kund"]],
       ["Teknisk kunskap och marknadsföring för Account Managers", 50, ["affar"]]
     ],
@@ -531,8 +531,8 @@ const AI_INFO = {"frontend": ["AI-stöd ingår i alla programmeringskurser, frå
 const KP_INFO = { appName: "Kompetensportfölj och hållbar utveckling", appPts: 10,
   desc: "Du lär dig vad arbetslivet kräver av yrkesrollen och hur du tar ansvar för ditt eget lärande under studierna, LIA och i jobbet. Du får också en introduktion till branschen, AI och hållbar utveckling.",
   moments: ["CV, LinkedIn och nätverkande", "LIA-processen", "Värdegrund och diskrimineringslagstiftning", "Strategier för studier och självledarskap", "AI i studierna och yrkesrollen", "Hållbarhet och Agenda 2030 i yrkesrollen"] };
-for (const pid of ["javautvecklare", "it-sakerhetsspecialist", "net", "it-projektledare"]) COURSE_INFO[pid + "|Kompetensportfölj och hållbar utveckling"] = KP_INFO;
-for (const [to, from] of [["javautvecklare|Agil utveckling och kundförståelse", "javautvecklare|Agil utveckling"],
+for (const pid of ["frontend", "javautvecklare", "it-sakerhetsspecialist", "net", "net-cloud", "it-projektledare", "account-manager"]) COURSE_INFO[pid + "|Kompetensportfölj och hållbar utveckling"] = KP_INFO;
+for (const [to, from] of [["ux-designer|Introduktion till UX-design och kompetensportfölj", "ux-designer|Introduktion till UX-design"], ["javautvecklare|Agil utveckling och kundförståelse", "javautvecklare|Agil utveckling"],
   ["it-sakerhetsspecialist|Kryptering", "it-sakerhetsspecialist|Kryptologi"], ["it-sakerhetsspecialist|Virusanalys", "it-sakerhetsspecialist|Visusanalys"],
   ["it-projektledare|Projektledning – modeller, verktyg och processer", "it-projektledare|Projektledning, projektmodeller och grupp-processer"]])
   if (COURSE_INFO[from]) COURSE_INFO[to] = COURSE_INFO[from];
@@ -639,7 +639,7 @@ function openCourse(pid, name, from) {
   const dlg = document.getElementById("coursedlg");
   let body;
   if (info) {
-    const renamed = info.appName !== name || info.appPts !== course[1];
+    const renamed = info.appPts !== course[1];
     body = `<p>${esc(info.desc)}</p>
       ${info.moments.length ? `<h4>Det här ingår bland annat</h4><ul>${info.moments.map(m => `<li>${esc(m)}</li>`).join("")}</ul>` : ""}
       <p class="src">${esc(info.src || "Källa: IT-Högskolans ansökan till Myndigheten för yrkeshögskolan 2026.")}${renamed ? ` Där heter kursen <strong>${esc(info.appName)}</strong> och omfattar ${info.appPts} poäng, så detaljer kan skilja sig från utbildningssidan på iths.se.` : ""}</p>`;
