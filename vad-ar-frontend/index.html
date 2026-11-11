@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är frontend? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; }</style>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är frontend?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-frontend/ som iframe. All CSS är avgränsad till #iths-fe-demo. -->
+<style>
+/* Ett produktkort byggs upp i fyra lager: HTML (struktur), CSS (design), JavaScript (funktion), AI & UX (finputs).
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547.
+   Avenir Heavy för rubriker och knappar, Avenir Book för brödtext. Medvetet bara ljust tema, som iths.se. */
+#iths-fe-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-fe-demo *, #iths-fe-demo *::before, #iths-fe-demo *::after { box-sizing: border-box; }
+#iths-fe-demo .wrap { display: grid; gap: 20px; }
+#iths-fe-demo h2, #iths-fe-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-fe-demo p { margin: 0; }
+#iths-fe-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-fe-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-fe-demo .intro { display: grid; gap: 8px; }
+#iths-fe-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-fe-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-fe-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+#iths-fe-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; position: relative; overflow: hidden; }
+#iths-fe-demo .step:hover { border-color: var(--server); }
+#iths-fe-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-fe-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; }
+#iths-fe-demo .step .s { font-size: 13px; color: var(--muted); }
+#iths-fe-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-fe-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-fe-demo .step[aria-current="step"] .n { color: var(--pixel); }
+#iths-fe-demo .step[aria-current="step"] .s { color: rgba(255,255,255,.85); }
+
+/* Huvudyta */
+#iths-fe-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-fe-demo .panel { display: grid; gap: 14px; }
+#iths-fe-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-fe-demo .panel .lead { max-width: 60ch; }
+#iths-fe-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-fe-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-fe-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-fe-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-fe-demo .btn.ghost:hover { background: var(--soft); }
+#iths-fe-demo .btn[hidden] { display: none; }
+
+/* Kodruta */
+#iths-fe-demo .code { margin: 0; background: var(--terminal); color: #f3e9f0; border-radius: 12px; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; tab-size: 2; }
+#iths-fe-demo .code .file { display: block; color: #bfa8b8; font-size: 11.5px; margin-bottom: 6px; letter-spacing: .04em; }
+#iths-fe-demo .tk-tag { color: var(--pixel); }
+#iths-fe-demo .tk-attr { color: #e4b8d2; }
+#iths-fe-demo .tk-str { color: #a8e1c4; }
+#iths-fe-demo .tk-kw { color: var(--pixel); }
+#iths-fe-demo .tk-com { color: #a48f9f; font-style: italic; }
+#iths-fe-demo .ln { display: block; }
+#iths-fe-demo .ln.add { background: rgba(90, 200, 140, .24); margin: 0 -16px; padding: 0 16px; }
+#iths-fe-demo .ln.del { background: rgba(240, 110, 125, .24); margin: 0 -16px; padding: 0 16px; color: #d7c5d0; }
+
+/* AI-förslag */
+#iths-fe-demo .ai { display: grid; gap: 10px; }
+#iths-fe-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-fe-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-fe-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-fe-demo .sug.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-fe-demo .sug-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+#iths-fe-demo .sug-top b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-fe-demo .sug-top p { font-size: 14px; color: var(--muted); }
+#iths-fe-demo .sug .code { font-size: 12px; padding: 10px 14px; }
+#iths-fe-demo .sug .code .ln.add, #iths-fe-demo .sug .code .ln.del { margin: 0 -14px; padding: 0 14px; }
+#iths-fe-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 7px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-fe-demo .ok:hover { background: var(--soft); }
+#iths-fe-demo .ok[aria-pressed="true"] { background: #2f7d55; border-color: #2f7d55; color: #fff; }
+#iths-fe-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-fe-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-fe-demo .done-box[hidden] { display: none; }
+
+/* Webbläsarfönster */
+#iths-fe-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-fe-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-fe-demo .dots { display: flex; gap: 5px; }
+#iths-fe-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-fe-demo .url { flex: 1; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-fe-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-fe-demo .hint[hidden] { display: none; }
+
+/* ---------- Förhandsvisningen ----------
+   Lager 1: webbläsarens standardutseende (inga egna stilar).
+   .styled = CSS är på, .js = JavaScript är på, .fix-a/b/c = godkända AI-förslag. */
+#iths-fe-demo .pv { background: #fff; color: #000; font-family: "Times New Roman", Times, serif; font-size: 16px; line-height: 1.3; padding: 12px 14px 18px; min-height: 420px; }
+#iths-fe-demo .pv :is(header, article, h3, p, fieldset, legend, label, input, button, span, b, div) { all: revert; }
+#iths-fe-demo .pv .bild svg { width: 110px; height: auto; display: block; color: #000; }
+#iths-fe-demo .pv .sr[hidden], #iths-fe-demo .pv .status:empty { display: none; }
+
+#iths-fe-demo .pv.styled { background: var(--moln); color: var(--ink); font-family: var(--font-body); padding: 0 0 22px; }
+#iths-fe-demo .pv.styled .shop { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: var(--surface); border-bottom: 1px solid var(--line); margin: 0 0 18px; }
+#iths-fe-demo .pv.styled .logo { font-family: var(--font-display); font-weight: 800; font-size: 17px; color: var(--kod); letter-spacing: -.01em; }
+#iths-fe-demo .pv.styled .cart { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); }
+#iths-fe-demo .pv.styled .count { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px; background: var(--pixel); color: var(--terminal); font-family: var(--font-display); font-weight: 800; font-size: 13px; }
+#iths-fe-demo .pv.styled .count.bump { animation: fe-bump .45s ease; }
+@keyframes fe-bump { 0% { transform: scale(1); } 40% { transform: scale(1.45); } 100% { transform: scale(1); } }
+#iths-fe-demo .pv.styled .produkt { display: grid; gap: 12px; margin: 0 18px; max-width: 340px; background: var(--surface); border-radius: 16px; padding: 16px; box-shadow: 0 8px 24px rgba(45, 26, 46, .12); }
+#iths-fe-demo .pv.styled .bild { display: grid; place-items: center; background: var(--soft); border-radius: 12px; padding: 22px 0 18px; position: relative; }
+#iths-fe-demo .pv.styled .bild svg { width: 132px; color: var(--cup, var(--kod)); transition: color .25s ease; }
+#iths-fe-demo .pv.styled .ny { position: absolute; top: 10px; left: 10px; background: var(--pixel); color: var(--terminal); font-family: var(--font-display); font-weight: 800; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+#iths-fe-demo .pv:not(.styled) .ny { display: none; }
+#iths-fe-demo .pv.styled .namn { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.1; color: var(--ink); }
+#iths-fe-demo .pv.styled .desc { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+#iths-fe-demo .pv.styled .pris { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--kod); }
+#iths-fe-demo .pv.styled .rad { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
+#iths-fe-demo .pv.styled .farger { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#iths-fe-demo .pv.styled .farger legend { padding: 0; margin: 0 0 6px; font-size: 13px; color: var(--muted); float: left; width: 100%; }
+#iths-fe-demo .pv.styled .vald { display: none; }
+#iths-fe-demo .pv.styled .sw { position: relative; display: inline-block; cursor: pointer; }
+#iths-fe-demo .pv.styled .sw input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+#iths-fe-demo .pv.styled .sw .dot { display: block; width: 20px; height: 20px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--line); transition: width .25s ease, height .25s ease; }
+#iths-fe-demo .pv.styled .sw input:checked + .dot { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--terminal); }
+#iths-fe-demo .pv.styled .sw .txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#iths-fe-demo .pv.styled .kop { font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 0; border-radius: 999px; padding: 12px 18px; background: var(--kod); color: #fff; cursor: pointer; width: 100%; margin: 0; transition: background .2s ease; }
+#iths-fe-demo .pv.styled .kop:hover { background: var(--terminal); }
+#iths-fe-demo .pv.styled .kop:focus { outline: none; }
+#iths-fe-demo .pv.styled .sw input:focus { outline: none; }
+
+/* AI & UX: förslagen som godkänts */
+#iths-fe-demo .pv.fix-a .kop:focus-visible, #iths-fe-demo .pv.fix-b .sw input:focus-visible + .dot { outline: 3px solid var(--pixel); outline-offset: 3px; }
+#iths-fe-demo .pv.styled .status { margin: 0; font-size: 14px; color: #2f7d55; font-family: var(--font-display); font-weight: 800; display: flex; align-items: center; gap: 6px; }
+#iths-fe-demo .pv.styled .kop.added { background: #2f7d55; }
+#iths-fe-demo .pv.fix-b .sw .dot { width: 40px; height: 40px; }
+#iths-fe-demo .pv.fix-b .farger { gap: 12px; }
+#iths-fe-demo .pv.fix-b .vald { display: inline; color: var(--ink); font-family: var(--font-display); font-weight: 800; }
+#iths-fe-demo .pv.styled .sr { display: flex; gap: 8px; align-items: center; margin: 0; font-size: 13px; padding: 7px 10px; border-radius: 8px; background: #fdecec; color: #8a2330; }
+#iths-fe-demo .pv.styled .sr svg { width: 16px; height: 16px; flex: none; }
+#iths-fe-demo .pv.fix-c .sr { background: #e9f6ef; color: #23633f; }
+#iths-fe-demo .pv.styled .sr[hidden] { display: none; }
+
+/* Smal yta: mobil eller smal innehållskolumn */
+@container (max-width: 760px) {
+  #iths-fe-demo .stage { grid-template-columns: 1fr; }
+  #iths-fe-demo .browser { position: static; }
+  #iths-fe-demo .pv { min-height: 0; }
+}
+@container (max-width: 520px) {
+  #iths-fe-demo .steps { gap: 6px; }
+  #iths-fe-demo .step { padding: 8px 8px 9px; }
+  #iths-fe-demo .step .s { display: none; }
+  #iths-fe-demo .step .l { font-size: 14px; }
+  #iths-fe-demo .step .n { font-size: 11px; }
+  #iths-fe-demo .sug-top { flex-direction: column; }
+  #iths-fe-demo .pv.styled .produkt { margin: 0 12px; }
+  #iths-fe-demo .code { font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-fe-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-fe-demo" aria-labelledby="fe-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är frontend?</span>
+      <h2 id="fe-demo-rubrik">Bygg en webbsida: lager för lager</h2>
+      <p>Allt du ser och klickar på i en app eller webbshop är frontend. Klicka igenom de fyra lagren.</p>
+    </div>
+
+    <ol class="steps" aria-label="Lager">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">HTML</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">CSS</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">JavaScript</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
+        <div class="pv" id="fe-pv">
+          <header class="shop"><span class="logo">Butiken</span> <span class="cart">Varukorg <b class="count" id="fe-count">0</b></span></header>
+          <article class="produkt">
+            <div class="bild">
+              <svg viewBox="0 0 120 100" role="img" id="fe-img" aria-label=""><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="16" y="64" width="6" height="22" rx="3" fill="#fff" opacity=".35"/><rect x="90" y="64" width="6" height="22" rx="3" fill="#fff" opacity=".35"/></svg>
+            </div>
+            <p class="sr" id="fe-sr" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg><span id="fe-sr-txt"></span></p>
+            <div class="rad">
+              <div><h3 class="namn">Pixel One</h3><p class="desc">Trådlösa hörlurar</p></div>
+              <p class="pris">1 299 kr</p>
+            </div>
+            <fieldset class="farger">
+              <legend>Färg<span class="vald" id="fe-vald">: Plommon</span></legend>
+              <label class="sw" style="--c:#662247"><input type="radio" name="fe-farg" value="Plommon" data-c="#662247" checked><span class="dot" aria-hidden="true"></span><span class="txt">Plommon</span></label>
+              <label class="sw" style="--c:#FFB547"><input type="radio" name="fe-farg" value="Gul" data-c="#FFB547"><span class="dot" aria-hidden="true"></span><span class="txt">Gul</span></label>
+              <label class="sw" style="--c:#c9a3bd"><input type="radio" name="fe-farg" value="Lavendel" data-c="#c9a3bd"><span class="dot" aria-hidden="true"></span><span class="txt">Lavendel</span></label>
+            </fieldset>
+            <button type="button" class="kop" id="fe-kop">Lägg i varukorgen</button>
+            <p class="status" id="fe-status" role="status" aria-live="polite"></p>
+          </article>
+        </div>
+        <p class="hint" id="fe-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="fe-panel" aria-live="polite">
+        <h3 class="t" id="fe-titel"></h3>
+        <p class="lead" id="fe-text"></p>
+        <div id="fe-kod"></div>
+        <div class="done-box" id="fe-klar" hidden>
+          <b>Klart! Det här är frontend.</b>
+          <span>Det är precis det du lär dig på utbildningen.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="fe-bak">Föregående</button>
+          <button type="button" class="btn" id="fe-fram">Nästa lager</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-fe-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var pv = $("fe-pv"), count = $("fe-count"), kop = $("fe-kop"), status = $("fe-status"), hint = $("fe-hint");
+  var img = $("fe-img"), sr = $("fe-sr"), srTxt = $("fe-sr-txt"), vald = $("fe-vald");
+  var stepBtns = root.querySelectorAll(".step");
+  var step = 0, antal = 0, farg = "Plommon", fixes = { a: false, b: false, c: false }, addedTimer;
+
+  var STEPS = [
+    {
+      titel: "HTML ger strukturen",
+      text: "HTML bestämmer vad som finns på sidan. Allt är på plats, men utan design.",
+      file: "produkt.html", lang: "html",
+      kod: '<article>\n  <img src="horlurar.png">\n  <h3>Pixel One</h3>\n  <p>1 299 kr</p>\n  <button>Lägg i varukorgen</button>\n</article>'
+    },
+    {
+      titel: "CSS ger designen",
+      text: "CSS bestämmer hur det ser ut. Snyggt, men knappen gör ingenting än.",
+      file: "produkt.css", lang: "css",
+      kod: '.knapp {\n  background: #662247;\n  color: #fff;\n  border-radius: 999px;\n}'
+    },
+    {
+      titel: "JavaScript gör det levande",
+      text: "JavaScript får sidan att reagera. Byt färg och lägg i varukorgen.",
+      file: "produkt.js", lang: "js",
+      kod: 'knapp.addEventListener("click", () => {\n  antal++;\n  korg.textContent = antal;\n});'
+    },
+    {
+      titel: "AI hittar, du bestämmer",
+      text: "AI granskar koden och föreslår förbättringar. Du bestämmer vilka som blir av.",
+      ai: true
+    }
+  ];
+
+  var SUGS = [
+    { id: "a", titel: "Bekräfta klicket", text: "Visa att varan hamnade i korgen.",
+      kod: '+ <p role="status" aria-live="polite"></p>\n+ status.textContent = "Tillagd i varukorgen";' },
+    { id: "b", titel: "Större klickytor", text: "Färgprickarna är svåra att träffa med tummen.",
+      kod: '- .farg { width: 20px; height: 20px; }\n+ .farg { width: 40px; height: 40px; }\n+ <span class="vald">Plommon</span>' },
+    { id: "c", titel: "Beskriv bilden", text: "Så att skärmläsare kan läsa upp den.",
+      kod: '- <img src="horlurar.png" alt="">\n+ <img src="horlurar.png" alt="Hörlurar Pixel One i plommon">' }
+  ];
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var RX = /(\/\/.*$)|("[^"]*")|(&lt;\/?[\w-]+|&gt;)|(\b(?:const|let|function|return|if)\b|=&gt;)|([\w-]+(?==))|(^\s*[.#][\w-]+(?= \{)|[\w-]+(?=: ))/gm;
+  function hl(src) {
+    return esc(src).replace(RX, function (m, com, str, tag, kw, attr, prop) {
+      var c = com ? "com" : str ? "str" : tag ? "tag" : kw ? "kw" : "attr";
+      return '<span class="tk-' + c + '">' + m + "</span>";
+    });
+  }
+  function codeBlock(src, file, diff) {
+    var lines = src.split("\n").map(function (l) {
+      var cls = "ln";
+      if (diff && l.charAt(0) === "+") cls += " add";
+      if (diff && l.charAt(0) === "-") cls += " del";
+      return '<span class="' + cls + '">' + (hl(l) || " ") + "</span>";
+    }).join("");
+    return '<pre class="code">' + (file ? '<span class="file">' + file + "</span>" : "") + lines + "</pre>";
+  }
+
+  function render() {
+    var s = STEPS[step];
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    pv.classList.toggle("styled", step >= 1);
+    pv.classList.toggle("js", step >= 2);
+    ["a", "b", "c"].forEach(function (k) { pv.classList.toggle("fix-" + k, step === 3 && fixes[k]); });
+    $("fe-titel").textContent = s.titel;
+    $("fe-text").textContent = s.text;
+    var kod = $("fe-kod");
+    if (s.ai) {
+      kod.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår</div>' +
+        SUGS.map(function (g) {
+          return '<div class="sug' + (fixes[g.id] ? " on" : "") + '"><div class="sug-top"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<button type="button" class="ok" data-fix="' + g.id + '" aria-pressed="' + fixes[g.id] + '">' + (fixes[g.id] ? "Godkänt" : "Godkänn") + "</button></div></div>";
+        }).join("") + "</div>";
+    } else {
+      kod.innerHTML = codeBlock(s.kod, s.file, false);
+    }
+    $("fe-klar").hidden = !(step === 3 && fixes.a && fixes.b && fixes.c);
+    $("fe-bak").hidden = step === 0;
+    $("fe-fram").hidden = step === 3;
+    $("fe-fram").textContent = "Nästa lager: " + (STEPS[step + 1] ? ["", "CSS", "JavaScript", "AI & UX"][step + 1] : "");
+    hint.hidden = true;
+    status.textContent = "";
+    kop.classList.remove("added");
+    kop.textContent = "Lägg i varukorgen";
+    if (step < 2) { antal = 0; }
+    count.textContent = antal;
+    applyColor();
+    // Skärmläsarbubblan visas bara i steg 4
+    sr.hidden = step !== 3;
+    updateAlt();
+    send();
+  }
+
+  function applyColor() {
+    var input = root.querySelector('input[name="fe-farg"]:checked');
+    if (step >= 2 && input) { farg = input.value; pv.style.setProperty("--cup", input.getAttribute("data-c")); }
+    else { farg = "Plommon"; pv.style.removeProperty("--cup"); }
+    vald.textContent = ": " + farg;
+  }
+  function updateAlt() {
+    var alt = fixes.c && step === 3 ? "Hörlurar Pixel One i " + farg.toLowerCase() : "";
+    img.setAttribute("aria-label", alt || "bild");
+    srTxt.textContent = fixes.c ? "Skärmläsaren säger: ”" + alt + "”" : "Skärmläsaren säger bara: ”bild”";
+  }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { step = +b.getAttribute("data-step"); render(); }); });
+  $("fe-fram").addEventListener("click", function () { if (step < 3) { step++; render(); } });
+  $("fe-bak").addEventListener("click", function () { if (step > 0) { step--; render(); } });
+
+  $("fe-kod").addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b) return;
+    var k = b.getAttribute("data-fix");
+    fixes[k] = !fixes[k];
+    render();
+    var nb = root.querySelector('.ok[data-fix="' + k + '"]');
+    if (nb) nb.focus();
+  });
+
+  root.querySelectorAll('input[name="fe-farg"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      if (step < 2) {
+        if (step === 1) showHint("Färgen på hörlurarna byts inte. Det är JavaScript som saknas, och det kommer i lager 3.");
+        return;
+      }
+      applyColor(); updateAlt();
+    });
+  });
+
+  kop.addEventListener("click", function () {
+    if (step < 2) {
+      showHint(step === 0 ? "Knappen finns, men gör ingenting. Än så länge är det bara struktur." : "Knappen ser klickbar ut men gör ingenting. Det är JavaScript som saknas, och det kommer i lager 3.");
+      return;
+    }
+    antal++;
+    count.textContent = antal;
+    count.classList.remove("bump"); void count.offsetWidth; count.classList.add("bump");
+    if (step === 3 && fixes.a) {
+      status.textContent = "✓ Tillagd i varukorgen";
+      kop.classList.add("added");
+      kop.textContent = "Tillagd ✓";
+      clearTimeout(addedTimer);
+      addedTimer = setTimeout(function () { kop.classList.remove("added"); kop.textContent = "Lägg i varukorgen"; }, 1600);
+    }
+  });
+
+  // Höjd till förälder när demon visas i en iframe
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "fe-demo-height", h: Math.ceil(document.documentElement.scrollHeight) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  render();
+})();
+</script>
+
+</body>
+</html>

@@ -82,3 +82,11 @@ Bädda in med ett block av typen Anpassad HTML. Iframen växer med innehållet:
 ```
 
 På en programsida kan iframen få `data-program="frontend"` för att visa just den utbildningen; den fullständiga koden finns i projektmappen (`kursplan/iframe-kod.txt`).
+
+## Vad är frontend? (levande demo)
+
+Mappen `vad-ar-frontend/` innehåller en demo för avsnittet "Vad är frontend?" på utbildningssidan för Frontend-utvecklare. Ett produktkort byggs upp i fyra lager: HTML, CSS, JavaScript och AI & UX.
+
+- Källan är `vad-ar-frontend/snippet.html`. Kör `python3 tools/build-vad-ar-frontend.py` efter ändringar, så byggs `vad-ar-frontend/index.html` (GitHub Pages) och `wordpress/vad-ar-frontend-wpcode.html` (WPCode).
+- WPCode: klistra in hela `wordpress/vad-ar-frontend-wpcode.html` i ett HTML-snippet. All CSS är avgränsad till `#iths-fe-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "fe-demo-height"`), så iframen kan växa med innehållet.
