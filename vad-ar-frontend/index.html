@@ -401,10 +401,10 @@
     }
   });
 
-  // Höjd till förälder när demon visas i en iframe
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet: dokumentet är minst lika högt som iframen, så då kan den aldrig krympa.
   function send() {
     if (window.parent === window) return;
-    window.parent.postMessage({ type: "fe-demo-height", h: Math.ceil(document.documentElement.scrollHeight) }, "*");
+    window.parent.postMessage({ type: "fe-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
 
