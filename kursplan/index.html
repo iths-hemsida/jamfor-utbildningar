@@ -1,3 +1,4 @@
+<!doctype html>
 <meta charset="utf-8">
 <title>Kursplansutforskare</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -490,7 +491,8 @@ renderPrograms(); renderCard();
 if (window.self !== window.top) {
   let last = 0;
   const sendHeight = () => {
-    const h = Math.ceil(document.documentElement.scrollHeight);
+    // Mät innehållet, inte fönstret: scrollHeight blir aldrig lägre än iframens egen höjd.
+    const h = Math.ceil(document.body.getBoundingClientRect().height);
     if (Math.abs(h - last) < 2) return;
     last = h;
     window.parent.postMessage({ type: "kursplan-height", h }, "*");
