@@ -129,14 +129,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 @media (max-width: 640px) {
   .card { padding: 16px; gap: 16px; }
   .head h2 { font-size: 22px; }
-  .year { grid-template-columns: minmax(0, 1fr); gap: 4px; }
-  .year-label { padding-top: 0; font-size: 13px; }
-  .year-label span { display: inline; margin-left: 6px; }
-  .terms { display: none; }
-  .track { height: 16px; gap: 2px; }
-  .seg { padding: 0; font-size: 0; border-radius: 3px; pointer-events: none; }
-  .ai-on .seg.ai::after { display: none; }
-  .ai-on .seg.ai { padding-right: 0; }
+  /* På mobil visas bara listan: tidslinjen och AI-knappen döljs. */
+  .years, .aibar { display: none; }
+  .ai-on .step:not(.ai) { opacity: 1; }
   .legend { font-size: 13px; }
   .steps { display: block; }
   .hint { display: none; }
@@ -413,7 +408,7 @@ function renderCard() {
     </div>
     ${nAi || aiInfo ? `<div class="aibar">
       <button class="aitoggle" type="button" id="aitoggle" aria-pressed="${aiOn}">${aiTag} ${aiOn ? "Visar AI i utbildningen" : "Visa AI i utbildningen"}</button>
-      ${aiOn ? `<p class="aisum">${aiInfo ? esc(aiInfo[0]) + " " : ""}${nAi ? `AI ingår i ${nAi} av ${items.length} moment.` : ""}</p>` : ""}
+      ${aiOn && aiInfo ? `<p class="aisum">${esc(aiInfo[0])}</p>` : ""}
     </div>` : ""}
     <div class="years" role="group" aria-label="Tidslinje">${tracks}</div>
     <div class="legend" aria-hidden="true"><span><i style="background:var(--seg)"></i>Kurs</span><span><i style="background:var(--seg-lia)"></i>LIA, lärande i arbete</span><span><i style="background:var(--seg-exam)"></i>Examensarbete</span></div>
