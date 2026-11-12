@@ -189,3 +189,7 @@ Mappen `framtidsyrke/` innehåller fyra kort för avsnittet med samma namn på u
 - Källan är `framtidsyrke/snippet.html`. Kör `python3 tools/build-framtidsyrke.py` efter ändringar.
 - WPCode: `wordpress/framtidsyrke-wpcode.html`. All CSS är avgränsad till `#iths-fe-framtid`.
 - Iframe: höjden skickas med `postMessage` (`type: "fe-framtid-height"`).
+
+## Vem är du? (vem-ar-du/)
+
+Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg (4–5 → intresseanmälan, 0–3 → quizet). Redigera `vem-ar-du/snippet.html` och kör `python3 tools/build-vem-ar-du.py`. Länkarna ställs in i `LANKAR` i skriptet. WPCode-version: `wordpress/vem-ar-du-wpcode.html`.
