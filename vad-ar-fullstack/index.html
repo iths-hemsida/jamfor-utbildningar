@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är fullstack? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är fullstack?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-fullstack/ som iframe. All CSS är avgränsad till #iths-fs-demo. -->
+<style>
+/* Bygg en funktion från knapp till databas. Samma webbshop som i "Vad är frontend?" och "Vad är Java?", men nu bygger besökaren recensioner
+   i hela kedjan: gränssnitt (React), API (Node.js), databas och AI & kvalitet. JavaScript hela vägen.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-fs-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-fs-demo *, #iths-fs-demo *::before, #iths-fs-demo *::after { box-sizing: border-box; }
+#iths-fs-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-fs-demo h2, #iths-fs-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-fs-demo p { margin: 0; }
+#iths-fs-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-fs-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-fs-demo .intro { display: grid; gap: 8px; min-width: 0; overflow-wrap: break-word; }
+#iths-fs-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-fs-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-fs-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-fs-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-fs-demo .step:hover { border-color: var(--server); }
+#iths-fs-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-fs-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; }
+#iths-fs-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-fs-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-fs-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-fs-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-fs-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-fs-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-fs-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-fs-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-fs-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-fs-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-fs-demo .btn.ghost:hover { background: var(--soft); }
+#iths-fs-demo .btn[hidden] { display: none; }
+
+/* Kodruta */
+#iths-fs-demo .code { margin: 0; background: var(--terminal); color: #f3e9f0; border-radius: 12px; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; tab-size: 2; }
+#iths-fs-demo .code .file { display: block; color: #bfa8b8; font-size: 11.5px; margin-bottom: 6px; letter-spacing: .04em; }
+#iths-fs-demo .tk-ann { color: #e4b8d2; }
+#iths-fs-demo .tk-str { color: #a8e1c4; }
+#iths-fs-demo .tk-kw { color: var(--pixel); }
+#iths-fs-demo .tk-com { color: #a48f9f; font-style: italic; }
+#iths-fs-demo .ln { display: block; }
+#iths-fs-demo .ln.add { background: rgba(90, 200, 140, .24); margin: 0 -16px; padding: 0 16px; }
+#iths-fs-demo .ln.del { background: rgba(240, 110, 125, .24); margin: 0 -16px; padding: 0 16px; color: #d7c5d0; }
+
+/* AI-förslag */
+#iths-fs-demo .ai { display: grid; gap: 10px; }
+#iths-fs-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-fs-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-fs-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; }
+#iths-fs-demo .sug.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-fs-demo .sug-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+#iths-fs-demo .sug-top b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-fs-demo .sug-top p { font-size: 14px; color: var(--muted); }
+#iths-fs-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 7px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-fs-demo .ok:hover { background: var(--soft); }
+#iths-fs-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-fs-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-fs-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-fs-demo .done-box[hidden] { display: none; }
+#iths-fs-demo .koder { display: grid; gap: 8px; }
+#iths-fs-demo .tk-tag { color: #e4b8d2; }
+#iths-fs-demo .sida { display: inline-block; font-family: var(--font-display); font-weight: 800; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: 1px 8px; margin-right: 6px; vertical-align: 1px; }
+#iths-fs-demo .sida.fe { background: var(--pixel); color: var(--terminal); }
+#iths-fs-demo .sida.be { background: #6fd39b; color: var(--terminal); }
+
+/* Förhandsvisning: webbshop överst, servern under */
+#iths-fs-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-fs-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-fs-demo .dots { display: flex; gap: 5px; }
+#iths-fs-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-fs-demo .url { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-fs-demo .pill { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 12px; line-height: 1.2; border-radius: 999px; padding: 4px 11px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-fs-demo .pill:hover { border-color: var(--server); background: var(--soft); }
+#iths-fs-demo .pill[hidden] { display: none; }
+#iths-fs-demo .shop { background: var(--moln); padding: 14px; }
+#iths-fs-demo .produkt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-fs-demo .topp { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; align-items: center; }
+#iths-fs-demo .bild { grid-row: span 2; width: 64px; height: 64px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-fs-demo .bild svg { width: 48px; color: var(--kod); }
+#iths-fs-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-fs-demo .meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 2px 10px; }
+#iths-fs-demo .meta b { font-family: var(--font-display); color: var(--kod); }
+#iths-fs-demo .snitt .st { color: #e59a1c; }
+#iths-fs-demo .rec { min-width: 0; border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 8px; }
+#iths-fs-demo .rec-h { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+#iths-fs-demo .lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+#iths-fs-demo .lista li { background: var(--moln); border-radius: 8px; padding: 6px 10px; font-size: 14px; line-height: 1.4; display: grid; gap: 1px; overflow-wrap: anywhere; }
+#iths-fs-demo .lista .st { color: #e59a1c; letter-spacing: 1px; font-size: 13px; }
+#iths-fs-demo .lista .tom, #iths-fs-demo .lista .notext { color: var(--muted); font-style: italic; }
+#iths-fs-demo .lista .farlig { color: var(--err); font-family: var(--font-mono); font-size: 12.5px; }
+#iths-fs-demo .lista .ny { animation: fs-ny .8s ease; }
+@keyframes fs-ny { from { background: #ffe7bd; } to { background: var(--moln); } }
+#iths-fs-demo .form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+#iths-fs-demo .stjarnor { display: flex; gap: 2px; }
+#iths-fs-demo .stjarna { font: inherit; font-size: 22px; line-height: 1; background: none; border: 0; padding: 2px 3px; cursor: pointer; color: #dccfd8; border-radius: 6px; }
+#iths-fs-demo .stjarna.on { color: #e59a1c; }
+#iths-fs-demo .rad { display: flex; gap: 8px; }
+#iths-fs-demo .rad input { flex: 1; min-width: 0; font: inherit; font-size: 15px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; color: var(--ink); background: var(--surface); }
+#iths-fs-demo .rad input:focus-visible { border-color: var(--kod); outline-offset: 0; }
+#iths-fs-demo .skicka { flex: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 0; border-radius: 999px; padding: 9px 18px; background: var(--kod); color: #fff; cursor: pointer; }
+#iths-fs-demo .skicka:hover { background: var(--terminal); }
+#iths-fs-demo .svar { font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; }
+#iths-fs-demo .svar:empty { display: none; }
+#iths-fs-demo .svar.s-ok { background: #e9f6ef; color: #23633f; }
+#iths-fs-demo .svar.s-fel { background: #fdecec; color: #8a2330; }
+#iths-fs-demo .svar.s-info { background: #fff6e3; color: var(--terminal); }
+
+#iths-fs-demo .server { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-fs-demo .server[hidden] { display: none; }
+#iths-fs-demo .server-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-fs-demo .server-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); flex: none; }
+#iths-fs-demo .server-head i.av { background: #ff9aa8; box-shadow: 0 0 0 3px rgba(255, 154, 168, .2); }
+#iths-fs-demo .server-head .pill { margin-left: auto; background: transparent; color: #f3e9f0; border-color: rgba(255,255,255,.3); letter-spacing: 0; text-transform: none; font-family: var(--font-body); font-weight: 400; }
+#iths-fs-demo .server-head .pill:hover { background: rgba(255,255,255,.1); }
+#iths-fs-demo .logg { display: grid; gap: 2px; min-height: 40px; }
+#iths-fs-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-fs-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-fs-demo .logg .l-in { color: #e4b8d2; }
+#iths-fs-demo .logg .l-ok { color: #a8e1c4; }
+#iths-fs-demo .logg .l-fel { color: #ff9aa8; }
+#iths-fs-demo .logg .l-info { color: #bfa8b8; }
+#iths-fs-demo .logg .ny { animation: fs-nyl .6s ease; }
+@keyframes fs-nyl { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-fs-demo .db, #iths-fs-demo .test { border-top: 1px dashed rgba(255,255,255,.18); padding-top: 8px; display: grid; gap: 4px; }
+#iths-fs-demo .db[hidden], #iths-fs-demo .test[hidden] { display: none; }
+#iths-fs-demo .db b, #iths-fs-demo .test b { font-family: var(--font-display); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-fs-demo .db table { border-collapse: collapse; width: 100%; font-size: 12px; table-layout: fixed; }
+#iths-fs-demo .db td { padding: 2px 8px 2px 0; border-bottom: 1px solid rgba(255,255,255,.08); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#iths-fs-demo .db td:nth-child(1) { width: 46px; }
+#iths-fs-demo .db td:nth-child(2) { width: 30px; }
+#iths-fs-demo .db .tomt { color: #a48f9f; font-style: italic; }
+#iths-fs-demo .db .farlig { color: #ff9aa8; }
+#iths-fs-demo .test span { color: #a8e1c4; }
+#iths-fs-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-fs-demo .hint[hidden] { display: none; }
+#iths-fs-demo .browser.blink { animation: fs-blink 1.4s ease .3s; }
+@keyframes fs-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-fs-demo .stage { gap: 16px; }
+  #iths-fs-demo .code { font-size: 12px; padding: 12px 14px; }
+  #iths-fs-demo .sug-top { flex-direction: column; align-items: start; gap: 8px; }
+}
+@container (max-width: 600px) {
+  #iths-fs-demo .sug-top { flex-direction: row; align-items: center; }
+  #iths-fs-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-fs-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-fs-demo .steps { gap: 6px; }
+  #iths-fs-demo .step { padding: 8px 8px 9px; }
+  #iths-fs-demo .step .l { font-size: 14px; }
+  #iths-fs-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-fs-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-fs-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-fs-demo .code { font-size: 11px; padding: 10px 12px; }
+  #iths-fs-demo .shop { padding: 10px; }
+  #iths-fs-demo .chrome { padding: 8px 10px; gap: 8px; }
+  #iths-fs-demo .dots { display: none; }
+  #iths-fs-demo .server { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-fs-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-fs-demo .skicka { padding: 9px 14px; font-size: 14px; }
+  #iths-fs-demo .rad input { font-size: 14px; padding: 8px 12px; }
+  #iths-fs-demo .bild { width: 52px; height: 52px; }
+  #iths-fs-demo .bild svg { width: 40px; }
+  #iths-fs-demo .sug-top { flex-direction: column; align-items: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-fs-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-fs-demo" aria-labelledby="fs-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är fullstack?</span>
+      <h2 id="fs-demo-rubrik">Bygg en funktion från knapp till databas</h2>
+      <p>En fullstackutvecklare bygger både det du ser och tekniken bakom, med JavaScript hela vägen. Bygg recensioner till webbshoppen i fyra steg.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Gränssnitt</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">API</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Databas</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; kvalitet</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="fs-browser" aria-label="Förhandsvisning">
+        <div class="chrome"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url" aria-hidden="true">butiken.se/horlurar</span><button type="button" class="pill" id="fs-ladda">↻ Ladda om sidan</button></div>
+        <div class="shop">
+          <div class="produkt">
+            <div class="topp">
+              <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+              <div class="namn">Pixel One</div>
+              <div class="meta"><b>1 299 kr</b><span class="snitt" id="fs-snitt"></span></div>
+            </div>
+            <div class="rec">
+              <span class="rec-h">Recensioner</span>
+              <ul class="lista" id="fs-lista" aria-live="polite"></ul>
+              <form class="form" id="fs-form">
+                <div class="stjarnor" role="group" aria-label="Betyg" id="fs-stjarnor"></div>
+                <div class="rad">
+                  <input type="text" id="fs-text" maxlength="80" aria-label="Din recension" placeholder="Vad tyckte du?" autocomplete="off">
+                  <button type="submit" class="skicka">Skicka</button>
+                </div>
+                <p class="svar" id="fs-svar" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="server" id="fs-server" aria-label="Servern" hidden>
+          <div class="server-head"><i aria-hidden="true" id="fs-lampa"></i>Servern · Node.js<button type="button" class="pill" id="fs-omstart">Starta om servern</button></div>
+          <div class="logg" id="fs-logg" aria-live="polite"></div>
+          <div class="db" id="fs-db" hidden><b>Databas · recensioner</b><table><tbody id="fs-rader"></tbody></table></div>
+          <div class="test" id="fs-test" hidden><b>Tester</b><span>✓ sparar en recension</span><span>✓ stoppar en tom recension</span><span>✓ tar bort kod ur texten</span></div>
+        </div>
+        <p class="hint" id="fs-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="fs-panel" aria-live="polite">
+        <h3 class="t" id="fs-titel"></h3>
+        <p class="lead" id="fs-ingress"></p>
+        <div id="fs-kod"></div>
+        <div class="done-box" id="fs-klar" hidden>
+          <b>Klart! Det här är fullstack.</b>
+          <span>Det här lär du dig hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="fs-bak">Föregående</button>
+          <button type="button" class="btn" id="fs-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-fs-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var lista = $("fs-lista"), logg = $("fs-logg"), hint = $("fs-hint"), svar = $("fs-svar"), input = $("fs-text");
+  var stepBtns = root.querySelectorAll(".step");
+  var FORVAL = "Grymt ljud!";
+  var SEED = [{ i: 101, b: 5, t: "Sitter skönt hela dagen." }, { i: 102, b: 4, t: "Bra ljud för priset." }];
+  var SEED_AI = [{ i: 103, b: 1, t: "" }, { i: 104, b: 5, t: "Bra ljud! <script>stjal(kakor)<\/script>" }];
+
+  // webblasare: det frontend visar. minne: serverns minne (steg 2). db: databasen (steg 3 och 4). egna: det besökaren sparat i databasen.
+  var step = 0, betyg = 5, webblasare = [], minne = [], db = [], egna = [], id = 0, rader = [], nyast = -1;
+  var fixes = { a: false, b: false, c: false };
+
+  var STEPS = [
+    { kort: "Gränssnitt", titel: "React bygger det du ser",
+      text: "Gränssnittet byggs med React. Skriv en recension och skicka. Prova sedan att ladda om sidan.",
+      kod: [{ sida: "fe", file: "Recensioner.jsx", src: 'function Recensioner() {\n  const [lista, setLista] = useState([]);\n  function skicka(ny) {\n    // sparas bara i webbläsaren\n    setLista([...lista, ny]);\n  }\n  return <Formular onSkicka={skicka} />;\n}' }] },
+    { kort: "API", titel: "Node.js tar emot",
+      text: "Nu skickas recensionen till servern. Servern är också skriven i JavaScript, med Node.js och Express. Ladda om sidan och starta sedan om servern.",
+      kod: [{ sida: "fe", file: "Recensioner.jsx", src: 'await fetch("/api/recensioner", {\n  method: "POST", body: JSON.stringify(ny)\n});' },
+            { sida: "be", file: "server.js", src: 'app.post("/api/recensioner", (req, res) => {\n  // sparas bara i serverns minne\n  minne.push(req.body);\n  res.status(201).json(req.body);\n});' }] },
+    { kort: "Databas", titel: "Databasen minns",
+      text: "Recensionen sparas i en databas. Nu finns den kvar för alla besökare, även när servern startas om. Betyget räknas ut från databasen.",
+      kod: [{ sida: "be", file: "server.js", src: 'app.post("/api/recensioner", async (req, res) => {\n  const ny = await db.recensioner.create(req.body);\n  res.status(201).json(ny);\n});' }] },
+    { kort: "AI & kvalitet", titel: "AI hjälper, du bestämmer", ai: true,
+      text: "AI granskar koden i hela kedjan och föreslår förbättringar. Du bestämmer vilka som blir av." }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Stoppa tomma recensioner", text: "En tom recension med en stjärna drar ner betyget. Kolla texten i både React och Node.js." },
+    { id: "b", titel: "Ta bort kod ur texten", text: "Någon har skrivit kod i en recension. Den kan köras i andra besökares webbläsare." },
+    { id: "c", titel: "Skriv tester", text: "Så att recensionerna fortsätter fungera efter nästa ändring." }
+  ];
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var RX = /(\/\/.*$)|("[^"]*")|(&lt;\/?[A-Z]\w*)|(\b(?:function|const|return|await|async|if)\b)/gm;
+  function hl(src) {
+    return esc(src).replace(RX, function (m, com, str, tag) {
+      return '<span class="tk-' + (com ? "com" : str ? "str" : tag ? "tag" : "kw") + '">' + m + "</span>";
+    });
+  }
+  function codeBlock(k) {
+    return '<pre class="code"><span class="file"><span class="sida ' + k.sida + '">' + (k.sida === "fe" ? "Frontend" : "Backend") + "</span>" + k.file + "</span>" +
+      k.src.split("\n").map(function (l) { return '<span class="ln">' + (hl(l) || " ") + "</span>"; }).join("") + "</pre>";
+  }
+  function rensa(t) { return t.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]*>/g, "").trim(); }
+  function harKod(t) { return /<[^>]+>/.test(t); }
+  function stj(n) { return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); }
+
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 4) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">Väntar på anrop …</span>'; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function visaLista() {
+    var n = webblasare.length;
+    if (!n) {
+      lista.innerHTML = '<li class="tom">Inga recensioner än</li>';
+      $("fs-snitt").textContent = "";
+    } else {
+      var sum = 0;
+      webblasare.forEach(function (r) { sum += r.b; });
+      $("fs-snitt").innerHTML = '<span class="st">★</span> ' + (sum / n).toFixed(1).replace(".", ",") + " · " + n + (n === 1 ? " recension" : " recensioner");
+      lista.innerHTML = webblasare.slice(-3).reverse().map(function (r) {
+        var txt = !r.t ? '<span class="notext">(ingen text)</span>' : harKod(r.t) ? '<span class="farlig">' + esc(r.t) + "</span>" : esc(r.t);
+        return '<li' + (r.uid === nyast ? ' class="ny"' : "") + '><span class="st" aria-label="' + r.b + ' av 5 stjärnor">' + stj(r.b) + "</span><span>" + txt + "</span></li>";
+      }).join("");
+    }
+    nyast = -1;
+  }
+  function visaDb() {
+    $("fs-db").hidden = step < 2;
+    $("fs-rader").innerHTML = db.length
+      ? db.slice(-4).map(function (r) {
+          return "<tr><td>#" + r.id + "</td><td>" + r.b + "★</td><td" + (harKod(r.t) ? ' class="farlig"' : !r.t ? ' class="tomt"' : "") + ">" + (r.t ? esc(r.t) : "(tom)") + "</td></tr>";
+        }).join("")
+      : '<tr><td class="tomt" colspan="3">Tom tabell</td></tr>';
+  }
+  function visaStjarnor() {
+    $("fs-stjarnor").innerHTML = [1, 2, 3, 4, 5].map(function (i) {
+      return '<button type="button" class="stjarna' + (i <= betyg ? " on" : "") + '" data-b="' + i + '" aria-label="' + i + (i === 1 ? " stjärna" : " stjärnor") + '" aria-pressed="' + (i === betyg) + '">★</button>';
+    }).join("");
+  }
+  function setSvar(cls, txt) { svar.className = "svar" + (cls ? " s-" + cls : ""); svar.textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+  function hamta(kalla) { webblasare = kalla.map(function (r) { return { b: r.b, t: r.t, uid: r.uid }; }); }
+
+  function render() {
+    var s = STEPS[step];
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("fs-titel").textContent = s.titel;
+    $("fs-ingress").textContent = s.text;
+    if (s.ai) {
+      $("fs-kod").innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår</div>' +
+        SUGS.map(function (g) {
+          return '<div class="sug' + (fixes[g.id] ? " on" : "") + '"><div class="sug-top"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<button type="button" class="ok" data-fix="' + g.id + '" aria-pressed="' + fixes[g.id] + '">' + (fixes[g.id] ? "Godkänt" : "Godkänn") + "</button></div></div>";
+        }).join("") + "</div>";
+    } else {
+      $("fs-kod").innerHTML = '<div class="koder">' + s.kod.map(codeBlock).join("") + "</div>";
+    }
+    $("fs-klar").hidden = !(step === 3 && fixes.a && fixes.b && fixes.c);
+    $("fs-bak").hidden = step === 0;
+    $("fs-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("fs-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    $("fs-server").hidden = step < 1;
+    $("fs-test").hidden = !(step === 3 && fixes.c);
+    hint.hidden = true;
+    visaLista(); visaDb(); visaLogg(false);
+    send();
+  }
+  function byggDb() {
+    db = []; id = 104;
+    var kalla = SEED.concat(step === 3 ? SEED_AI.filter(function (r) { return (r.t || !fixes.a); }) : []);
+    kalla.forEach(function (r) { db.push({ id: r.i, b: r.b, t: (fixes.b && step === 3) ? rensa(r.t) : r.t, uid: "s" + r.i }); });
+    egna.forEach(function (r) { db.push(r); id = Math.max(id, r.id); });
+  }
+  function bytSteg(n) {
+    step = n; rader = []; minne = []; webblasare = [];
+    if (step < 2) egna = [];
+    if (step >= 2) {
+      byggDb();
+      hamta(db);
+      logga("in", "GET /api/recensioner");
+      logga("ok", "200 · " + db.length + " recensioner från databasen");
+    }
+    input.value = FORVAL; betyg = 5; visaStjarnor();
+    setSvar("", "");
+    render();
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("fs-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("fs-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+  $("fs-stjarnor").addEventListener("click", function (e) {
+    var b = e.target.closest(".stjarna");
+    if (!b) return;
+    betyg = +b.getAttribute("data-b"); visaStjarnor();
+    var nb = root.querySelector('.stjarna[data-b="' + betyg + '"]');
+    if (nb) nb.focus({ preventScroll: true });
+  });
+
+  $("fs-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var t = input.value.trim(), uid = "u" + Date.now();
+    if (step === 3 && fixes.a && !t) {
+      logga("fel", "400 · tom recension stoppad");
+      setSvar("fel", "Skriv några ord först.");
+      send(); return;
+    }
+    if (step === 0) {
+      webblasare.push({ b: betyg, t: t, uid: uid }); nyast = uid;
+      setSvar("ok", "Tack för din recension!");
+      visaLista();
+      if (webblasare.length === 1) showHint("Recensionen syns. Ladda nu om sidan och se vad som händer.");
+      send(); return;
+    }
+    logga("in", "POST /api/recensioner {betyg: " + betyg + ", text: \"" + t + "\"}");
+    if (step === 1) {
+      minne.push({ b: betyg, t: t, uid: uid });
+      logga("ok", "201 · sparad i serverns minne");
+      hamta(minne);
+    } else {
+      if (step === 3 && fixes.b && harKod(t)) { t = rensa(t); logga("info", "Kod borttagen ur texten"); }
+      id++;
+      var rad = { id: id, b: betyg, t: t, uid: uid };
+      db.push(rad); egna.push(rad);
+      logga("ok", "201 · sparad i databasen som #" + id);
+      if (step === 3 && !t) logga("fel", "⚠ Tom recension sparad");
+      else if (step === 3 && harKod(t)) logga("fel", "⚠ Recension med kod sparad");
+      hamta(db);
+    }
+    nyast = uid;
+    setSvar("ok", "Tack för din recension!");
+    visaLista(); visaDb(); send();
+  });
+
+  $("fs-ladda").addEventListener("click", function () {
+    setSvar("", "");
+    if (step === 0) {
+      var hade = webblasare.length;
+      webblasare = []; visaLista();
+      if (hade) showHint("Borta! Recensionen fanns bara i din webbläsare, så ingen annan kunde se den. I steg 2 skickas den till en server.");
+      else showHint("Sidan laddades om. Skriv en recension först.");
+      return;
+    }
+    logga("in", "GET /api/recensioner");
+    var kalla = step === 1 ? minne : db;
+    logga("ok", "200 · " + kalla.length + (kalla.length === 1 ? " recension" : " recensioner") + (step === 1 ? " från minnet" : " från databasen"));
+    hamta(kalla); visaLista();
+    if (step === 1 && minne.length) showHint("Recensionen finns kvar, för nu ligger den på servern. Prova att starta om servern.");
+    else if (step === 1) showHint("Inga recensioner på servern. Skicka en först.");
+    send();
+  });
+
+  $("fs-omstart").addEventListener("click", function () {
+    setSvar("", "");
+    rader = [];
+    logga("info", "Servern startar om …");
+    if (step === 1) {
+      var hade = minne.length;
+      minne = []; hamta(minne);
+      logga("ok", "Servern är igång · 0 recensioner i minnet");
+      visaLista();
+      showHint(hade ? "Borta igen! Servern hade bara recensionerna i minnet. I steg 3 sparas de i en databas." : "Servern startade om. Skicka en recension först, så syns skillnaden.");
+    } else {
+      logga("ok", "Servern är igång · " + db.length + " recensioner i databasen");
+      hamta(db); visaLista();
+      showHint(step === 2 ? "Allt finns kvar. Nu hänger hela kedjan ihop: React, Node.js och databasen." : "Allt finns kvar i databasen.");
+    }
+    var lampa = $("fs-lampa");
+    lampa.classList.add("av");
+    setTimeout(function () { lampa.classList.remove("av"); }, 500);
+    send();
+  });
+
+  $("fs-kod").addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b) return;
+    var k = b.getAttribute("data-fix");
+    fixes[k] = !fixes[k];
+    if (k === "a" || k === "b") {
+      var egnaKvar = egna;
+      byggDb();
+      // Egna recensioner följer samma regler som AI:s ändring
+      db = db.filter(function (r) { return !(fixes.a && !r.t); }).map(function (r) {
+        return egnaKvar.indexOf(r) > -1 && fixes.b ? (r.t = rensa(r.t), r) : r;
+      });
+      egna = egnaKvar.filter(function (r) { return db.indexOf(r) > -1; });
+      hamta(db);
+      if (fixes[k]) logga("ok", k === "a" ? "Tomma recensioner borttagna och stoppas nu" : "Kod borttagen ur recensionerna");
+    }
+    if (k === "c" && fixes.c) logga("ok", "3 tester gick igenom");
+    setSvar("", "");
+    render();
+    var nb = root.querySelector('.ok[data-fix="' + k + '"]');
+    if (nb) nb.focus({ preventScroll: true });
+    if (fixes[k] && root.clientWidth <= 600) {
+      var br = $("fs-browser");
+      var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(function () {
+        br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+        br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+      }, 60);
+    }
+  });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "fullstack-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>
+
+</body>
+</html>

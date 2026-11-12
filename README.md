@@ -115,6 +115,14 @@ Mappen `vad-ar-mjukvarutest/` innehåller en demo för utbildningssidan Mjukvaru
 - All CSS är avgränsad till `#iths-test-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "test-demo-height"`).
 
+## Vad är fullstack? (levande demo)
+
+Mappen `vad-ar-fullstack/` innehåller en demo för utbildningssidan Fullstackutvecklare: "Bygg en funktion från knapp till databas". Samma webbshop som i de andra demona, men nu bygger besökaren recensioner genom hela kedjan i fyra steg: gränssnitt (React, recensionen försvinner när sidan laddas om), API (Node.js och Express, recensionen försvinner när servern startas om), databas (allt finns kvar och betyget räknas ut) och AI & kvalitet (godkänn AI:s förslag: stoppa tomma recensioner, ta bort kod ur texten och skriv tester). Innehållet bygger på iths.se/utbildningar/fullstackutvecklare/ (hämtad 12 november 2026), som nämner JavaScript, React, Node.js, Express, databaser och AI för kodning, felsökning och kvalitetssäkring.
+
+- Källan är `vad-ar-fullstack/snippet.html`. Kör `python3 tools/build-vad-ar-fullstack.py` efter ändringar, så byggs `vad-ar-fullstack/index.html` (GitHub Pages) och `wordpress/vad-ar-fullstack-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-fs-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "fullstack-demo-height"`).
+
 ## Vad är UX? (levande demo)
 
 Mappen `vad-ar-ux/` innehåller en demo för utbildningssidan UX-designer: "Design som människor vill använda". Samma webbshop som i de andra demona, men nu görs den lätt att använda i fyra steg: research (spela upp ett användartest där Sara inte lyckas köpa), prototyp (fixa pris, färgval och köpknapp och låt Sara testa igen: från inget köp till klart på 8 sekunder), tillgänglighet (välj en färg på köpknappen som klarar kontrastkravet 4,5:1, och se butiken med nedsatt syn) och AI & UX (godkänn eller avvisa AI:s designförslag, där ett av dem är ett mörkt mönster). Innehållet bygger på iths.se/utbildningar/ux-designer/ (hämtad 12 november 2026), som nämner research, användarcentrerad design, prototyper, tillgänglighetslagen och AI som verktyg i designprocessen.
