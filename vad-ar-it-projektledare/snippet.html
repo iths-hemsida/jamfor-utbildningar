@@ -182,6 +182,35 @@
   #iths-pl-demo .done-box { padding: 14px 14px; }
   #iths-pl-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: butiken, loggen och korten går att fälla ihop så att demon blir kortare */
+#iths-pl-demo .fall { display: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 12px; color: var(--kod); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px 4px 12px; cursor: pointer; align-items: center; gap: 6px; white-space: nowrap; }
+#iths-pl-demo .fall::after { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+#iths-pl-demo .fall[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
+#iths-pl-demo .fall:hover { background: var(--soft); }
+#iths-pl-demo .logbox .fall { background: transparent; color: #e4b8d2; border-color: #5a3d58; justify-self: start; }
+#iths-pl-demo .logbox .fall:hover { background: #3d2840; }
+#iths-pl-demo .log-rad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#iths-pl-demo.kompakt .fall { display: inline-flex; }
+#iths-pl-demo.kompakt .fall[hidden] { display: none; }
+#iths-pl-demo.kompakt .status { flex-wrap: nowrap; gap: 8px; }
+#iths-pl-demo.kompakt .status .proj { font-size: 12px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-pl-demo.kompakt .lampa { font-size: 0; gap: 0; }
+#iths-pl-demo.kompakt .lampa i { width: 12px; height: 12px; }
+#iths-pl-demo.kompakt .lampor { display: inline-flex; gap: 5px; flex: none; }
+#iths-pl-demo .lampor { display: contents; }
+#iths-pl-demo.kompakt .shop.ihop { display: none; }
+#iths-pl-demo.kompakt .tc.utan-f span.f { display: none; }
+#iths-pl-demo .acc { padding: 0; gap: 0; overflow: hidden; }
+#iths-pl-demo .acc-h { font: inherit; color: inherit; background: none; border: 0; width: 100%; text-align: left; cursor: pointer; padding: 11px 14px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; }
+#iths-pl-demo .acc-h > span:first-child { min-width: 0; }
+#iths-pl-demo .acc-h b { font-size: 15px; line-height: 1.25; }
+#iths-pl-demo .acc-h .res { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+#iths-pl-demo .acc-h .pil { width: 9px; height: 9px; border-right: 2px solid var(--kod); border-bottom: 2px solid var(--kod); transform: rotate(45deg); margin: 0 4px 4px; transition: transform .2s; }
+#iths-pl-demo .acc-h[aria-expanded="true"] .pil { transform: rotate(-135deg); margin: 4px 4px 0; }
+#iths-pl-demo .acc-b { display: grid; gap: 8px; padding: 0 14px 12px; }
+#iths-pl-demo .acc-b[hidden] { display: none; }
+#iths-pl-demo .acc.nej .acc-h b { color: var(--muted); }
+#iths-pl-demo .story-knapp { justify-self: start; }
 @media (prefers-reduced-motion: reduce) {
   #iths-pl-demo * { animation: none !important; transition: none !important; }
 }
@@ -206,10 +235,13 @@
       <div class="browser" id="pl-browser" aria-label="Förhandsvisning">
         <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
         <div class="status" aria-label="Projektstatus">
-          <span class="proj">Lansering: Black Friday</span>
+          <span class="proj" id="pl-proj">Lansering: Black Friday</span>
+          <span class="lampor">
           <span class="lampa" id="pl-l-tid" data-s=""><i aria-hidden="true"></i>Tid</span>
           <span class="lampa" id="pl-l-kval" data-s=""><i aria-hidden="true"></i>Kvalitet</span>
           <span class="lampa" id="pl-l-kund" data-s=""><i aria-hidden="true"></i>Kund</span>
+          </span>
+          <button type="button" class="fall" id="pl-visa-butik" aria-expanded="false" aria-controls="pl-shop">Butiken</button>
         </div>
         <div class="shop" id="pl-shop">
           <span class="robot" id="pl-robot" hidden></span>
@@ -232,7 +264,10 @@
         <div class="logbox" aria-label="Logg">
           <div class="log-head"><i aria-hidden="true"></i><span id="pl-loghead">Backlog</span></div>
           <div class="logg" id="pl-logg" aria-live="polite"></div>
-          <button type="button" class="kor" id="pl-kor" hidden>Starta sprinten</button>
+          <div class="log-rad">
+            <button type="button" class="kor" id="pl-kor" hidden>Starta sprinten</button>
+            <button type="button" class="fall" id="pl-hela-loggen" aria-expanded="false" hidden>Hela loggen</button>
+          </div>
         </div>
         <p class="hint" id="pl-hint" role="status" aria-live="polite" hidden></p>
       </div>
@@ -309,6 +344,8 @@
   ];
 
   var step = 0, rader = [], med = {}, status = {}, beslut = {}, ai = {}, korg = 0, spelar = false, spelat = 0, blockerad = false, losning = null, timer;
+  // Mobil: kompakt läge med fällbara delar
+  var kompakt = false, visaButik = false, helaLoggen = false, visaStories = false, oppen = null;
   function standardMed() { var m = {}; BACKLOG.forEach(function (b) { m[b.id] = true; }); return m; }
   med = standardMed();
 
@@ -325,8 +362,14 @@
     visaLogg(true);
   }
   function visaLogg(ny) {
+    var mer = $("pl-hela-loggen"), dold = kompakt && !helaLoggen ? Math.max(0, rader.length - 3) : 0;
+    mer.hidden = !(kompakt && rader.length > 3);
+    mer.setAttribute("aria-expanded", String(helaLoggen));
+    mer.textContent = helaLoggen ? "Visa färre" : "Hela loggen (" + rader.length + ")";
+    mer.parentNode.hidden = mer.hidden && kor.hidden;
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + (step === 1 ? "Sprinten har inte startat …" : "Inga beslut än …") + "</span>"; return; }
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
@@ -369,6 +412,11 @@
     r.hidden = !(step === 0 || (step === 1 && spelar) || lans);
     r.textContent = lans ? "Lanserad!" : step === 0 ? "Skiss: det här lanseras" : "Under utveckling";
     r.classList.toggle("lans", lans);
+    $("pl-proj").textContent = lans ? "Lanserad!" : kompakt ? "Black Friday" : "Lansering: Black Friday";
+    shop.classList.toggle("ihop", kompakt && !visaButik);
+    var vb = $("pl-visa-butik");
+    vb.setAttribute("aria-expanded", String(!kompakt || visaButik));
+    vb.textContent = visaButik ? "Dölj butiken" : "Visa butiken";
     lampor();
   }
 
@@ -379,13 +427,14 @@
       var p = poang();
       h = '<div class="kap"><div class="kap-rad"><span>Planerat</span><b class="' + (p > KAP ? "over" : "") + '">' + p + " av " + KAP + ' poäng</b></div>' +
         '<div class="bar" aria-hidden="true"><i class="' + (p > KAP ? "over" : "") + '" style="width:' + Math.min(100, p / KAP * 100) + '%"></i></div></div>' +
-        '<ul class="tc" aria-label="Backlog" style="margin-top:12px">' + BACKLOG.map(function (b) {
+        (kompakt ? '<button type="button" class="fall story-knapp" data-stories aria-expanded="' + visaStories + '" style="margin-top:12px">' + (visaStories ? "Dölj user stories" : "Visa user stories") + "</button>" : "") +
+        '<ul class="tc' + (kompakt && !visaStories ? " utan-f" : "") + '" aria-label="Backlog" style="margin-top:12px">' + BACKLOG.map(function (b) {
           var on = !!med[b.id];
           return '<li class="' + (on ? "" : "av") + '"><div><b>' + b.namn + "<em>" + b.p + ' p</em></b><span class="f">' + b.f + "</span></div>" +
             '<button type="button" class="ok" data-med="' + b.id + '" aria-pressed="' + on + '">' + (on ? "Med" : "Senare") + "</button></li>";
         }).join("") + "</ul>";
     } else if (step === 1) {
-      h = '<ul class="tc" aria-label="Sprinttavla">' + iSprint().map(function (b) {
+      h = '<ul class="tc utan-f" aria-label="Sprinttavla">' + iSprint().map(function (b) {
         var st = status[b.id] || "gora";
         var c = st === "klar" ? chip("ok", "Klar") : st === "block" ? chip("fel", "Blockerad") : st === "pagar" ? chip("gar", "Pågår") : chip("", "Att göra");
         return '<li class="' + (st === "block" ? "blockerad" : "") + '"><div><b>' + b.namn + "<em>" + b.p + ' p</em></b><span class="f">' + b.f + "</span></div>" + c + "</li>";
@@ -398,6 +447,27 @@
           '<button type="button" class="ok lang" data-los="bra">Ring betaltjänsten och lös det i dag</button>' +
           "</div></div>";
       }
+    } else if (step === 2 && kompakt) {
+      h = '<div class="ai">' + BESLUT.map(function (b) {
+        var v = beslut[b.id], o = oppen === b.id, valt = b.val.filter(function (x) { return x.v === v; })[0];
+        return '<div class="sug acc' + (v === "bra" ? " ja" : v === "dalig" ? " fel" : "") + '">' +
+          '<button type="button" class="acc-h" data-oppna="' + b.id + '" aria-expanded="' + o + '"><span><span class="vem">' + b.vem + (v ? (v === "bra" ? " · ✓" : " · ✗") : "") + "</span><b>" + esc(b.titel) + "</b>" +
+          (valt && !o ? '<span class="res">' + valt.t + "</span>" : "") + '</span><i class="pil" aria-hidden="true"></i></button>' +
+          '<div class="acc-b"' + (o ? "" : " hidden") + "><p>" + b.text + '</p><div class="val stapel">' + b.val.map(function (x) {
+            return '<button type="button" class="ok lang" data-beslut="' + b.id + '" data-val="' + x.v + '" aria-pressed="' + (v === x.v) + '">' + x.t + "</button>";
+          }).join("") + "</div></div></div>";
+      }).join("") + "</div>";
+    } else if (step === 3 && kompakt) {
+      h = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI-assistenten föreslår</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id], o = oppen === g.id;
+          return '<div class="sug acc' + (v ? " " + v : "") + '">' +
+            '<button type="button" class="acc-h" data-oppna="' + g.id + '" aria-expanded="' + o + '"><span><b>' + g.titel + "</b>" +
+            (v && !o ? '<span class="res">' + (v === "ja" ? "✓ Godkänt" : "✗ Avvisat") + "</span>" : "") + '</span><i class="pil" aria-hidden="true"></i></button>' +
+            '<div class="acc-b"' + (o ? "" : " hidden") + "><p>" + g.text + "</p>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div></div>";
+        }).join("") + "</div>";
     } else if (step === 2) {
       h = '<div class="ai">' + BESLUT.map(function (b) {
         var v = beslut[b.id];
@@ -425,6 +495,7 @@
     kor.hidden = step !== 1;
     kor.disabled = spelar;
     kor.textContent = spelat ? "Kör sprinten igen" : "Starta sprinten";
+    kor.parentNode.hidden = kor.hidden && $("pl-hela-loggen").hidden;
   }
 
   function render() {
@@ -451,6 +522,8 @@
     if (step === 2) rader = [{ cls: "ok", txt: "✓ Sprint klar: " + iSprint().length + " av " + iSprint().length + " funktioner" }];
     if (step === 3) rader = [{ cls: "ok", txt: "✓ Tid, kvalitet och kund: grönt" }];
     hint.hidden = true; setSvar("");
+    helaLoggen = false; visaButik = false;
+    oppen = step === 2 ? BESLUT[0].id : step === 3 ? SUGS[0].id : null;
     render();
   }
 
@@ -521,7 +594,21 @@
     send();
   });
 
+  // Öppnar nästa obesvarade kort, så att man går igenom dem ett i taget på mobilen
+  function nastaOppen(lista, svar) {
+    var n = lista.filter(function (x) { return !svar[x.id]; })[0];
+    return n ? n.id : null;
+  }
   innehall.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-oppna], [data-stories]");
+    if (t) {
+      if (t.hasAttribute("data-stories")) visaStories = !visaStories;
+      else { var id0 = t.getAttribute("data-oppna"); oppen = oppen === id0 ? null : id0; }
+      var sel0 = t.hasAttribute("data-stories") ? "[data-stories]" : '[data-oppna="' + t.getAttribute("data-oppna") + '"]';
+      visaInnehall(); send();
+      var n0 = root.querySelector(sel0); if (n0) n0.focus({ preventScroll: true });
+      return;
+    }
     var b = e.target.closest(".ok");
     if (!b || b.disabled) return;
     var sel;
@@ -551,6 +638,7 @@
       var alla = BESLUT.every(function (x) { return beslut[x.id] === "bra"; });
       if (alla) { logga("sum", "Statusrapport: allt grönt inför lanseringen"); showHint("Tid, kvalitet och kund är gröna. Så ser en projektledare till att lanseringen håller."); }
       sel = '.ok[data-beslut="' + bid + '"][data-val="' + bv + '"]';
+      if (kompakt && beslut[bid]) { oppen = nastaOppen(BESLUT, beslut); sel = oppen ? '[data-oppna="' + oppen + '"]' : '[data-oppna="' + bid + '"]'; }
     } else {
       var a = b.getAttribute("data-ai"), av = b.getAttribute("data-val");
       ai[a] = ai[a] === av ? null : av;
@@ -562,6 +650,7 @@
       else hint.hidden = true;
       if (klar()) logga("sum", "Butiken är lanserad!");
       sel = '.ok[data-ai="' + a + '"][data-val="' + av + '"]';
+      if (kompakt && ai[a]) { oppen = nastaOppen(SUGS, ai); sel = oppen ? '[data-oppna="' + oppen + '"]' : '[data-oppna="' + a + '"]'; }
     }
     visaInnehall(); visaShop();
     var nb = root.querySelector(sel);
@@ -590,6 +679,18 @@
     window.parent.postMessage({ type: "projektledare-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  $("pl-visa-butik").addEventListener("click", function () { visaButik = !visaButik; visaShop(); send(); });
+  $("pl-hela-loggen").addEventListener("click", function () { helaLoggen = !helaLoggen; visaLogg(false); send(); });
+  // Kompakt läge när demon är smal (samma gräns som när butiken hamnar ovanför texten)
+  function kollaBredd() {
+    var k = root.clientWidth <= 600;
+    if (k === kompakt) return;
+    kompakt = k; root.classList.toggle("kompakt", k);
+    visaInnehall(); visaShop(); visaLogg(false); send();
+  }
+  kollaBredd();
+  if ("ResizeObserver" in window) new ResizeObserver(kollaBredd).observe(root); else window.addEventListener("resize", kollaBredd);
 
   bytSteg(0);
 })();
