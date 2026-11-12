@@ -147,3 +147,11 @@ Mappen `vad-ar-cloud/` innehåller en demo för utbildningssidan .NET Cloud Deve
 - Källan är `vad-ar-cloud/snippet.html`. Kör `python3 tools/build-vad-ar-cloud.py` efter ändringar, så byggs `vad-ar-cloud/index.html` (GitHub Pages) och `wordpress/vad-ar-cloud-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-cloud-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "cloud-demo-height"`).
+
+## Vad är IT-säkerhet? (levande demo)
+
+Mappen `vad-ar-it-sakerhet/` innehåller en demo för utbildningssidan IT-säkerhetsspecialist: "Skydda butiken mot angrepp". Samma webbshop som i de andra demona, men nu ska den skyddas i fyra steg: kryptering (Anna loggar in från ett café och angriparen på samma wifi läser lösenordet, tills besökaren skaffar ett certifikat och slår på HTTPS), loggar (läs inloggningsloggen, hitta adressen som provar lösenord mot många konton och blockera den i brandväggen, utan att blockera en kund eller butikens egen server), incident (ransomware har krypterat butiken: isolera servern, täpp till hålet, återställ från backup och skriv en incidentrapport i rätt ordning, och betala aldrig lösensumman) och AI & säkerhet (godkänn eller avvisa AI:s förslag, där ett av dem stänger av loggningen). Innehållet bygger på iths.se/utbildningar/it-sakerhetsspecialist/ (hämtad 12 november 2026), som nämner hot som virus, ransomware och nätverksintrång, logganalys, incidenthantering, spårbarhet, återställning efter attacker, kryptering, nätverkssäkerhet och AI för att förutse attacker. IP-adresser, lösenord och belopp i demon är påhittade exempel.
+
+- Källan är `vad-ar-it-sakerhet/snippet.html`. Kör `python3 tools/build-vad-ar-it-sakerhet.py` efter ändringar, så byggs `vad-ar-it-sakerhet/index.html` (GitHub Pages) och `wordpress/vad-ar-it-sakerhet-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-sak-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "sakerhet-demo-height"`).
