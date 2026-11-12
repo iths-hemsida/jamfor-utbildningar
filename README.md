@@ -155,3 +155,11 @@ Mappen `vad-ar-it-sakerhet/` innehåller en demo för utbildningssidan IT-säker
 - Källan är `vad-ar-it-sakerhet/snippet.html`. Kör `python3 tools/build-vad-ar-it-sakerhet.py` efter ändringar, så byggs `vad-ar-it-sakerhet/index.html` (GitHub Pages) och `wordpress/vad-ar-it-sakerhet-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-sak-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "sakerhet-demo-height"`).
+
+## Vad är IT-säkerhetstest? (levande demo)
+
+Mappen `vad-ar-it-sakerhetstest/` innehåller en demo för utbildningssidan IT-säkerhetstestare: "Hacka butiken innan någon annan gör det". Samma webbshop som i de andra demona, men nu penetrationstestas den i fyra steg: kartlägg (skanna butiken.se med Nmap och hitta en adminsida på port 8080, men stoppas om du försöker skanna betaltjänsten som inte ingår i uppdraget), hitta hålet (fånga köpet i Burp Suite, ändra priset till 1 kr och se servern godta det), rapport (bedöm risken Hög, Medel eller Låg för tre fynd, skicka rapporten och gör ett omtest som visar att hålet är tätat) och AI & pentest (godkänn AI-agentens Python-skript och kodgranskning, men avvisa förslaget att attackera betala.se). Innehållet bygger på IT-Högskolans kursplaner 2026 för IT-säkerhetstestare (samma underlag som i jämförelsen och kursplansutforskaren), som nämner pentestrapporter, NIS2 och GDPR, Nmap och Wireshark, Nessus, OWASP, Burp Suite, Python och AI-agenter för att skriva kod och automatisera penetrationstester.
+
+- Källan är `vad-ar-it-sakerhetstest/snippet.html`. Kör `python3 tools/build-vad-ar-it-sakerhetstest.py` efter ändringar, så byggs `vad-ar-it-sakerhetstest/index.html` (GitHub Pages) och `wordpress/vad-ar-it-sakerhetstest-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-pen-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "pentest-demo-height"`).
