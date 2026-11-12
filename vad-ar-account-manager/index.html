@@ -222,6 +222,30 @@
   #iths-am-demo .done-box b { font-size: 17px; }
   #iths-am-demo .done-box span { font-size: 15px; letter-spacing: -0.01em; }
 }
+/* Mobil: butiken, anteckningarna och AI-korten går att fälla ihop så att demon blir kortare */
+#iths-am-demo .fall { display: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 12px; color: var(--kod); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px 4px 12px; cursor: pointer; align-items: center; gap: 6px; white-space: nowrap; flex: none; }
+#iths-am-demo .fall::after { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .2s; }
+#iths-am-demo .fall[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
+#iths-am-demo .fall:hover { background: var(--soft); }
+#iths-am-demo .logbox .fall { background: transparent; color: #e4b8d2; border-color: #5a3d58; }
+#iths-am-demo .logbox .fall:hover { background: #3d2840; }
+#iths-am-demo .log-rad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#iths-am-demo .log-rad[hidden] { display: none; }
+#iths-am-demo.kompakt .fall { display: inline-flex; }
+#iths-am-demo.kompakt .fall[hidden] { display: none; }
+#iths-am-demo.kompakt .chrome .dots, #iths-am-demo.kompakt .chrome .kund { display: none; }
+#iths-am-demo.kompakt .shop.ihop .shop-top, #iths-am-demo.kompakt .shop.ihop .produkt, #iths-am-demo.kompakt .shop.ihop .chatt { display: none; }
+#iths-am-demo.kompakt .shop.ihop.tom { display: none; }
+#iths-am-demo.kompakt .tc.utan-f span.f { display: none; }
+#iths-am-demo .acc { padding: 0; gap: 0; overflow: hidden; }
+#iths-am-demo .acc-h { font: inherit; color: inherit; background: none; border: 0; width: 100%; text-align: left; cursor: pointer; padding: 11px 14px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; align-items: center; }
+#iths-am-demo .acc-h > span:first-child { min-width: 0; }
+#iths-am-demo .acc-h b { font-size: 15px; line-height: 1.25; }
+#iths-am-demo .acc-h .svarsrad { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+#iths-am-demo .acc-h .pil { width: 9px; height: 9px; border-right: 2px solid var(--kod); border-bottom: 2px solid var(--kod); transform: rotate(45deg); margin: 0 4px 4px; transition: transform .2s; }
+#iths-am-demo .acc-h[aria-expanded="true"] .pil { transform: rotate(-135deg); margin: 4px 4px 0; }
+#iths-am-demo .acc-b { display: grid; gap: 8px; padding: 0 14px 12px; }
+#iths-am-demo .acc-b[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) {
   #iths-am-demo * { animation: none !important; transition: none !important; }
 }
@@ -244,8 +268,8 @@
 
     <div class="stage">
       <div class="browser" id="am-browser" aria-label="Förhandsvisning">
-        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">pixelbutiken.se</span><span class="kund">Din kund</span></div>
-        <div class="shop">
+        <div class="chrome"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url" aria-hidden="true">pixelbutiken.se</span><span class="kund" aria-hidden="true">Din kund</span><button type="button" class="fall" id="am-visa-butik" aria-expanded="false" aria-controls="am-shop">Visa butiken</button></div>
+        <div class="shop" id="am-shop">
           <div class="shop-top"><span>Pixelbutiken</span><span>Varukorg<b id="am-count">0</b></span></div>
           <div class="produkt">
             <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
@@ -265,7 +289,10 @@
         <div class="logbox" aria-label="Anteckningar">
           <div class="log-head"><i aria-hidden="true"></i><span id="am-loghead">Mötesanteckningar</span></div>
           <div class="logg" id="am-logg" aria-live="polite"></div>
-          <button type="button" class="kor" id="am-kor" hidden>Presentera för Sara</button>
+          <div class="log-rad">
+            <button type="button" class="kor" id="am-kor" hidden>Presentera för Sara</button>
+            <button type="button" class="fall" id="am-hela-loggen" aria-expanded="false" hidden>Hela loggen</button>
+          </div>
         </div>
         <p class="hint" id="am-hint" role="status" aria-live="polite" hidden></p>
       </div>
@@ -362,6 +389,8 @@
 
   var step = 0, rader = [], fragat = [], valda = {}, presenterat = false, inv = 0, missar = [], ai = { a: null, b: null, c: null },
       korg = 0, spelar = false, nyFlagga = null, timer;
+  // Mobil: kompakt läge med fällbara delar
+  var kompakt = false, visaButik = false, helaLoggen = false, oppen = null;
 
   function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function kr(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " kr"; }
@@ -371,8 +400,14 @@
     visaLogg(true);
   }
   function visaLogg(ny) {
+    var mer = $("am-hela-loggen"), dold = kompakt && !helaLoggen ? Math.max(0, rader.length - 3) : 0;
+    mer.hidden = !(kompakt && rader.length > 3);
+    mer.setAttribute("aria-expanded", String(helaLoggen));
+    mer.textContent = helaLoggen ? "Visa färre" : "Hela loggen (" + rader.length + ")";
+    mer.parentNode.hidden = mer.hidden && kor.hidden;
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Mötet har inte börjat …", "Inget presenterat än …", "", ""][step] + "</span>"; return; }
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
@@ -397,6 +432,11 @@
     }
     $("am-flaggor").innerHTML = fl.join("");
     nyFlagga = null;
+    var shop = $("am-shop"), vb = $("am-visa-butik");
+    shop.classList.toggle("ihop", kompakt && !visaButik);
+    shop.classList.toggle("tom", !fl.length);
+    vb.setAttribute("aria-expanded", String(!kompakt || visaButik));
+    vb.textContent = visaButik ? "Dölj butiken" : "Visa butiken";
   }
 
   function res(cls, namn, txt, ikon, ny) { return '<div class="res ' + cls + (ny ? " ny" : "") + '">' + IKON[ikon] + "<b>" + namn + "</b><span>" + txt + "</span></div>"; }
@@ -444,7 +484,7 @@
   function visaInnehall() {
     var s = STEPS[step];
     if (step === 0) {
-      innehall.innerHTML = '<ul class="tc" aria-label="Frågor till Sara">' + FRAGOR.map(function (f) {
+      innehall.innerHTML = '<ul class="tc' + (kompakt ? " utan-f" : "") + '" aria-label="Frågor till Sara">' + FRAGOR.map(function (f) {
         var on = harFragat(f.id);
         return '<li class="' + (on ? (f.bad ? "miss" : "klar") : "") + '"><div><b>' + f.q + '</b><span class="f">' + (on ? "<em>Sara:</em> " + f.kund : f.bad ? "Gå rakt på försäljningen" : "Öppen fråga om verksamheten") + "</span></div>" +
           knapp("data-fraga", f.id, on, on ? "Ställd" : "Fråga", on || spelar, f.bad ? "fel" : "") + "</li>";
@@ -461,11 +501,22 @@
         return '<li class="klar"><div><b>' + x.fraga + '</b><span class="f"><em>Du:</em> ' + r.t + "</span></div></li>";
       }).join("");
       var cur = INV[inv];
-      innehall.innerHTML = (klara ? '<ul class="tc" aria-label="Lösta invändningar">' + klara + "</ul>" : "") +
+      innehall.innerHTML = (klara ? '<ul class="tc' + (kompakt ? " utan-f" : "") + '" aria-label="Lösta invändningar">' + klara + "</ul>" : "") +
         (cur ? '<div class="inv" style="margin-top:' + (klara ? "10px" : "0") + '"><div class="vem"><span class="avatar" aria-hidden="true">O</span>Omar, ekonomichef · invändning ' + (inv + 1) + " av " + INV.length + '</div><p class="citat">”' + cur.fraga + '”</p><div class="alts" role="group" aria-label="Ditt svar">' +
           cur.alts.map(function (a, i) {
             return '<button type="button" class="alt' + (missar.indexOf(i) >= 0 ? " miss" : "") + '" data-alt="' + i + '"' + (spelar ? " disabled" : "") + ">" + a.t + "</button>";
           }).join("") + "</div></div>" : "");
+    } else if (kompakt) {
+      innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI i CRM-systemet föreslår</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id], o = oppen === g.id;
+          return '<div class="sug acc' + (v ? " " + v : "") + '">' +
+            '<button type="button" class="acc-h" data-oppna="' + g.id + '" aria-expanded="' + o + '"><span><b>' + g.titel + "</b>" +
+            (v && !o ? '<span class="svarsrad">' + (v === "ja" ? "✓ Godkänt" : "✗ Avvisat") + "</span>" : "") + '</span><i class="pil" aria-hidden="true"></i></button>' +
+            '<div class="acc-b"' + (o ? "" : " hidden") + "><p>" + g.text + "</p>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div></div>";
+        }).join("") + "</div>";
     } else {
       innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI i CRM-systemet föreslår</div>' +
         SUGS.map(function (g) {
@@ -484,6 +535,7 @@
     kor.disabled = spelar;
     kor.textContent = presenterat ? "Erbjudandet är presenterat" : "Presentera för Sara";
     if (presenterat) kor.disabled = true;
+    kor.parentNode.hidden = kor.hidden && $("am-hela-loggen").hidden;
   }
 
   function render() {
@@ -506,6 +558,8 @@
     if (step === 2) rader = [{ cls: "sum", txt: "Offert skickad: 13 000 kr/mån i 12 månader" }, { cls: "kund", txt: "Omar: Jag har några frågor innan vi skriver på." }];
     if (step === 3) rader = [{ cls: "ok", txt: "✓ Avtal i 24 månader, lösningen i drift" }, { cls: "du", txt: "AI: 3 förslag efter 214 mejl och 6 möten" }];
     hint.hidden = true; setSvar("");
+    helaLoggen = false; visaButik = false;
+    oppen = step === 3 ? SUGS[0].id : null;
     render();
   }
 
@@ -596,6 +650,14 @@
   });
 
   innehall.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-oppna]");
+    if (t) {
+      var id0 = t.getAttribute("data-oppna");
+      oppen = oppen === id0 ? null : id0;
+      visaInnehall(); send();
+      var n0 = root.querySelector('[data-oppna="' + id0 + '"]'); if (n0) n0.focus({ preventScroll: true });
+      return;
+    }
     var alt = e.target.closest(".alt");
     if (alt && !spelar) { svara(+alt.getAttribute("data-alt")); return; }
     var b = e.target.closest(".ok");
@@ -620,11 +682,18 @@
       var g = SUGS.filter(function (y) { return y.id === a; })[0];
       if (ai[a] === "ja") logga(a === "c" ? "fel" : "ok", g.log);
       else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+      if (a === "c") { rader = rader.filter(function (r) { return r.txt !== "✓ Du ringer Sara i dag"; }); visaLogg(false); }
       if (a === "c" && ai.c === "ja") showHint("Sara är irriterad och behöver höra från dig, inte få en standardtext. Förtroende bygger du själv, det kan ingen AI göra åt dig. Avvisa förslaget.");
       else if (a === "c" && ai.c === "nej") { logga("ok", "✓ Du ringer Sara i dag"); showHint("Rätt! AI tar rutinen, du tar samtalet."); }
       else hint.hidden = true;
       ny = a;
       sel = '.ok[data-ai="' + a + '"][data-val="' + v + '"]';
+      // Mobil: rätt svar fäller ihop kortet och öppnar nästa obesvarade, ett i taget
+      if (kompakt && ai[a] === (a === "c" ? "nej" : "ja")) {
+        var n = SUGS.filter(function (y) { return !ai[y.id]; })[0];
+        oppen = n ? n.id : null;
+        sel = '[data-oppna="' + (n ? n.id : a) + '"]';
+      }
     }
     visaInnehall(); visaShop(); visaVy(ny);
     var nb = root.querySelector(sel);
@@ -652,6 +721,18 @@
     window.parent.postMessage({ type: "am-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  $("am-visa-butik").addEventListener("click", function () { visaButik = !visaButik; visaShop(); send(); });
+  $("am-hela-loggen").addEventListener("click", function () { helaLoggen = !helaLoggen; visaLogg(false); send(); });
+  // Kompakt läge när demon är smal (samma gräns som när butiken hamnar ovanför texten)
+  function kollaBredd() {
+    var k = root.clientWidth <= 600;
+    if (k === kompakt) return;
+    kompakt = k; root.classList.toggle("kompakt", k);
+    visaInnehall(); visaShop(); visaLogg(false); visaKor(); send();
+  }
+  kollaBredd();
+  if ("ResizeObserver" in window) new ResizeObserver(kollaBredd).observe(root); else window.addEventListener("resize", kollaBredd);
 
   bytSteg(0);
 })();
