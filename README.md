@@ -201,3 +201,7 @@ Fem levande kort för Mjukvarutestare-sidan: fler digitala tjänster över tid, 
 ## Vem är du? Mjukvarutestare (vem-ar-du-mjukvarutest/)
 
 Samma självkoll som för Frontend, med fem av punkterna från Mjukvarutestare-sidan. Redigera `vem-ar-du-mjukvarutest/snippet.html` och kör `python3 tools/build-vem-ar-du-mjukvarutest.py`. WPCode-version: `wordpress/vem-ar-du-mjukvarutest-wpcode.html`.
+
+## LIA-praktik (lia-mjukvarutest/)
+
+Snyggare LIA-avsnitt för Mjukvarutestare-sidan: punkterna som ikonrutor och nyckeltalen 16 veckor (med en veckostapel som fylls i när blocket syns) och 100 %. Redigera `lia-mjukvarutest/snippet.html` och kör `python3 tools/build-lia-mjukvarutest.py`. WPCode-version: `wordpress/lia-mjukvarutest-wpcode.html`.
