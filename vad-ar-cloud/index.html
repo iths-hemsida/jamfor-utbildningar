@@ -1,0 +1,622 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är Cloud? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är Cloud?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-cloud/ som iframe. All CSS är avgränsad till #iths-cloud-demo. -->
+<style>
+/* Ta butiken ut i molnet. Samma webbshop som i de andra demona, men nu flyttar vi den från din dator till Microsoft Azure: driftsätt, skala, säkerhet och AI & moln.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-cloud-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-cloud-demo *, #iths-cloud-demo *::before, #iths-cloud-demo *::after { box-sizing: border-box; }
+#iths-cloud-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-cloud-demo h2, #iths-cloud-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-cloud-demo p { margin: 0; }
+#iths-cloud-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-cloud-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-cloud-demo .intro { display: grid; gap: 8px; min-width: 0; overflow-wrap: break-word; }
+#iths-cloud-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-cloud-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-cloud-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-cloud-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-cloud-demo .step:hover { border-color: var(--server); }
+#iths-cloud-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-cloud-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+#iths-cloud-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-cloud-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-cloud-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-cloud-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-cloud-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-cloud-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-cloud-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-cloud-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-cloud-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-cloud-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-cloud-demo .btn.ghost:hover { background: var(--soft); }
+#iths-cloud-demo .btn[hidden] { display: none; }
+
+/* Listor i panelen: driftsättning, servrar, säkerhetsfynd */
+#iths-cloud-demo .tc { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+#iths-cloud-demo .tc li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--surface); }
+#iths-cloud-demo .tc li:first-child { border-top: 0; }
+#iths-cloud-demo .tc li.klar { background: #f3faf6; }
+#iths-cloud-demo .tc li.vald { background: #fffaf0; }
+#iths-cloud-demo .tc b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-cloud-demo .tc span.f { font-size: 14px; color: var(--muted); display: block; }
+#iths-cloud-demo .tc code { font-family: var(--font-mono); font-size: 12px; background: var(--soft); border-radius: 4px; padding: 1px 5px; color: var(--kod); }
+#iths-cloud-demo .chip { font-family: var(--font-display); font-weight: 800; font-size: 12px; border-radius: 999px; padding: 3px 10px; white-space: nowrap; background: var(--moln); color: var(--muted); border: 1px solid var(--line); }
+#iths-cloud-demo .chip.c-ok { background: #e9f6ef; color: #23633f; border-color: #b7dcc7; }
+#iths-cloud-demo .chip.c-fel { background: #fdecec; color: #8a2330; border-color: #f2c2c8; }
+#iths-cloud-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-cloud-demo .ok:hover { background: var(--soft); }
+#iths-cloud-demo .ok:disabled { opacity: .4; cursor: default; background: var(--surface); }
+#iths-cloud-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; opacity: 1; }
+#iths-cloud-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); }
+#iths-cloud-demo .not { font-size: 13px; color: var(--muted); }
+
+/* AI-förslag */
+#iths-cloud-demo .ai { display: grid; gap: 10px; }
+#iths-cloud-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-cloud-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-cloud-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-cloud-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-cloud-demo .sug.nej { background: var(--moln); }
+#iths-cloud-demo .sug.nej b, #iths-cloud-demo .sug.nej p { color: var(--muted); }
+#iths-cloud-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-cloud-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-cloud-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-cloud-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-cloud-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-cloud-demo .done-box span { white-space: nowrap; }
+#iths-cloud-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, molnet och loggen under */
+#iths-cloud-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-cloud-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-cloud-demo .dots { display: flex; gap: 5px; }
+#iths-cloud-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-cloud-demo .url { flex: 1; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: background .3s, color .3s; }
+#iths-cloud-demo .url.live { color: #23633f; background: #e9f6ef; border-color: #b7dcc7; }
+#iths-cloud-demo .shop { background: var(--moln); padding: 14px; position: relative; }
+#iths-cloud-demo .shop-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+#iths-cloud-demo .shop-top b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 999px; background: var(--kod); color: #fff; font-size: 11px; padding: 0 5px; margin-left: 4px; }
+#iths-cloud-demo .var { font-size: 11px; letter-spacing: .03em; border-radius: 999px; padding: 2px 9px; background: var(--soft); color: var(--kod); white-space: nowrap; }
+#iths-cloud-demo .var.live { background: #e9f6ef; color: #23633f; }
+#iths-cloud-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: start; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); transition: opacity .3s; }
+#iths-cloud-demo .bild { grid-row: span 3; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-cloud-demo .bild svg { width: 56px; color: var(--kod); }
+#iths-cloud-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-cloud-demo .pris { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--kod); line-height: 1.1; }
+#iths-cloud-demo .besk { font-size: 13px; color: var(--muted); line-height: 1.4; }
+#iths-cloud-demo .kop { grid-column: 1 / -1; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 11px 18px; background: var(--kod); color: #fff; border: 0; cursor: pointer; margin-top: 6px; }
+#iths-cloud-demo .kop:hover { background: var(--terminal); }
+#iths-cloud-demo .svar { grid-column: 1 / -1; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; background: #e9f6ef; color: #23633f; }
+#iths-cloud-demo .svar.fel { background: #fdecec; color: #8a2330; }
+#iths-cloud-demo .svar:empty { display: none; }
+#iths-cloud-demo .nere { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 4px; text-align: center; padding: 16px; background: rgba(249, 249, 249, .96); font-family: var(--font-display); font-weight: 800; color: var(--err); }
+#iths-cloud-demo .nere b { font-size: 30px; line-height: 1; }
+#iths-cloud-demo .nere span { font-size: 14px; color: var(--terminal); }
+#iths-cloud-demo .nere[hidden] { display: none; }
+
+/* Molnet: servrar, mätare och resurser */
+#iths-cloud-demo .moln { padding: 12px 14px; border-top: 1px solid var(--line); display: grid; gap: 10px; background: var(--surface); }
+#iths-cloud-demo .moln-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+#iths-cloud-demo .moln-head em { font-style: normal; letter-spacing: 0; text-transform: none; font-size: 12px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+#iths-cloud-demo .flode { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
+#iths-cloud-demo .nod { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; display: grid; gap: 2px; min-width: 0; background: var(--moln); }
+#iths-cloud-demo .nod b { font-family: var(--font-display); font-weight: 800; font-size: 14px; display: flex; gap: 6px; align-items: center; }
+#iths-cloud-demo .nod b svg { width: 18px; height: 18px; flex: none; color: var(--kod); }
+#iths-cloud-demo .nod span { font-size: 12px; color: var(--muted); line-height: 1.3; }
+#iths-cloud-demo .nod.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-cloud-demo .nod.on span { color: #23633f; }
+#iths-cloud-demo .nod.fel { border-color: #f2c2c8; background: #fdecec; }
+#iths-cloud-demo .nod.fel span { color: #8a2330; }
+#iths-cloud-demo .pil { font-family: var(--font-display); font-weight: 800; color: var(--line); font-size: 18px; transition: color .3s; }
+#iths-cloud-demo .pil.on { color: var(--ok); }
+#iths-cloud-demo .servrar { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+#iths-cloud-demo .srv { height: 44px; border-radius: 8px; border: 1.5px dashed var(--line); display: grid; place-items: center; color: #d8ccd4; transition: background .3s, border-color .3s, color .3s; }
+#iths-cloud-demo .srv svg { width: 22px; height: 22px; }
+#iths-cloud-demo .srv.on { border: 1.5px solid var(--server); background: var(--soft); color: var(--kod); }
+#iths-cloud-demo .srv.het { border-color: var(--err); background: #fdecec; color: var(--err); }
+#iths-cloud-demo .matare { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+#iths-cloud-demo .mat { border-radius: 8px; background: var(--moln); padding: 6px 8px; display: grid; min-width: 0; }
+#iths-cloud-demo .mat small { font-size: 11px; color: var(--muted); line-height: 1.3; }
+#iths-cloud-demo .mat b { font-family: var(--font-display); font-weight: 800; font-size: 15px; line-height: 1.2; white-space: nowrap; }
+#iths-cloud-demo .mat.fel b { color: var(--err); }
+#iths-cloud-demo .last { height: 8px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+#iths-cloud-demo .last i { display: block; height: 100%; width: 0; background: var(--ok); border-radius: 999px; transition: width .4s, background .3s; }
+#iths-cloud-demo .last i.hog { background: var(--pixel); }
+#iths-cloud-demo .last i.over { background: var(--err); }
+#iths-cloud-demo .resurser { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 6px; }
+#iths-cloud-demo .res { border: 1px solid #f2c2c8; background: #fdecec; border-radius: 10px; padding: 7px 9px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 7px; align-items: center; }
+#iths-cloud-demo .res svg { width: 18px; height: 18px; grid-row: span 2; color: var(--err); }
+#iths-cloud-demo .res b { font-family: var(--font-display); font-weight: 800; font-size: 13px; line-height: 1.2; }
+#iths-cloud-demo .res span { font-size: 11px; color: #8a2330; line-height: 1.3; }
+#iths-cloud-demo .res.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-cloud-demo .res.on svg { color: var(--ok); }
+#iths-cloud-demo .res.on span { color: #23633f; }
+#iths-cloud-demo .res.ny { animation: cl-ny .8s ease; }
+
+#iths-cloud-demo .logbox { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-cloud-demo .log-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-cloud-demo .log-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-cloud-demo .logg { display: grid; gap: 2px; min-height: 64px; align-content: start; }
+#iths-cloud-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-cloud-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-cloud-demo .logg .l-in { color: #e4b8d2; }
+#iths-cloud-demo .logg .l-ok { color: #a8e1c4; }
+#iths-cloud-demo .logg .l-fel { color: #ff9aa8; }
+#iths-cloud-demo .logg .l-sum { color: var(--pixel); font-weight: 700; }
+#iths-cloud-demo .logg .ny { animation: cl-ny .6s ease; }
+@keyframes cl-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-cloud-demo .kor { justify-self: start; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; background: var(--pixel); border: 0; color: var(--terminal); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#iths-cloud-demo .kor:hover { background: #ffc66e; }
+#iths-cloud-demo .kor:disabled { opacity: .5; cursor: default; }
+#iths-cloud-demo .kor[hidden] { display: none; }
+#iths-cloud-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-cloud-demo .hint[hidden] { display: none; }
+#iths-cloud-demo .browser.blink { animation: cl-blink 1.4s ease .3s; }
+@keyframes cl-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-cloud-demo .stage { gap: 16px; }
+  #iths-cloud-demo .bild { width: 60px; height: 60px; }
+  #iths-cloud-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-cloud-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-cloud-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-cloud-demo .steps { gap: 6px; }
+  #iths-cloud-demo .step { padding: 8px 8px 9px; }
+  #iths-cloud-demo .step .l { font-size: 14px; }
+  #iths-cloud-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-cloud-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-cloud-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-cloud-demo .shop { padding: 10px; }
+  #iths-cloud-demo .moln { padding: 10px 12px; }
+  #iths-cloud-demo .logbox { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-cloud-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-cloud-demo .tc li { padding: 9px 12px; }
+  #iths-cloud-demo .mat b { font-size: 14px; }
+  #iths-cloud-demo .srv { height: 38px; }
+  #iths-cloud-demo .done-box { padding: 14px 14px; }
+  #iths-cloud-demo .done-box b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-cloud-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-cloud-demo" aria-labelledby="cl-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är Cloud?</span>
+      <h2 id="cl-demo-rubrik">Ta butiken ut i molnet</h2>
+      <p>En cloud developer bygger lösningar som körs i molnet, till exempel i Microsoft Azure. De ska klara många användare, vara säkra och inte kosta mer än de behöver. Flytta samma webbshop från din dator till molnet i fyra steg, från driftsättning till AI.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Driftsätt</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Skala</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Säkerhet</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; moln</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="cl-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="cl-url">localhost:5000</span></div>
+        <div class="shop">
+          <div class="shop-top"><span>Butiken <span class="var" id="cl-var">Bara på din dator</span></span><span>Varukorg<b id="cl-count">0</b></span></div>
+          <div class="produkt">
+            <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="pris">1 299 kr</div>
+            <p class="besk">Trådlösa hörlurar med brusreducering och 30 timmars batteri.</p>
+            <button type="button" class="kop" id="cl-kop">Lägg i varukorg</button>
+            <p class="svar" id="cl-svar" role="status" aria-live="polite"></p>
+          </div>
+          <div class="nere" id="cl-nere" hidden><b>503</b><span>Butiken är överbelastad. Försök igen senare.</span></div>
+        </div>
+        <div class="moln" id="cl-moln" aria-live="polite"></div>
+        <div class="logbox" aria-label="Logg">
+          <div class="log-head"><i aria-hidden="true"></i><span id="cl-loghead">Terminal</span></div>
+          <div class="logg" id="cl-logg" aria-live="polite"></div>
+          <button type="button" class="kor" id="cl-kor">Testa från mobilen</button>
+        </div>
+        <p class="hint" id="cl-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="cl-panel">
+        <h3 class="t" id="cl-titel"></h3>
+        <p class="lead" id="cl-text"></p>
+        <div id="cl-innehall"></div>
+        <div class="done-box" id="cl-klar" hidden>
+          <b>Klart! Det här är molnutveckling.</b>
+          <span>Bli .NET Cloud Developer hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="cl-bak">Föregående</button>
+          <button type="button" class="btn" id="cl-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-cloud-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var logg = $("cl-logg"), hint = $("cl-hint"), kor = $("cl-kor"), innehall = $("cl-innehall"), moln = $("cl-moln");
+  var stepBtns = root.querySelectorAll(".step");
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var IKON = {
+    dator: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>',
+    moln: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6.1 9.5 4.25 4.25 0 0 0 7 18z"/></svg>',
+    server: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/></svg>',
+    las: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+    oppen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 7.75-1.4"/></svg>',
+    larm: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/></svg>',
+    natt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'
+  };
+
+  var STEPS = [
+    { kort: "Driftsätt", titel: "Från din dator till molnet",
+      text: "Butiken fungerar, men bara på din dator. Paketera den, skapa en plats för den i Microsoft Azure och driftsätt. Då kan alla nå den, dygnet runt." },
+    { kort: "Skala", titel: "Klarar butiken Black Friday?",
+      text: "En vanlig kväll har butiken 200 besökare i minuten. På Black Friday kommer tio gånger fler. Välj hur många servrar butiken ska ha och starta rusningen." },
+    { kort: "Säkerhet", titel: "Lås dörren till kunddatan",
+      text: "Butiken sparar namn, adresser och beställningar. I molnet kan hela internet knacka på. Kör en säkerhetsskanning och täpp till luckorna." },
+    { kort: "AI & moln", titel: "AI föreslår men du granskar",
+      text: "AI kan skriva om molnets inställningar på sekunder. Men alla förslag är inte bra för butiken. Granska dem innan de driftsätts." }
+  ];
+  var DRIFT = [
+    { id: "bygg", namn: "Paketera i en container", f: "Docker packar butiken med allt den behöver", knapp: "Bygg",
+      log: [["in", "$ docker build -t butiken:1.0 ."], ["ok", "✓ Container klar: butiken:1.0"]] },
+    { id: "skapa", namn: "Skapa en webbapp i Azure", f: "En plats i molnet där containern kan köras", knapp: "Skapa",
+      log: [["in", "$ az webapp create --name butiken"], ["ok", "✓ Webbapp skapad i Sweden Central"]] },
+    { id: "drift", namn: "Driftsätt", f: "Skicka upp containern och starta butiken", knapp: "Driftsätt",
+      log: [["in", "$ docker push butiken.azurecr.io/butiken:1.0"], ["ok", "✓ Live: butiken.azurewebsites.net"]] }
+  ];
+  var PLANER = [
+    { id: "en", namn: "1 server", f: "Samma som en vanlig kväll", kr: "300\u00a0kr/mån" },
+    { id: "fem", namn: "5 servrar hela tiden", f: "Gott om plats, även mitt i natten", kr: "1\u00a0500\u00a0kr/mån" },
+    { id: "auto", namn: "Autoskalning 1–5", f: "Fler servrar när det behövs, färre när det är lugnt", kr: "300–1\u00a0500\u00a0kr/mån" }
+  ];
+  var LUCKOR = [
+    { id: "db", namn: "Databasen är öppen mot internet", f: "Alla kan försöka logga in", fixNamn: "Bara webbappen når databasen", fixF: "Brandvägg och privat nätverk",
+      res: "Databas", resFel: "Öppen mot internet", resOk: "Bara webbappen" },
+    { id: "nyckel", namn: "Lösenordet står i koden", f: "Alla som ser koden kan läsa det", fixNamn: "Lösenordet i Key Vault", fixF: "Azure Key Vault förvarar hemligheter",
+      res: "Lösenord", resFel: "Står i koden", resOk: "I Key Vault" },
+    { id: "roll", namn: "Alla i teamet är admin", f: "Ett misstag kan radera allt", fixNamn: "Rätt behörighet för var och en", fixF: "Varje person får bara det den behöver",
+      res: "Behörighet", resFel: "Alla är admin", resOk: "Rätt roller" }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Larm när butiken blir långsam", text: "Skicka ett larm till teamet om svarstiden går över en sekund. Då hinner ni agera innan kunderna märker det.", log: "✓ Larm: svarstid över 1 s" },
+    { id: "b", titel: "Låt testmiljön sova på natten", text: "Ingen testar klockan tre på natten. Stäng av testservrarna 22–06 och spara pengar.", log: "✓ Testmiljön sover 22–06" },
+    { id: "c", titel: "Öppna databasen för alla", text: "Testservern får ”Åtkomst nekad” från databasen. Låt databasen tillåta alla IP-adresser, så försvinner felet.", log: "✗ Databasen öppen för alla" }
+  ];
+  // Black Friday: besökare per minut timme för timme. En server klarar 500 besökare i minuten.
+  var RUSNING = [["17:00", 200], ["18:00", 900], ["19:00", 1700], ["20:00", 2400], ["21:00", 2300], ["23:00", 800], ["03:00", 150]];
+  var PER_SERVER = 500;
+
+  var step = 0, rader = [], drift = {}, plan = "en", luckor = {}, ai = { a: null, b: null, c: null },
+      korg = 0, spelar = false, kort = 0, skannat = false,
+      m = { besok: 200, servrar: 1, svar: 120, kr: 300, nere: false }, timer;
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function tal(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0"); }
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 6) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Inget körts än …", "Ingen rusning än …", "Ingen skanning än …", "Inga ändringar än …"][step] + "</span>"; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function setSvar(txt, fel) { var s = $("cl-svar"); s.textContent = txt; s.classList.toggle("fel", !!fel); }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+  function chip(cls, txt) { return '<span class="chip' + (cls ? " c-" + cls : "") + '">' + txt + "</span>"; }
+  function live() { return step > 0 || !!drift.drift; }
+  function antalDrift() { return DRIFT.filter(function (d) { return drift[d.id]; }).length; }
+  function allaLuckor() { return LUCKOR.every(function (l) { return luckor[l.id]; }); }
+
+  function visaShop() {
+    var l = live();
+    $("cl-url").textContent = l ? "butiken.azurewebsites.net" : "localhost:5000";
+    $("cl-url").classList.toggle("live", l);
+    $("cl-var").textContent = l ? "Live i Azure" : "Bara på din dator";
+    $("cl-var").classList.toggle("live", l);
+    $("cl-count").textContent = korg;
+    $("cl-nere").hidden = !(step === 1 && m.nere);
+  }
+
+  function nod(cls, ikon, namn, txt) { return '<div class="nod' + (cls ? " " + cls : "") + '"><b>' + IKON[ikon] + namn + "</b><span>" + txt + "</span></div>"; }
+  function res(on, namn, txt, ikon, ny) { return '<div class="res' + (on ? " on" : "") + (ny ? " ny" : "") + '">' + IKON[ikon || (on ? "las" : "oppen")] + "<b>" + namn + "</b><span>" + txt + "</span></div>"; }
+  function visaMoln(nyRes) {
+    var h = "";
+    if (step === 0) {
+      var n = antalDrift();
+      h = '<div class="moln-head"><span>Var körs butiken?</span></div><div class="flode">' +
+        nod(n < 3 ? "on" : "", "dator", "Din dator", n < 3 ? "Butiken körs här" : "Kan stängas av") +
+        '<span class="pil' + (n === 3 ? " on" : "") + '" aria-hidden="true">→</span>' +
+        nod(n === 3 ? "on" : "", "moln", "Azure", n === 0 ? "Tomt" : n === 1 ? "Container redo" : n === 2 ? "Webbapp skapad" : "Butiken körs här, dygnet runt") + "</div>";
+    } else if (step === 1) {
+      var srv = "";
+      for (var i = 0; i < 5; i++) srv += '<div class="srv' + (i < m.servrar ? " on" + (m.nere ? " het" : "") : "") + '">' + IKON.server + "</div>";
+      var lastPct = Math.round(m.besok / (m.servrar * PER_SERVER) * 100);
+      h = '<div class="moln-head"><span>Servrar i Azure</span><em>Exempelpriser</em></div>' +
+        '<div class="servrar" aria-label="' + m.servrar + ' av 5 servrar igång">' + srv + "</div>" +
+        '<div class="last" aria-hidden="true"><i class="' + (lastPct > 100 ? "over" : lastPct > 75 ? "hog" : "") + '" style="width:' + Math.min(lastPct, 100) + '%"></i></div>' +
+        '<div class="matare"><div class="mat"><small>Besökare/min</small><b>' + tal(m.besok) + '</b></div>' +
+        '<div class="mat' + (m.svar > 1000 ? " fel" : "") + '"><small>Svarstid</small><b>' + (m.svar >= 1000 ? (m.svar / 1000).toFixed(1).replace(".", ",") + " s" : m.svar + " ms") + "</b></div>" +
+        '<div class="mat"><small>Kostnad</small><b>' + tal(m.kr) + " kr/mån</b></div></div>";
+    } else {
+      h = '<div class="moln-head"><span>Butikens resurser i Azure</span></div><div class="resurser">' +
+        LUCKOR.map(function (l) {
+          var on = step === 3 ? !(l.id === "db" && ai.c === "ja") : !!luckor[l.id];
+          var txt = step === 3 && l.id === "db" && ai.c === "ja" ? "Öppen för alla" : on ? l.resOk : l.resFel;
+          return res(on, l.res, txt, null, nyRes === l.id);
+        }).join("") +
+        (step === 3 && ai.a === "ja" ? res(true, "Larm", "Svarstid över 1 s", "larm", nyRes === "a") : "") +
+        (step === 3 && ai.b === "ja" ? res(true, "Testmiljö", "Sover 22–06", "natt", nyRes === "b") : "") +
+        "</div>";
+    }
+    moln.innerHTML = h;
+  }
+
+  function visaInnehall() {
+    var s = STEPS[step];
+    if (step === 0) {
+      var n = antalDrift();
+      innehall.innerHTML = '<ul class="tc" aria-label="Driftsättning">' + DRIFT.map(function (d, i) {
+        var on = !!drift[d.id];
+        return '<li class="' + (on ? "klar" : "") + '"><div><b>' + (i + 1) + ". " + d.namn + '</b><span class="f">' + d.f + "</span></div>" +
+          '<button type="button" class="ok" data-drift="' + d.id + '" aria-pressed="' + on + '"' + (on || i !== n || spelar ? " disabled" : "") + ">" + (on ? "Klart" : d.knapp) + "</button></li>";
+      }).join("") + "</ul>";
+    } else if (step === 1) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Antal servrar">' + PLANER.map(function (p) {
+        var on = plan === p.id;
+        return '<li class="' + (on ? "vald" : "") + '"><div><b>' + p.namn + '</b><span class="f">' + p.f + " · " + p.kr + "</span></div>" +
+          '<button type="button" class="ok" data-plan="' + p.id + '" aria-pressed="' + on + '"' + (spelar ? " disabled" : "") + ">" + (on ? "Vald" : "Välj") + "</button></li>";
+      }).join("") + "</ul>";
+    } else if (step === 2) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Säkerhetsluckor">' + LUCKOR.map(function (l) {
+        var on = !!luckor[l.id];
+        return '<li class="' + (on ? "klar" : "") + '"><div><b>' + (on ? l.fixNamn : l.namn) + '</b><span class="f">' + (on ? l.fixF : l.f) + "</span></div>" +
+          '<button type="button" class="ok" data-lucka="' + l.id + '" aria-pressed="' + on + '">' + (on ? "Fixat" : "Fixa") + "</button></li>";
+      }).join("") + "</ul>";
+    } else {
+      innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår ändringar i molnet</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    }
+    $("cl-titel").textContent = s.titel;
+    $("cl-text").textContent = s.text;
+    $("cl-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "nej");
+  }
+  function visaKor() {
+    kor.hidden = step === 3;
+    kor.disabled = spelar;
+    if (step === 0) kor.textContent = "Öppna butiken från mobilen";
+    else if (step === 1) kor.textContent = kort ? "Kör Black Friday igen" : "Starta Black Friday";
+    else if (step === 2) kor.textContent = skannat ? "Skanna igen" : "Kör säkerhetsskanning";
+  }
+
+  function render() {
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("cl-loghead").textContent = ["Terminal", "Black Friday", "Säkerhetsskanning", "Ändringar i molnet"][step];
+    $("cl-bak").hidden = step === 0;
+    $("cl-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("cl-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    visaInnehall(); visaShop(); visaMoln(); visaKor(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    clearTimeout(timer);
+    step = n; rader = []; spelar = false; kort = 0; skannat = false; korg = 0;
+    drift = {}; plan = "en"; luckor = {};
+    m = { besok: 200, servrar: 1, svar: 120, kr: 300, nere: false };
+    if (step >= 2) { plan = "auto"; }
+    if (step === 3) { LUCKOR.forEach(function (l) { luckor[l.id] = true; }); rader = [{ cls: "ok", txt: "✓ Skanning: 0 luckor" }, { cls: "fel", txt: "✗ Testservern: åtkomst nekad till databasen" }]; }
+    ai = { a: null, b: null, c: null };
+    hint.hidden = true; setSvar("");
+    render();
+  }
+
+  // Kör en serie loggrader med lite tid emellan, som en riktig terminal.
+  function kedja(fns, klar) {
+    spelar = true; visaKor(); visaInnehall();
+    var i = 0;
+    (function nasta() {
+      fns[i++](); send();
+      if (i < fns.length) timer = setTimeout(nasta, lugn ? 150 : 700);
+      else { spelar = false; visaKor(); visaInnehall(); if (klar) klar(); send(); }
+    })();
+  }
+
+  // Steg 1: driftsätt
+  function driftsatt(id) {
+    var d = DRIFT.filter(function (x) { return x.id === id; })[0];
+    kedja(d.log.map(function (r, i) {
+      return function () { logga(r[0], r[1]); if (i === d.log.length - 1) { drift[id] = true; visaShop(); visaMoln(); } };
+    }), function () {
+      if (id === "bygg") showHint("Containern innehåller butiken och allt den behöver. Den går att köra likadant överallt.");
+      else if (id === "skapa") showHint("Nu finns en plats i molnet. Den står i ett datacenter i Sverige.");
+      else showHint("Butiken är live! Nu kan alla nå den, dygnet runt, även när din dator är avstängd. Testa från mobilen.");
+      blinka();
+    });
+  }
+
+  // Steg 2: Black Friday
+  function rusning() {
+    rader = []; korg = 0; setSvar(""); hint.hidden = true;
+    var miss = 0, maxServ = 1;
+    kedja(RUSNING.map(function (r, i) {
+      return function () {
+        var besok = r[1], behov = Math.ceil(besok / PER_SERVER);
+        var serv = plan === "en" ? 1 : plan === "fem" ? 5 : Math.max(1, behov);
+        var forra = m.servrar;
+        maxServ = Math.max(maxServ, serv);
+        var last = besok / (serv * PER_SERVER);
+        m.besok = besok; m.servrar = serv; m.nere = last > 1.4;
+        m.svar = last <= 1 ? Math.round(110 + last * 70) : Math.round(1000 + (last - 1) * 1400);
+        m.kr = plan === "en" ? 300 : plan === "fem" ? 1500 : 300 + (maxServ - 1) * 15;
+        if (plan === "auto" && serv !== forra && i > 0) logga("in", r[0] + (serv > forra ? " ↑ Skalar upp till " : " ↓ Skalar ner till ") + serv + (serv === 1 ? " server" : " servrar"));
+        if (last > 1) {
+          var f = Math.round((besok - serv * PER_SERVER) * 0.35);
+          miss += f;
+          logga("fel", r[0] + " ✗ " + tal(besok) + "/min · " + tal(f) + " köp misslyckades");
+        } else if (!(plan === "auto" && serv !== forra && i > 0)) {
+          logga("ok", r[0] + " ✓ " + tal(besok) + "/min · svarstid " + m.svar + " ms");
+        }
+        if (i === RUSNING.length - 1) m.nere = false;
+        visaShop(); visaMoln();
+      };
+    }), function () {
+      kort++;
+      if (plan === "en") { logga("sum", "Black Friday: " + tal(miss) + " köp misslyckades"); showHint("En server räckte inte. Butiken blev långsam och slutade svara mitt i rusningen. Prova ett annat val och kör igen."); }
+      else if (plan === "fem") { logga("sum", "Alla köp gick igenom. Kostnad 1\u00a0500 kr/mån"); showHint("Det gick! Men fem servrar står på dygnet runt, även när butiken är tom. Finns det ett billigare sätt?"); }
+      else { logga("sum", "Alla köp gick igenom. Kostnad " + m.kr + " kr/mån"); showHint("Molnet startade fler servrar när kunderna kom och stängde av dem efteråt. Du betalar bara för det du använder."); }
+      visaMoln(); visaKor(); blinka();
+    });
+  }
+
+  // Steg 3: säkerhetsskanning
+  function skanna() {
+    rader = []; hint.hidden = true;
+    var fynd = LUCKOR.filter(function (l) { return !luckor[l.id]; });
+    var fns = [function () { logga("in", "$ az security scan --app butiken"); }];
+    LUCKOR.forEach(function (l) {
+      fns.push(function () { logga(luckor[l.id] ? "ok" : "fel", (luckor[l.id] ? "✓ " + l.fixNamn : "✗ " + l.namn)); });
+    });
+    kedja(fns, function () {
+      skannat = true; visaKor();
+      logga("sum", fynd.length ? fynd.length + (fynd.length === 1 ? " lucka" : " luckor") + " hittade" : "0 luckor. Kunddatan är skyddad.");
+      if (fynd.length === 3) showHint("Tre luckor. Fixa dem i listan och skanna igen.");
+      else if (fynd.length) showHint("Bättre! Men det finns fortfarande luckor kvar.");
+      else showHint("Inga luckor! Bara webbappen når databasen, lösenordet är gömt och alla har rätt behörighet.");
+      blinka();
+    });
+  }
+
+  kor.addEventListener("click", function () {
+    if (spelar) return;
+    if (step === 0) {
+      if (live()) { logga("ok", "Mobil: butiken.azurewebsites.net ✓ laddad på 0,3 s"); showHint("Det fungerar! Butiken ligger i molnet, så den kan nås från vilken mobil som helst."); }
+      else { logga("fel", "Mobil: localhost:5000 ✗ sidan kan inte nås"); showHint("Mobilen hittar inte butiken. localhost betyder ”den här datorn”, så butiken finns bara hos dig. Driftsätt den till molnet."); }
+      blinka(); send();
+      return;
+    }
+    if (step === 1) { rusning(); return; }
+    if (step === 2) skanna();
+  });
+
+  $("cl-kop").addEventListener("click", function () {
+    if (step === 1 && m.nere) { setSvar("Det gick inte. Servern svarar inte.", true); send(); return; }
+    korg++; visaShop(); setSvar("Tillagd i varukorgen."); send();
+  });
+
+  innehall.addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b || b.disabled || spelar) return;
+    var sel, nyRes;
+    if (b.hasAttribute("data-drift")) {
+      driftsatt(b.getAttribute("data-drift"));
+      return;
+    } else if (b.hasAttribute("data-plan")) {
+      plan = b.getAttribute("data-plan");
+      var p = PLANER.filter(function (x) { return x.id === plan; })[0];
+      m = { besok: 200, servrar: plan === "fem" ? 5 : 1, svar: 120, kr: plan === "fem" ? 1500 : 300, nere: false };
+      logga("in", "Valt: " + p.namn.toLowerCase());
+      showHint("Starta Black Friday och se vad som händer.");
+      sel = '.ok[data-plan="' + plan + '"]';
+    } else if (b.hasAttribute("data-lucka")) {
+      var id = b.getAttribute("data-lucka");
+      luckor[id] = !luckor[id];
+      var l = LUCKOR.filter(function (x) { return x.id === id; })[0];
+      logga(luckor[id] ? "ok" : "fel", luckor[id] ? "✓ " + l.fixNamn : "Ångrat: " + l.fixNamn.toLowerCase());
+      if (allaLuckor()) showHint("Alla tre är fixade. Skanna igen och kontrollera.");
+      else hint.hidden = true;
+      nyRes = id;
+      sel = '.ok[data-lucka="' + id + '"]';
+    } else {
+      var a = b.getAttribute("data-ai"), v = b.getAttribute("data-val");
+      ai[a] = ai[a] === v ? null : v;
+      var g = SUGS.filter(function (x) { return x.id === a; })[0];
+      if (ai[a] === "ja") logga(a === "c" ? "fel" : "ok", g.log);
+      else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+      if (a === "c" && ai.c === "ja") showHint("Felet försvinner, men nu kan hela internet försöka nå kunddatan. Ge bara testservern åtkomst i stället. Avvisa förslaget.");
+      else if (a === "c" && ai.c === "nej") showHint("Rätt! En snabb lösning får inte öppna en säkerhetslucka. Du granskar, AI hjälper.");
+      else hint.hidden = true;
+      nyRes = a === "c" ? "db" : a;
+      sel = '.ok[data-ai="' + a + '"][data-val="' + v + '"]';
+    }
+    visaInnehall(); visaShop(); visaMoln(nyRes);
+    var nb = root.querySelector(sel);
+    if (nb) nb.focus({ preventScroll: true });
+    blinka();
+    send();
+  });
+
+  function blinka() {
+    if (root.clientWidth > 600) return;
+    var br = $("cl-browser");
+    setTimeout(function () {
+      br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+      br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+    }, 60);
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("cl-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("cl-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "cloud-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>
+
+</body>
+</html>
