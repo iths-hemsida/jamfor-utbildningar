@@ -106,3 +106,11 @@ Mappen `vad-ar-java/` innehåller en demo för utbildningssidan Javautvecklare: 
 - Källan är `vad-ar-java/snippet.html`. Kör `python3 tools/build-vad-ar-java.py` efter ändringar, så byggs `vad-ar-java/index.html` (GitHub Pages) och `wordpress/vad-ar-java-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-java-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "java-demo-height"`).
+
+## Vad är mjukvarutest? (levande demo)
+
+Mappen `vad-ar-mjukvarutest/` innehåller en demo för utbildningssidan Mjukvarutestare med testautomation: "Hitta felen innan kunderna gör det". Samma webbshop som i "Vad är frontend?" och "Vad är Java?", men nu testas den i fyra steg: testfall (besökaren hittar en bugg i antalsväljaren), buggrapport, testautomation (Selenium klickar själv och Cucumber-testerna stoppar en trasig kodändring) och AI & kvalitet (godkänn eller avvisa AI:s förslag på testfall). Innehållet bygger på iths.se/utbildningar/mjukvarutestare/ (hämtad 12 november 2026), som nämner Selenium, Cucumber, JIRA, continuous testing och AI i testarbetet.
+
+- Källan är `vad-ar-mjukvarutest/snippet.html`. Kör `python3 tools/build-vad-ar-mjukvarutest.py` efter ändringar, så byggs `vad-ar-mjukvarutest/index.html` (GitHub Pages) och `wordpress/vad-ar-mjukvarutest-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-test-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "test-demo-height"`).
