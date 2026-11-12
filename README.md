@@ -193,3 +193,7 @@ Mappen `framtidsyrke/` innehåller fyra kort för avsnittet med samma namn på u
 ## Vem är du? (vem-ar-du/)
 
 Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg (4–5 → "Det låter som du!", 0–3 → quizet). Redigera `vem-ar-du/snippet.html` och kör `python3 tools/build-vem-ar-du.py`. Länkarna ställs in i `LANKAR` i skriptet. WPCode-version: `wordpress/vem-ar-du-wpcode.html`.
+
+## Därför är mjukvarutestare ett framtidsyrke (framtidsyrke-mjukvarutest/)
+
+Fem levande kort för Mjukvarutestare-sidan: fler digitala tjänster över tid, ett test som hittar en bugg i AI-skriven kod, manuellt mot automatiserat, när buggen hittas och branscher. Redigera `framtidsyrke-mjukvarutest/snippet.html` och kör `python3 tools/build-framtidsyrke-mjukvarutest.py`. WPCode-version: `wordpress/framtidsyrke-mjukvarutest-wpcode.html`.

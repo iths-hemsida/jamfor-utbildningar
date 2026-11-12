@@ -1,0 +1,326 @@
+<!-- IT-Högskolan: "Därför är mjukvarutestare ett framtidsyrke" – fem levande kort. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/framtidsyrke-mjukvarutest/ som iframe. All CSS är avgränsad till #iths-mt-framtid. -->
+<style>
+/* Fem skäl, vart och ett med en liten interaktiv illustration:
+   1 fler digitala tjänster över tid, 2 testet hittar en bugg i AI:ns kod, 3 manuellt mot automatiserat,
+   4 när buggen hittas, 5 branscher. Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9,
+   Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. Medvetet bara ljust tema, som iths.se. */
+#iths-mt-framtid {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef; --ok: #2f7d55;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-mt-framtid *, #iths-mt-framtid *::before, #iths-mt-framtid *::after { box-sizing: border-box; }
+#iths-mt-framtid .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-mt-framtid h3 { font-family: var(--font-display); }
+#iths-mt-framtid h2, #iths-mt-framtid h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+#iths-mt-framtid p { margin: 0; }
+#iths-mt-framtid button { font: inherit; color: inherit; cursor: pointer; }
+#iths-mt-framtid :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-mt-framtid .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-mt-framtid .intro { display: grid; gap: 8px; }
+/* Huvudrubriken i Futura semibold, samma som rubrikerna på iths.se (font-family: futura; font-weight: 600).
+   I WPCode används sidans egen webbfont. I iframe används Futura som finns inbyggt i Mac och iPhone, annars Avenir. */
+#iths-mt-framtid .intro h2 { color: var(--kod); font-size: 25px; font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-transform: none; }
+#iths-mt-framtid .intro p { color: var(--muted); max-width: 64ch; }
+
+/* Korten */
+#iths-mt-framtid .kort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#iths-mt-framtid .k { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+#iths-mt-framtid .illu { background: var(--soft); min-height: 200px; position: relative; overflow: hidden; display: grid; place-items: center; padding: 14px; }
+#iths-mt-framtid .txt { padding: 16px 18px 18px; display: grid; gap: 6px; align-content: start; }
+#iths-mt-framtid .txt h3 { font-size: 19px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+#iths-mt-framtid .txt h3::before { content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--pixel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%232D1A2E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; transform: translateY(2px); }
+#iths-mt-framtid .txt p { color: var(--muted); font-size: 15px; }
+
+/* Små knappar i illustrationerna */
+#iths-mt-framtid .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+#iths-mt-framtid .seg button { border: 0; background: transparent; border-radius: 999px; padding: 5px 11px; font-family: var(--font-display); font-weight: 800; font-size: 12px; color: var(--muted); }
+#iths-mt-framtid .seg button[aria-pressed="true"] { background: var(--kod); color: #fff; }
+#iths-mt-framtid .mini { border-radius: 999px; padding: 6px 13px; font-family: var(--font-display); font-weight: 800; font-size: 12px; border: 2px solid var(--kod); background: var(--kod); color: #fff; }
+#iths-mt-framtid .mini.ghost { background: var(--surface); color: var(--kod); }
+
+/* Skydd mot temats knapp- och liststilar i WPCode */
+#iths-mt-framtid button { white-space: normal; text-transform: none; letter-spacing: normal; height: auto; min-height: 0; min-width: 0; line-height: 1.3; box-shadow: none; text-shadow: none; margin: 0; -webkit-appearance: none; appearance: none; }
+#iths-mt-framtid .k.bred { grid-column: 1 / -1; }
+#iths-mt-framtid .k.bred .illu { min-height: 150px; }
+#iths-mt-framtid .fel { color: #b3261e; font-family: var(--font-display); font-weight: 800; }
+#iths-mt-framtid .stack { width: 100%; display: grid; gap: 10px; align-content: center; }
+
+/* 1: Digitala tjänster */
+#iths-mt-framtid .tj { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+#iths-mt-framtid .tj span { aspect-ratio: 1; border-radius: 8px; background: #e7d7e1; display: grid; place-items: center; font-size: 18px; filter: grayscale(1); opacity: .45; transition: background .3s ease, opacity .3s ease, filter .3s ease, transform .3s ease; }
+#iths-mt-framtid .tj span.on { background: var(--surface); filter: none; opacity: 1; transform: scale(1.04); box-shadow: inset 0 0 0 2px var(--kod); }
+#iths-mt-framtid .tj-text { font-size: 13.5px; text-align: center; }
+#iths-mt-framtid .tj-text b { font-family: var(--font-display); color: var(--kod); }
+
+/* 2 och 4: kod och resultat */
+#iths-mt-framtid .rad { background: var(--terminal); color: #f3e9f0; border-radius: 10px; padding: 9px 12px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; overflow-wrap: anywhere; white-space: pre-wrap; }
+#iths-mt-framtid .rad .kw { color: #e4b8d2; }
+#iths-mt-framtid .rad .fn { color: var(--pixel); }
+#iths-mt-framtid .rad .bugg { background: rgba(255, 120, 110, .3); border-radius: 3px; }
+#iths-mt-framtid .rad .ny { background: rgba(90, 200, 140, .28); border-radius: 3px; }
+#iths-mt-framtid .ruta { background: var(--surface); border-radius: 10px; padding: 9px 11px; display: grid; gap: 8px; font-size: 13px; box-shadow: 0 4px 14px rgba(45, 26, 46, .1); }
+#iths-mt-framtid .ruta code { font-family: var(--font-mono); font-size: 12px; }
+#iths-mt-framtid .knappar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+#iths-mt-framtid .klart { color: var(--ok); font-family: var(--font-display); font-weight: 800; }
+#iths-mt-framtid .lank { border: 0; background: none; padding: 0; color: var(--kod); text-decoration: underline; font-size: 12px; }
+
+/* 3: Manuellt mot automatiserat */
+#iths-mt-framtid .lopp { display: grid; gap: 8px; }
+#iths-mt-framtid .bana { display: grid; grid-template-columns: 96px minmax(0, 1fr) 44px; gap: 8px; align-items: center; font-size: 12.5px; }
+#iths-mt-framtid .bana b { font-family: var(--font-display); font-weight: 800; }
+#iths-mt-framtid .spar { height: 12px; border-radius: 6px; background: #e7d7e1; overflow: hidden; }
+#iths-mt-framtid .spar i { display: block; height: 100%; width: 0; border-radius: 6px; background: var(--server); }
+#iths-mt-framtid .bana.auto .spar i { background: var(--kod); }
+#iths-mt-framtid .bana .n { font-family: var(--font-mono); font-size: 12px; text-align: right; }
+#iths-mt-framtid .lopp-text { font-size: 13px; min-height: 2.6em; }
+
+/* 4: När hittas buggen */
+#iths-mt-framtid .tidslinje { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#iths-mt-framtid .tidslinje button { border: 0; border-radius: 0; background: var(--surface); color: var(--muted); padding: 7px 4px; font-family: var(--font-display); font-weight: 800; font-size: 12px; border-right: 1px solid var(--line); }
+#iths-mt-framtid .tidslinje button:first-child { border-radius: 999px 0 0 999px; }
+#iths-mt-framtid .tidslinje button:last-child { border-radius: 0 999px 999px 0; border-right: 0; }
+#iths-mt-framtid .tidslinje button[aria-pressed="true"] { background: var(--kod); color: #fff; }
+#iths-mt-framtid .paverkan { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+#iths-mt-framtid .paverkan .spar i { background: var(--ok); transition: width .4s ease, background .4s ease; }
+#iths-mt-framtid .paverkan .spar i.mellan { background: var(--pixel); }
+#iths-mt-framtid .paverkan .spar i.hog { background: #b3261e; }
+
+/* 5: Branscher */
+#iths-mt-framtid .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+#iths-mt-framtid .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-family: var(--font-display); font-weight: 800; font-size: 13px; }
+#iths-mt-framtid .chip:hover { border-color: var(--kod); }
+#iths-mt-framtid .chip[aria-pressed="true"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-mt-framtid .bransch-text { background: var(--surface); border-radius: 10px; padding: 10px 12px; font-size: 13.5px; min-height: 64px; }
+
+/* Smal yta: en spalt */
+@container (max-width: 600px) {
+  #iths-mt-framtid .kort { grid-template-columns: minmax(0, 1fr); }
+  #iths-mt-framtid .tj { grid-template-columns: repeat(4, minmax(0, 1fr)); width: 100%; max-width: 240px; justify-self: center; }
+  #iths-mt-framtid .rad { font-size: 11.5px; padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-mt-framtid * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-mt-framtid" aria-labelledby="mt-framtid-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Ett yrke med framtid</span>
+      <h2 id="mt-framtid-rubrik">Därför är mjukvarutestare ett framtidsyrke</h2>
+    </div>
+
+    <div class="kort">
+      <article class="k">
+        <div class="illu">
+          <div class="stack">
+            <div class="seg" role="group" aria-label="Välj år" style="justify-self:center">
+              <button type="button" data-ar="0" aria-pressed="false">2000</button>
+              <button type="button" data-ar="1" aria-pressed="false">2010</button>
+              <button type="button" data-ar="2" aria-pressed="true">2020</button>
+              <button type="button" data-ar="3" aria-pressed="false">Idag</button>
+            </div>
+            <div class="tj" id="mt-tj" aria-hidden="true"><span>🏦</span><span>🛒</span><span>🚆</span><span>🏥</span><span>📚</span><span>🎬</span><span>💳</span><span>🏛️</span><span>🚗</span><span>🍔</span><span>📦</span><span>💬</span></div>
+            <p class="tj-text" id="mt-tj-text" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Allt mer behöver testas</h3>
+          <p>När fler tjänster och verksamheter blir digitala ökar behovet av att säkerställa att systemen fungerar som de ska.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="stack" id="mt-ai" aria-live="polite"></div>
+        </div>
+        <div class="txt">
+          <h3>AI ökar behovet av kvalitetssäkring</h3>
+          <p>AI kan generera kod, men någon behöver testa att den fungerar, är säker och håller rätt kvalitet.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="stack">
+            <div class="lopp" aria-hidden="true">
+              <div class="bana"><b>För hand</b><span class="spar"><i id="mt-man"></i></span><span class="n" id="mt-man-n">0</span></div>
+              <div class="bana auto"><b>Automatiserat</b><span class="spar"><i id="mt-auto"></i></span><span class="n" id="mt-auto-n">0</span></div>
+            </div>
+            <div class="knappar"><button type="button" class="mini" id="mt-kor">Kör 200 tester</button></div>
+            <p class="lopp-text" id="mt-lopp-text" aria-live="polite">Samma 200 tester. Vem blir klar först?</p>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Testning blir mer automatiserad</h3>
+          <p>Företag använder allt mer testautomation för att kunna utveckla och lansera digitala tjänster snabbare.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="stack">
+            <p style="font-size:13px;text-align:center">Kassan räknar fel. När hittas buggen?</p>
+            <div class="tidslinje" role="group" aria-label="När hittas buggen">
+              <button type="button" data-nar="0" aria-pressed="true">Under utveckling</button>
+              <button type="button" data-nar="1" aria-pressed="false">I testet</button>
+              <button type="button" data-nar="2" aria-pressed="false">Hos kunden</button>
+            </div>
+            <div class="paverkan"><span>Påverkan</span><span class="spar"><i id="mt-pav"></i></span></div>
+            <p class="ruta" id="mt-nar-text" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Kvalitet och säkerhet blir viktigare</h3>
+          <p>Ju mer vi förlitar oss på digitala system, desto viktigare blir det att upptäcka problem innan de når användarna.</p>
+        </div>
+      </article>
+
+      <article class="k bred">
+        <div class="illu">
+          <div class="stack">
+            <div class="chips" role="group" aria-label="Branscher">
+              <button type="button" class="chip" data-b="0" aria-pressed="true">Tech</button>
+              <button type="button" class="chip" data-b="1" aria-pressed="false">E-handel</button>
+              <button type="button" class="chip" data-b="2" aria-pressed="false">Bank</button>
+              <button type="button" class="chip" data-b="3" aria-pressed="false">Industri</button>
+              <button type="button" class="chip" data-b="4" aria-pressed="false">Offentlig sektor</button>
+            </div>
+            <p class="bransch-text" id="mt-bransch" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>En kompetens som behövs i många branscher</h3>
+          <p>Testare behövs inom allt från tech och e-handel till bank, industri och offentlig sektor.</p>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-mt-framtid");
+  if (!root) return;
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 1: Fler digitala tjänster över tid
+  var AR = [
+    { n: 2, t: "<b>2 av 12</b> vardagstjänster fanns på nätet." },
+    { n: 5, t: "<b>5 av 12</b> var digitala, oftast bara på datorn." },
+    { n: 9, t: "<b>9 av 12</b> använder du i mobilen." },
+    { n: 12, t: "<b>Alla 12</b> är digitala. Alla behöver testas." }
+  ];
+  var tj = root.querySelectorAll("#mt-tj span");
+  var tjText = document.getElementById("mt-tj-text");
+  var arBtns = root.querySelectorAll("[data-ar]");
+  function visaAr(i) {
+    tj.forEach(function (s, k) { s.classList.toggle("on", k < AR[i].n); });
+    tjText.innerHTML = AR[i].t;
+    arBtns.forEach(function (b) { b.setAttribute("aria-pressed", +b.getAttribute("data-ar") === i ? "true" : "false"); });
+  }
+  arBtns.forEach(function (b) { b.addEventListener("click", function () { visaAr(+b.getAttribute("data-ar")); }); });
+  visaAr(2);
+
+  // 2: Testet hittar en bugg i AI:ns kod
+  var ai = document.getElementById("mt-ai");
+  var KOD_FEL = '<span class="kw">function</span> <span class="fn">rabatt</span>(pris, procent) {\n  <span class="kw">return</span> <span class="bugg">pris - procent</span>;\n}';
+  var KOD_RATT = '<span class="kw">function</span> <span class="fn">rabatt</span>(pris, procent) {\n  <span class="kw">return</span> <span class="ny">pris * (1 - procent / 100)</span>;\n}';
+  var TEST = "Test: <code>rabatt(500, 10)</code> ska bli <code>450</code>";
+  function aiVisa(lage) {
+    var kod = '<div class="rad">' + (lage === "ratt" ? KOD_RATT : KOD_FEL) + "</div>";
+    var r;
+    if (lage === "start") {
+      r = '<div class="ruta"><span>AI skrev koden. ' + TEST + '</span><div class="knappar"><button type="button" class="mini" data-ai="kor">Kör testet</button></div></div>';
+    } else if (lage === "fel") {
+      r = '<div class="ruta"><span><span class="fel">✗ Fick 490.</span> Testet hittade en bugg i AI:ns kod.</span><div class="knappar"><button type="button" class="mini" data-ai="ratt">Rätta och testa igen</button></div></div>';
+    } else {
+      r = '<div class="ruta"><div class="knappar"><span class="klart">✓ 450. Testet går igenom.</span><button type="button" class="lank" data-ai="start">Börja om</button></div></div>';
+    }
+    ai.innerHTML = kod + r;
+  }
+  ai.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-ai]");
+    if (!t) return;
+    var v = t.getAttribute("data-ai");
+    aiVisa(v === "kor" ? "fel" : v);
+    var f = ai.querySelector("button");
+    if (f) f.focus({ preventScroll: true });
+  });
+  aiVisa("start");
+
+  // 3: Manuellt mot automatiserat
+  var man = document.getElementById("mt-man"), manN = document.getElementById("mt-man-n");
+  var aut = document.getElementById("mt-auto"), autN = document.getElementById("mt-auto-n");
+  var kor = document.getElementById("mt-kor"), loppText = document.getElementById("mt-lopp-text");
+  var TOT = 200, MAN_SLUT = 8, igang = false;
+  function rita(p) {
+    var a = Math.round(TOT * p), m = Math.round(MAN_SLUT * p);
+    aut.style.width = (a / TOT * 100) + "%"; autN.textContent = a;
+    man.style.width = (m / TOT * 100) + "%"; manN.textContent = m;
+  }
+  kor.addEventListener("click", function () {
+    if (igang) return;
+    igang = true; kor.disabled = true; loppText.textContent = "Testerna körs …";
+    var start = null, tid = lugn ? 1 : 1800;
+    function steg(ts) {
+      if (start === null) start = ts;
+      var p = Math.min(1, (ts - start) / tid);
+      rita(p);
+      if (p < 1) { requestAnimationFrame(steg); return; }
+      loppText.innerHTML = '<span class="klart">✓ Automatiserat: alla 200 klara.</span> För hand hann du 8. Testaren skriver testerna, datorn kör dem om och om igen.';
+      kor.textContent = "Kör igen"; kor.disabled = false; igang = false;
+    }
+    rita(0);
+    requestAnimationFrame(steg);
+  });
+
+  // 4: När hittas buggen
+  var NAR = [
+    { w: 12, k: "", t: "Utvecklaren rättar på några minuter. Ingen användare märker något." },
+    { w: 40, k: "mellan", t: "Testaren hittar felet före lansering. Det tar lite tid att rätta, men kunderna slipper det." },
+    { w: 100, k: "hog", t: "Kunderna betalar fel pris, supporten ringer och förtroendet tar skada. Rättningen blir brådskande och dyr." }
+  ];
+  var narBtns = root.querySelectorAll("[data-nar]");
+  var pav = document.getElementById("mt-pav"), narText = document.getElementById("mt-nar-text");
+  function visaNar(i) {
+    pav.style.width = NAR[i].w + "%"; pav.className = NAR[i].k; narText.textContent = NAR[i].t;
+    narBtns.forEach(function (b) { b.setAttribute("aria-pressed", +b.getAttribute("data-nar") === i ? "true" : "false"); });
+  }
+  narBtns.forEach(function (b) { b.addEventListener("click", function () { visaNar(+b.getAttribute("data-nar")); }); });
+  visaNar(0);
+
+  // 5: Branscher
+  var BRANSCH = [
+    "Appar och plattformar som släpper nya versioner varje vecka. Testerna ser till att inget gammalt går sönder.",
+    "Kassan, frakten och rabattkoderna. Ett fel i köpflödet märks direkt i försäljningen.",
+    "Betalningar, överföringar och inloggning med BankID. Här måste säkerhet och exakthet sitta.",
+    "Styrsystem och mjukvara i maskiner och fordon, där ett fel kan stoppa en hel produktionslinje.",
+    "E-tjänster som deklarationen, vårdens journaler och ansökningar som alla medborgare ska kunna använda."
+  ];
+  var chips = root.querySelectorAll(".chip");
+  var bText = document.getElementById("mt-bransch");
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+      bText.textContent = BRANSCH[+c.getAttribute("data-b")];
+    });
+  });
+  bText.textContent = BRANSCH[0];
+
+  // Höjd till förälder när komponenten visas i en iframe
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "mt-framtid-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
