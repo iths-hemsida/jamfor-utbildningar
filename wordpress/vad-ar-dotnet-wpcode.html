@@ -1,0 +1,527 @@
+<!-- IT-Högskolan: "Vad är .NET?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-dotnet/ som iframe. All CSS är avgränsad till #iths-net-demo. -->
+<style>
+/* Bygg en rabattkod med C# och .NET. Samma webbshop som i de andra demona, men nu byggs en rabattkod i fyra steg:
+   C# (kompilatorn hittar felet), webb-API (servern räknar priset), databas (koderna är data) och AI & kvalitet (låt AI granska koden).
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-net-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-net-demo *, #iths-net-demo *::before, #iths-net-demo *::after { box-sizing: border-box; }
+#iths-net-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-net-demo h2, #iths-net-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-net-demo p { margin: 0; }
+#iths-net-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-net-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-net-demo .intro { display: grid; gap: 8px; min-width: 0; overflow-wrap: break-word; }
+#iths-net-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-net-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-net-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-net-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-net-demo .step:hover { border-color: var(--server); }
+#iths-net-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-net-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; }
+#iths-net-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-net-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-net-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-net-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-net-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-net-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-net-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-net-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-net-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-net-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-net-demo .btn.ghost:hover { background: var(--soft); }
+#iths-net-demo .btn[hidden] { display: none; }
+
+/* Kodruta */
+#iths-net-demo .code { margin: 0; background: var(--terminal); color: #f3e9f0; border-radius: 12px; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; tab-size: 2; }
+#iths-net-demo .code .file { display: block; color: #bfa8b8; font-size: 11.5px; margin-bottom: 6px; letter-spacing: .04em; }
+#iths-net-demo .tk-str { color: #a8e1c4; }
+#iths-net-demo .tk-kw { color: var(--pixel); }
+#iths-net-demo .tk-typ { color: #e4b8d2; }
+#iths-net-demo .tk-com { color: #a48f9f; font-style: italic; }
+#iths-net-demo .ln { display: block; }
+#iths-net-demo .ln.add { background: rgba(90, 200, 140, .24); margin: 0 -16px; padding: 0 16px; }
+#iths-net-demo .ln.err { background: rgba(240, 110, 125, .18); margin: 0 -16px; padding: 0 16px; }
+#iths-net-demo .ln.err .tk-str { text-decoration: wavy underline #ff9aa8; text-underline-offset: 3px; }
+
+/* AI-förslag */
+#iths-net-demo .ai { display: grid; gap: 10px; }
+#iths-net-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-net-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-net-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-net-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-net-demo .sug.nej { background: var(--moln); }
+#iths-net-demo .sug.nej b, #iths-net-demo .sug.nej p { color: var(--muted); }
+#iths-net-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-net-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-net-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-net-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-net-demo .ok:hover { background: var(--soft); }
+#iths-net-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-net-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); }
+#iths-net-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-net-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-net-demo .done-box span { white-space: nowrap; }
+#iths-net-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, Visual Studio eller servern under */
+#iths-net-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-net-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-net-demo .dots { display: flex; gap: 5px; }
+#iths-net-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-net-demo .url { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-net-demo .pill { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 12px; line-height: 1.2; border-radius: 999px; padding: 4px 11px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-net-demo .pill:hover { border-color: var(--server); background: var(--soft); }
+#iths-net-demo .pill[hidden] { display: none; }
+#iths-net-demo .shop { background: var(--moln); padding: 14px; }
+#iths-net-demo .produkt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-net-demo .topp { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; align-items: center; }
+#iths-net-demo .bild { grid-row: span 2; width: 64px; height: 64px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-net-demo .bild svg { width: 48px; color: var(--kod); }
+#iths-net-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-net-demo .meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+#iths-net-demo .meta b { font-family: var(--font-display); color: var(--kod); font-size: 16px; }
+#iths-net-demo .meta b.fusk { color: var(--err); outline: 2px dashed var(--err); outline-offset: 2px; border-radius: 3px; }
+#iths-net-demo .meta s { color: var(--muted); }
+#iths-net-demo .meta .lapp { font-family: var(--font-display); font-weight: 800; font-size: 12px; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 1px 8px; }
+#iths-net-demo .kassa { min-width: 0; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--line); padding-top: 10px; display: grid; gap: 8px; }
+#iths-net-demo .kassa label { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+#iths-net-demo .rad { display: flex; gap: 8px; }
+#iths-net-demo .rad input { flex: 1; min-width: 0; font: inherit; font-family: var(--font-mono); font-size: 15px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; color: var(--ink); background: var(--surface); }
+#iths-net-demo .rad input:focus-visible { border-color: var(--kod); outline-offset: 0; }
+#iths-net-demo .skicka { flex: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 0; border-radius: 999px; padding: 9px 18px; background: var(--kod); color: #fff; cursor: pointer; }
+#iths-net-demo .skicka:hover { background: var(--terminal); }
+#iths-net-demo .svar { font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; }
+#iths-net-demo .svar:empty { display: none; }
+#iths-net-demo .svar.s-ok { background: #e9f6ef; color: #23633f; }
+#iths-net-demo .svar.s-fel { background: #fdecec; color: #8a2330; }
+#iths-net-demo .svar.s-info { background: #fff6e3; color: var(--terminal); }
+
+#iths-net-demo .server { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-net-demo .server-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-net-demo .server-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); flex: none; }
+#iths-net-demo .server-head i.vs { background: #b792e8; box-shadow: 0 0 0 3px rgba(183, 146, 232, .25); }
+#iths-net-demo .server-head .pill, #iths-net-demo .db-head .pill { margin-left: auto; background: transparent; color: #f3e9f0; border-color: rgba(255,255,255,.3); letter-spacing: 0; text-transform: none; font-family: var(--font-body); font-weight: 400; }
+#iths-net-demo .server-head .pill:hover, #iths-net-demo .db-head .pill:hover { background: rgba(255,255,255,.1); }
+#iths-net-demo .logg { display: grid; gap: 2px; min-height: 40px; }
+#iths-net-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-net-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-net-demo .logg .l-in { color: #e4b8d2; }
+#iths-net-demo .logg .l-ok { color: #a8e1c4; }
+#iths-net-demo .logg .l-fel { color: #ff9aa8; }
+#iths-net-demo .logg .l-info { color: #bfa8b8; }
+#iths-net-demo .logg .ny { animation: nt-nyl .6s ease; }
+@keyframes nt-nyl { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-net-demo .ratta { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 12px; border-radius: 999px; padding: 3px 11px; margin-top: 4px; cursor: pointer; border: 0; background: var(--pixel); color: var(--terminal); }
+#iths-net-demo .ratta:hover { background: #ffc875; }
+#iths-net-demo .db, #iths-net-demo .test { border-top: 1px dashed rgba(255,255,255,.18); padding-top: 8px; display: grid; gap: 4px; }
+#iths-net-demo .db[hidden], #iths-net-demo .test[hidden] { display: none; }
+#iths-net-demo .db-head { display: flex; align-items: center; gap: 8px; }
+#iths-net-demo .db b, #iths-net-demo .test b { font-family: var(--font-display); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-net-demo .db table { border-collapse: collapse; width: 100%; font-size: 12px; }
+#iths-net-demo .db th { text-align: left; font-weight: 400; color: #a48f9f; padding: 2px 8px 2px 0; }
+#iths-net-demo .db td { padding: 2px 8px 2px 0; border-bottom: 1px solid rgba(255,255,255,.08); white-space: nowrap; }
+#iths-net-demo .db th:last-child, #iths-net-demo .db td:last-child { text-align: right; padding-right: 0; }
+#iths-net-demo .db .gammal { color: #a48f9f; text-decoration: line-through; }
+#iths-net-demo .db tr.ny td { animation: nt-nyl .8s ease; }
+#iths-net-demo .test span.t-ok { color: #a8e1c4; }
+#iths-net-demo .test span.t-fel { color: #ff9aa8; }
+#iths-net-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-net-demo .hint[hidden] { display: none; }
+#iths-net-demo .browser.blink { animation: nt-blink 1.4s ease .3s; }
+@keyframes nt-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-net-demo .stage { gap: 16px; }
+  #iths-net-demo .code { font-size: 12px; padding: 12px 14px; }
+}
+@container (max-width: 600px) {
+  #iths-net-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-net-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-net-demo .steps { gap: 6px; }
+  #iths-net-demo .step { padding: 8px 8px 9px; }
+  #iths-net-demo .step .l { font-size: 14px; }
+  #iths-net-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-net-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-net-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-net-demo .code { font-size: 11px; padding: 10px 12px; }
+  #iths-net-demo .ln.add, #iths-net-demo .ln.err { margin: 0 -12px; padding: 0 12px; }
+  #iths-net-demo .shop { padding: 10px; }
+  #iths-net-demo .chrome { padding: 8px 10px; gap: 8px; }
+  #iths-net-demo .dots { display: none; }
+  #iths-net-demo .server { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-net-demo .db table { font-size: 11px; }
+  #iths-net-demo .db th, #iths-net-demo .db td { padding-right: 6px; }
+  #iths-net-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-net-demo .skicka { padding: 9px 14px; font-size: 14px; }
+  #iths-net-demo .rad input { font-size: 14px; padding: 8px 12px; }
+  #iths-net-demo .bild { width: 52px; height: 52px; }
+  #iths-net-demo .bild svg { width: 40px; }
+  #iths-net-demo .done-box { padding: 14px 14px; }
+  #iths-net-demo .done-box b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-net-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-net-demo" aria-labelledby="nt-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är .NET?</span>
+      <h2 id="nt-demo-rubrik">Bygg en rabattkod med C# och .NET</h2>
+      <p>.NET är Microsofts plattform för att bygga webbapplikationer, API:er och program. Språket du skriver i heter C#. Bygg en rabattkod till webbshoppen i fyra steg.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">C#</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Webb-API</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Databas</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; kvalitet</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="nt-browser" aria-label="Förhandsvisning">
+        <div class="chrome"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url" aria-hidden="true">butiken.se/kassa</span><button type="button" class="pill" id="nt-fuska" hidden>Fuska med priset</button></div>
+        <div class="shop">
+          <div class="produkt">
+            <div class="topp">
+              <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+              <div class="namn">Pixel One</div>
+              <div class="meta" id="nt-pris" aria-live="polite"></div>
+            </div>
+            <form class="kassa" id="nt-form">
+              <label for="nt-kod">Rabattkod</label>
+              <div class="rad">
+                <input type="text" id="nt-kod" maxlength="20" autocomplete="off" spellcheck="false">
+                <button type="submit" class="skicka">Använd</button>
+              </div>
+              <p class="svar" id="nt-svar" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+        <div class="server" id="nt-server">
+          <div class="server-head"><i aria-hidden="true" id="nt-lampa"></i><span id="nt-server-namn">Servern · .NET</span><button type="button" class="pill" id="nt-bygg">▶ Bygg</button></div>
+          <div class="logg" id="nt-logg" aria-live="polite"></div>
+          <div class="db" id="nt-db" hidden><div class="db-head"><b>Databas · Rabattkoder</b><button type="button" class="pill" id="nt-nykod">+ Ny kod: JUL20</button></div><table><thead><tr><th>Kod</th><th>Rabatt</th><th>Giltig till</th><th>Använd</th></tr></thead><tbody id="nt-rader"></tbody></table></div>
+          <div class="test" id="nt-test" hidden><b>Enhetstester</b><span id="nt-tester"></span></div>
+        </div>
+        <p class="hint" id="nt-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="nt-panel" aria-live="polite">
+        <h3 class="t" id="nt-titel"></h3>
+        <p class="lead" id="nt-ingress"></p>
+        <div id="nt-innehall"></div>
+        <div class="done-box" id="nt-klar" hidden>
+          <b>Klart! Det här är .NET-utveckling.</b>
+          <span>Bli .NET-utvecklare hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="nt-bak">Föregående</button>
+          <button type="button" class="btn" id="nt-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-net-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var logg = $("nt-logg"), hint = $("nt-hint"), svar = $("nt-svar"), input = $("nt-kod");
+  var stepBtns = root.querySelectorAll(".step");
+  var PRIS = 1299;
+
+  // Datum räknas från dagens datum, så att demon fungerar oavsett när den visas.
+  function dag(d) { return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  var nu = new Date(), IDAG = dag(nu);
+  var OM_ETT_AR = dag(new Date(nu.getFullYear() + 1, 11, 31));
+  var I_FJOL = dag(new Date(nu.getFullYear() - 1, 7, 31));
+  var OM_EN_MANAD = dag(new Date(nu.getFullYear(), nu.getMonth(), nu.getDate() + 30));
+
+  // step: aktuellt steg. byggd: steg 1 (0 = inte byggd, 1 = misslyckades, 2 = lyckades). rattad: felet är rättat.
+  var step = 0, byggd = 0, rattad = false, fusk = false, pris = PRIS, rabatt = 0, kodNamn = "";
+  var db = [], nyRad = "", rader = [], ai = { a: null, b: null, c: null, d: null };
+
+  var STEPS = [
+    { kort: "C#", titel: "C# ser felet innan koden körs", file: "Rabatt.cs",
+      text: "Rabatten räknas ut i C#. I C# har varje värde en typ, och ett pris är ett tal, inte text. Klicka på Bygg och se vad som händer." },
+    { kort: "Webb-API", titel: "Servern räknar priset", file: "Program.cs",
+      text: "Med .NET bygger du webbapplikationer och API:er. Nu skickas rabattkoden till servern, som räknar ut priset. Prova att fuska med priset i webbläsaren.",
+      kod: 'app.MapPost("/api/kassa", (Kassa k) =>\n{\n  // webbläsarens pris används inte\n  decimal pris = Priser["Pixel One"];\n  return MedRabatt(pris, k.Kod);\n});' },
+    { kort: "Databas", titel: "Koderna finns i databasen", file: "Program.cs",
+      text: "Rabattkoderna ligger i en databas i stället för i koden. Då kan butiken lägga till nya koder utan att bygga om. Lägg till en kod och prova den.",
+      kod: 'var rabatt = await db.Rabattkoder\n  .Where(r => r.Kod == kod\n           && r.GiltigTill >= idag)\n  .FirstOrDefaultAsync();\n\nrabatt.Antal++;  // räkna användningen\nawait db.SaveChangesAsync();' },
+    { kort: "AI & kvalitet", titel: "Låt AI granska din kod", ai: true,
+      text: "AI granskar koden och föreslår ändringar. Du kan C#, så du ser vilka förslag som håller. Godkänn de bra och avvisa det som är fel." }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Tillåt små bokstäver", text: "”iths10” godkänns inte. Jämför koden utan att skilja på stora och små bokstäver.", log: "Kod jämförs nu utan skiftläge" },
+    { id: "b", titel: "Flytta rabatten till en egen klass", text: "Uträkningen ligger i API:et. I en egen klass blir koden renare och lätt att testa.", log: "Refaktorerat: RabattService.MedRabatt()" },
+    { id: "c", titel: "Skriv enhetstester", text: "Tester som kör koden automatiskt efter varje ändring.", log: "Enhetstester tillagda" },
+    { id: "d", titel: "Ta bort datumkollen", text: "Frågan mot databasen går lite snabbare utan kollen av giltighetsdatum.", log: "⚠ Datumkollen borttagen" }
+  ];
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var RX = /(\/\/.*$)|("[^"]*")|(\b(?:public|decimal|string|if|return|var|await|new)\b)|(\b(?:Kassa|Priser|db|Rabattkoder)\b)/gm;
+  function hl(src) {
+    return esc(src).replace(RX, function (m, com, str, kw) {
+      return '<span class="tk-' + (com ? "com" : str ? "str" : kw ? "kw" : "typ") + '">' + m + "</span>";
+    });
+  }
+  function codeBlock(file, src, marks) {
+    return '<pre class="code"><span class="file">' + file + "</span>" +
+      src.split("\n").map(function (l, i) { return '<span class="ln' + (marks && marks[i] ? " " + marks[i] : "") + '">' + (hl(l) || " ") + "</span>"; }).join("") + "</pre>";
+  }
+  function kr(n) {
+    var heltal = Math.floor(n), ore = Math.round((n - heltal) * 100);
+    var s = String(heltal).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return s + (ore ? "," + ("0" + ore).slice(-2) : "") + " kr";
+  }
+
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 5) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">' + (step === 0 ? "Inte byggd än" : "Väntar på anrop …") + "</span>"; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) +
+        (r.ratta && !rattad ? '<br><button type="button" class="ratta" id="nt-ratta">Rätta rad 4</button>' : "") + "</span>";
+    }).join("");
+  }
+  function visaPris() {
+    var h;
+    if (fusk) h = '<b class="fusk">1 kr</b><span>ändrat i webbläsaren</span>';
+    else if (rabatt) h = "<b>" + kr(pris) + "</b><s>" + kr(PRIS) + '</s><span class="lapp">' + esc(kodNamn) + " −" + rabatt + " %</span>";
+    else h = "<b>" + kr(PRIS) + "</b><span>Fri frakt</span>";
+    $("nt-pris").innerHTML = h;
+  }
+  function visaDb() {
+    $("nt-db").hidden = step < 2;
+    $("nt-nykod").hidden = db.some(function (r) { return r.kod === "JUL20"; });
+    $("nt-rader").innerHTML = db.map(function (r) {
+      var gammal = r.till < IDAG;
+      return "<tr" + (r.kod === nyRad ? ' class="ny"' : "") + "><td>" + r.kod + "</td><td>" + r.p + " %</td><td" + (gammal ? ' class="gammal"' : "") + ">" + r.till + "</td><td>" + r.n + "</td></tr>";
+    }).join("");
+    nyRad = "";
+  }
+  function visaTester() {
+    var t = [
+      { ok: true, txt: "ITHS10 ger 10 % rabatt" },
+      { ok: ai.a === "ja", txt: "”iths10” fungerar också" },
+      { ok: ai.d !== "ja", txt: "utgången kod ger fullpris" }
+    ];
+    $("nt-test").hidden = !(step === 3 && ai.c === "ja");
+    $("nt-tester").outerHTML = '<span id="nt-tester" style="display:grid;gap:2px">' + t.map(function (x) {
+      return '<span class="' + (x.ok ? "t-ok" : "t-fel") + '">' + (x.ok ? "✓ " : "✗ ") + x.txt + "</span>";
+    }).join("") + "</span>";
+  }
+  function setSvar(cls, txt) { svar.className = "svar" + (cls ? " s-" + cls : ""); svar.textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+
+  function visaInnehall() {
+    var s = STEPS[step], h;
+    if (step === 0) {
+      var src = 'public decimal MedRabatt(\n  decimal pris, string kod)\n{\n  decimal procent = ' + (rattad ? "0.10m" : '"10%"') + ';\n  if (kod == "ITHS10")\n    return pris * (1 - procent);\n  return pris;\n}';
+      h = codeBlock(s.file, src, { 3: rattad ? "add" : (byggd === 1 ? "err" : "") });
+    } else if (s.ai) {
+      h = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI granskar koden</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    } else {
+      h = codeBlock(s.file, s.kod);
+    }
+    $("nt-innehall").innerHTML = h;
+    $("nt-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "ja" && ai.d === "nej");
+  }
+
+  function render() {
+    var s = STEPS[step];
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("nt-titel").textContent = s.titel;
+    $("nt-ingress").textContent = s.text;
+    $("nt-bak").hidden = step === 0;
+    $("nt-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("nt-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    $("nt-server-namn").textContent = step === 0 ? "Visual Studio · Bygg" : "Servern · .NET";
+    $("nt-lampa").className = step === 0 ? "vs" : "";
+    $("nt-bygg").hidden = step !== 0;
+    $("nt-fuska").hidden = step !== 1;
+    visaInnehall(); visaPris(); visaDb(); visaTester(); visaLogg(false);
+    send();
+  }
+
+  function nyDb() {
+    db = [
+      { kod: "ITHS10", p: 10, till: OM_ETT_AR, n: 0 },
+      { kod: "SOMMAR25", p: 25, till: I_FJOL, n: 0 }
+    ];
+  }
+  function bytSteg(n) {
+    step = n; rader = []; fusk = false; rabatt = 0; pris = PRIS;
+    if (step === 0) { byggd = 0; rattad = false; }
+    if (step < 2 || !db.length) nyDb();
+    input.value = step === 3 ? "iths10" : step === 2 ? "SOMMAR25" : "ITHS10";
+    setSvar("", "");
+    hint.hidden = true;
+    render();
+  }
+
+  // Slå upp en kod. Steg 1 och 2: koden finns bara i C#-koden. Steg 3 och 4: i databasen.
+  function slaUpp(kod) {
+    if (step < 2) return kod === "ITHS10" ? { kod: "ITHS10", p: 10, till: OM_ETT_AR } : null;
+    var k = step === 3 && ai.a === "ja" ? kod.toUpperCase() : kod;
+    var r = db.filter(function (x) { return x.kod === k; })[0];
+    if (!r) return null;
+    if (r.till < IDAG && !(step === 3 && ai.d === "ja")) return { utgangen: true, kod: r.kod };
+    return r;
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("nt-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("nt-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  $("nt-bygg").addEventListener("click", function () {
+    rader = [];
+    logga("info", "Bygger Butiken.csproj …");
+    if (!rattad) {
+      byggd = 1;
+      rader.push({ cls: "fel", txt: "✗ CS0029 rad 4: Kan inte göra om typen string till decimal", ratta: true });
+      visaLogg(true);
+      showHint("Bygget stoppades. C# hittade felet innan koden ens körts: \"10%\" är text, inte ett tal.");
+    } else {
+      byggd = 2;
+      logga("ok", "✓ Bygget lyckades · 0 fel");
+      showHint("Bygget lyckades. Prova rabattkoden i butiken.");
+    }
+    visaInnehall(); send();
+  });
+  logg.addEventListener("click", function (e) {
+    if (!e.target.closest("#nt-ratta")) return;
+    rattad = true; byggd = 0;
+    rader = [{ cls: "info", txt: "Rad 4 rättad: 0.10m är ett decimaltal" }];
+    visaLogg(true); visaInnehall();
+    showHint("Rättat. decimal är rätt typ för pengar, så öresbeloppen blir exakta. Bygg igen.");
+    $("nt-bygg").focus({ preventScroll: true });
+  });
+
+  $("nt-fuska").addEventListener("click", function () {
+    fusk = true; rabatt = 0; visaPris(); setSvar("", "");
+    showHint("Du ändrade priset i webbläsaren till 1 kr. Klicka på Använd och se vad servern säger.");
+  });
+
+  $("nt-nykod").addEventListener("click", function () {
+    db.push({ kod: "JUL20", p: 20, till: OM_EN_MANAD, n: 0 });
+    nyRad = "JUL20"; input.value = "JUL20";
+    logga("in", "INSERT Rabattkoder · JUL20, 20 %");
+    visaDb();
+    showHint("Koden ligger nu i databasen. Prova den i butiken, utan att bygga om.");
+    input.focus({ preventScroll: true });
+  });
+
+  $("nt-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var kod = input.value.trim();
+    if (step === 0 && byggd !== 2) {
+      setSvar("fel", "Rabattkoder fungerar inte än.");
+      showHint(byggd === 1 ? "Bygget misslyckades, så ingen ny kod körs. Rätta felet och bygg igen." : "Koden är inte byggd. Klicka på Bygg först.");
+      return;
+    }
+    if (step > 0) logga("in", "POST /api/kassa {" + (fusk ? "pris: 1, " : "") + 'kod: "' + kod + '"}');
+    if (step === 1 && fusk) logga("info", "Webbläsarens pris används inte");
+    if (step >= 2) logga("info", "Söker " + kod + " i Rabattkoder");
+    var r = slaUpp(kod), varFusk = fusk;
+    fusk = false;
+    if (!r || r.utgangen) {
+      rabatt = 0; pris = PRIS;
+      setSvar("fel", r ? "Koden " + r.kod + " har gått ut." : "Okänd rabattkod.");
+      if (step > 0) logga("fel", "200 · " + (r ? "utgången kod" : "okänd kod") + " · " + kr(PRIS));
+    } else {
+      rabatt = r.p; kodNamn = r.kod; pris = Math.round(PRIS * (100 - r.p)) / 100;
+      if (step >= 2) { r.n++; nyRad = ""; }
+      setSvar("ok", r.kod + ": " + r.p + " % rabatt!");
+      if (step > 0) logga("ok", "200 · " + r.p + " % · " + kr(pris));
+    }
+    visaPris(); visaDb();
+    if (step === 0) showHint(rabatt ? "Rabatten fungerar. C# stoppade felet redan när du byggde, innan någon kund märkte det." : "Koden ITHS10 ger rabatt. Prova den.");
+    else if (step === 1 && varFusk) showHint("Fusket gick inte. Servern litar inte på webbläsaren utan räknar själv ut priset.");
+    else if (step === 1) showHint("Priset räknas ut på servern. Prova att fuska med priset.");
+    else if (step === 2 && r && !r.utgangen && r.kod === "JUL20") showHint("En ny kod utan att bygga om. Koden i C# är densamma, det är bara datan som ändrats.");
+    else if (step === 2 && r && r.utgangen) showHint("Databasen vet när koden slutar gälla. Lägg till en ny kod.");
+    else if (step === 3 && !r && kod.toUpperCase() === "ITHS10") showHint("Kunden skrev med små bokstäver och fick ingen rabatt. Se vad AI föreslår.");
+    else if (step === 3 && r && r.kod === "SOMMAR25" && !r.utgangen) showHint("En utgången kod gav rabatt. Det var AI:s förslag som gjorde det.");
+    else hint.hidden = true;
+    send();
+  });
+
+  $("nt-innehall").addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b) return;
+    var a = b.getAttribute("data-ai"), v = b.getAttribute("data-val");
+    ai[a] = ai[a] === v ? null : v;
+    var g = SUGS.filter(function (x) { return x.id === a; })[0];
+    if (ai[a] === "ja") logga(a === "d" ? "fel" : "ok", g.log);
+    else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+    if (a === "c" && ai.c === "ja") {
+      var fel = (ai.a !== "ja") + (ai.d === "ja");
+      logga(fel ? "fel" : "ok", fel ? "✗ " + fel + " av 3 tester misslyckades" : "✓ 3 tester gick igenom");
+    }
+    if (a === "d" && ai.d === "ja") showHint(ai.c === "ja" ? "Testet slog larm: nu ger utgångna koder rabatt igen. Avvisa förslaget." : "Nu ger utgångna koder rabatt igen, och butiken förlorar pengar. Prova SOMMAR25 och avvisa sedan förslaget.");
+    else if (a === "d" && ai.d === "nej") showHint("Rätt! Snabbare men fel. Du förstår koden, så du ser när AI har fel.");
+    else if (a === "a" && ai.a === "ja") showHint("Nu fungerar ”iths10” också. Prova i butiken.");
+    else hint.hidden = true;
+    input.value = a === "d" && ai.d === "ja" ? "SOMMAR25" : "iths10";
+    setSvar("", ""); rabatt = 0; pris = PRIS;
+    visaInnehall(); visaPris(); visaTester();
+    var nb = root.querySelector('.ok[data-ai="' + a + '"][data-val="' + v + '"]');
+    if (nb) nb.focus({ preventScroll: true });
+    if (ai[a] && root.clientWidth <= 600) {
+      var br = $("nt-browser");
+      var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(function () {
+        br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+        br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+      }, 60);
+    }
+    send();
+  });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "net-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>

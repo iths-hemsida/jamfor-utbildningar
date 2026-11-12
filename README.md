@@ -131,6 +131,15 @@ Mappen `vad-ar-ux/` innehåller en demo för utbildningssidan UX-designer: "Desi
 - All CSS är avgränsad till `#iths-ux-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "ux-demo-height"`).
 
+## Vad är .NET? (levande demo)
+
+Mappen `vad-ar-dotnet/` innehåller en demo för utbildningssidan .NET-utvecklare: "Bygg en rabattkod med C# och .NET". Samma webbshop som i de andra demona, men nu byggs en rabattkod i fyra steg: C# (bygget stoppas av ett typfel, "10%" är text och inte ett tal, och besökaren rättar raden), webb-API (servern räknar ut priset, så det går inte att fuska med priset i webbläsaren), databas (rabattkoderna ligger i en tabell, besökaren lägger till en ny kod utan att bygga om och ser att en utgången kod stoppas) och AI & kvalitet (låt AI granska koden: godkänn tre förslag och avvisa ett som tar bort datumkollen, och se enhetstesterna slå larm). Innehållet bygger på iths.se/utbildningar/netutvecklare/ (hämtad 12 november 2026), som nämner C#, Visual Studio, webbapplikationer och API:er, databaser, clean code, testbar kod och "Låt AI granska din kod".
+
+- Källan är `vad-ar-dotnet/snippet.html`. Kör `python3 tools/build-vad-ar-dotnet.py` efter ändringar, så byggs `vad-ar-dotnet/index.html` (GitHub Pages) och `wordpress/vad-ar-dotnet-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-net-demo`.
+- Datumen i rabattabellen räknas från dagens datum, så att demon fungerar oavsett när den visas.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "net-demo-height"`).
+
 ## Vad är Cloud? (levande demo)
 
 Mappen `vad-ar-cloud/` innehåller en demo för utbildningssidan .NET Cloud Developer: "Ta butiken ut i molnet". Samma webbshop som i de andra demona, men nu flyttas den från din dator till Microsoft Azure i fyra steg: driftsätt (paketera i en Docker-container, skapa en webbapp i Azure och driftsätt, och testa att butiken nu nås från mobilen), skala (välj 1 server, 5 servrar hela tiden eller autoskalning och kör Black Friday: en server ger 503, fem kostar mest, autoskalning klarar rusningen och skalar ner efteråt), säkerhet (skanna och fixa en öppen databas, ett lösenord i koden och för breda behörigheter) och AI & moln (godkänn eller avvisa AI:s förslag, där ett av dem öppnar databasen för alla). Innehållet bygger på iths.se/utbildningar/net-cloud-developer/ (hämtad 12 november 2026), som nämner C#, .NET, Azure, molnarkitektur, IT-säkerhet, automatisering, Docker, skalbarhet, kostnader och AI-verktyg. Priserna i demon är exempel.
