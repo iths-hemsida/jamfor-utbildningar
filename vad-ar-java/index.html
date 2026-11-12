@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är Java? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är Java?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-java/ som iframe. All CSS är avgränsad till #iths-java-demo. -->
+<style>
+/* Vad händer när du klickar på Köp? Samma webbshop som i "Vad är frontend?", men nu syns servern bakom: API, logik, databas och AI & kvalitet.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-java-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-java-demo *, #iths-java-demo *::before, #iths-java-demo *::after { box-sizing: border-box; }
+#iths-java-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-java-demo h2, #iths-java-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-java-demo p { margin: 0; }
+#iths-java-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-java-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-java-demo .intro { display: grid; gap: 8px; min-width: 0; }
+#iths-java-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-java-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-java-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-java-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-java-demo .step:hover { border-color: var(--server); }
+#iths-java-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-java-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; }
+#iths-java-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-java-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-java-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-java-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-java-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-java-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-java-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-java-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-java-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-java-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-java-demo .btn.ghost:hover { background: var(--soft); }
+#iths-java-demo .btn[hidden] { display: none; }
+
+/* Kodruta */
+#iths-java-demo .code { margin: 0; background: var(--terminal); color: #f3e9f0; border-radius: 12px; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.6; overflow-x: auto; white-space: pre; tab-size: 2; }
+#iths-java-demo .code .file { display: block; color: #bfa8b8; font-size: 11.5px; margin-bottom: 6px; letter-spacing: .04em; }
+#iths-java-demo .tk-ann { color: #e4b8d2; }
+#iths-java-demo .tk-str { color: #a8e1c4; }
+#iths-java-demo .tk-kw { color: var(--pixel); }
+#iths-java-demo .tk-com { color: #a48f9f; font-style: italic; }
+#iths-java-demo .ln { display: block; }
+#iths-java-demo .ln.add { background: rgba(90, 200, 140, .24); margin: 0 -16px; padding: 0 16px; }
+#iths-java-demo .ln.del { background: rgba(240, 110, 125, .24); margin: 0 -16px; padding: 0 16px; color: #d7c5d0; }
+
+/* AI-förslag */
+#iths-java-demo .ai { display: grid; gap: 10px; }
+#iths-java-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-java-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-java-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; }
+#iths-java-demo .sug.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-java-demo .sug-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+#iths-java-demo .sug-top b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-java-demo .sug-top p { font-size: 14px; color: var(--muted); }
+#iths-java-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 7px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-java-demo .ok:hover { background: var(--soft); }
+#iths-java-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-java-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-java-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-java-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, servern under */
+#iths-java-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-java-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-java-demo .dots { display: flex; gap: 5px; }
+#iths-java-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-java-demo .url { flex: 1; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-java-demo .shop { background: var(--moln); padding: 14px; }
+#iths-java-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: center; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-java-demo .bild { grid-row: span 2; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-java-demo .bild svg { width: 56px; color: var(--kod); }
+#iths-java-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-java-demo .meta { font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; }
+#iths-java-demo .meta b { font-family: var(--font-display); color: var(--kod); }
+#iths-java-demo .lager { color: var(--ok); }
+#iths-java-demo .lager.slut { color: var(--err); }
+#iths-java-demo .lager[hidden] { display: none; }
+#iths-java-demo .kop { grid-column: 1 / -1; font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 0; border-radius: 999px; padding: 11px 18px; background: var(--kod); color: #fff; cursor: pointer; width: 100%; margin-top: 4px; }
+#iths-java-demo .kop:hover { background: var(--terminal); }
+#iths-java-demo .kop:disabled { background: #cbbcc6; cursor: not-allowed; }
+#iths-java-demo .svar { grid-column: 1 / -1; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; }
+#iths-java-demo .svar:empty { display: none; }
+#iths-java-demo .svar.s-ok { background: #e9f6ef; color: #23633f; }
+#iths-java-demo .svar.s-fel { background: #fdecec; color: #8a2330; }
+#iths-java-demo .svar.s-info { background: #fff6e3; color: var(--terminal); }
+
+#iths-java-demo .server { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-java-demo .server-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-java-demo .server-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-java-demo .logg { display: grid; gap: 2px; min-height: 64px; }
+#iths-java-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-java-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-java-demo .logg .l-in { color: #e4b8d2; }
+#iths-java-demo .logg .l-ok { color: #a8e1c4; }
+#iths-java-demo .logg .l-fel { color: #ff9aa8; }
+#iths-java-demo .logg .ny { animation: jv-ny .6s ease; }
+@keyframes jv-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-java-demo .db { border-top: 1px dashed rgba(255,255,255,.18); padding-top: 8px; display: grid; gap: 4px; }
+#iths-java-demo .db[hidden], #iths-java-demo .test[hidden] { display: none; }
+#iths-java-demo .db b, #iths-java-demo .test b { font-family: var(--font-display); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-java-demo .db table { border-collapse: collapse; width: 100%; font-size: 12px; }
+#iths-java-demo .db td { padding: 2px 8px 2px 0; border-bottom: 1px solid rgba(255,255,255,.08); }
+#iths-java-demo .db .tomt { color: #a48f9f; font-style: italic; }
+#iths-java-demo .test { border-top: 1px dashed rgba(255,255,255,.18); padding-top: 8px; display: grid; gap: 2px; }
+#iths-java-demo .test span { color: #a8e1c4; }
+#iths-java-demo .fyll { justify-self: start; font: inherit; font-size: 12px; background: none; border: 1px solid rgba(255,255,255,.3); color: #f3e9f0; border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+#iths-java-demo .fyll:hover { background: rgba(255,255,255,.1); }
+#iths-java-demo .fyll[hidden] { display: none; }
+#iths-java-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-java-demo .hint[hidden] { display: none; }
+#iths-java-demo .browser.blink { animation: jv-blink 1.4s ease .3s; }
+@keyframes jv-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-java-demo .stage { gap: 16px; }
+  #iths-java-demo .code { font-size: 12px; padding: 12px 14px; }
+  #iths-java-demo .sug-top { flex-direction: column; align-items: start; gap: 8px; }
+  #iths-java-demo .bild { width: 60px; height: 60px; }
+  #iths-java-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-java-demo .sug-top { flex-direction: row; align-items: center; }
+  #iths-java-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-java-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-java-demo .steps { gap: 6px; }
+  #iths-java-demo .step { padding: 8px 8px 9px; }
+  #iths-java-demo .step .l { font-size: 14px; }
+  #iths-java-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-java-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-java-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-java-demo .code { font-size: 11px; padding: 10px 12px; }
+  #iths-java-demo .ln.add, #iths-java-demo .ln.del { margin: 0 -12px; padding: 0 12px; }
+  #iths-java-demo .shop { padding: 10px; }
+  #iths-java-demo .server { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-java-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-java-demo .sug-top { flex-direction: column; align-items: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-java-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-java-demo" aria-labelledby="jv-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är Java?</span>
+      <h2 id="jv-demo-rubrik">Vad händer när du klickar på Köp?</h2>
+      <p>Frontend är det du ser. Java sköter allt som händer bakom kulisserna. Klicka igenom de fyra stegen.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">API</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Logik</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Databas</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; kvalitet</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="jv-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
+        <div class="shop">
+          <div class="produkt">
+            <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="meta"><b>1 299 kr</b><span class="lager" id="jv-lager" hidden></span></div>
+            <button type="button" class="kop" id="jv-kop">Köp</button>
+            <p class="svar" id="jv-svar" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="server" aria-label="Servern">
+          <div class="server-head"><i aria-hidden="true"></i>Servern · Java</div>
+          <div class="logg" id="jv-logg" aria-live="polite"></div>
+          <button type="button" class="fyll" id="jv-fyll" hidden>Fyll på lagret</button>
+          <div class="db" id="jv-db" hidden><b>Databas · ordrar</b><table><tbody id="jv-rader"></tbody></table></div>
+          <div class="test" id="jv-test" hidden><b>Tester</b><span>✓ lagretMinskarVidKop</span><span>✓ kanInteKopaNarDetArSlut</span></div>
+        </div>
+        <p class="hint" id="jv-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="jv-panel" aria-live="polite">
+        <h3 class="t" id="jv-titel"></h3>
+        <p class="lead" id="jv-text"></p>
+        <div id="jv-kod"></div>
+        <div class="done-box" id="jv-klar" hidden>
+          <b>Klart! Det här är backend med Java.</b>
+          <span>Grunderna i det du lär dig på utbildningen.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="jv-bak">Föregående</button>
+          <button type="button" class="btn" id="jv-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-java-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var kop = $("jv-kop"), svar = $("jv-svar"), logg = $("jv-logg"), lagerEl = $("jv-lager"), hint = $("jv-hint");
+  var stepBtns = root.querySelectorAll(".step");
+  var STARTLAGER = 3;
+  var step = 0, lager = STARTLAGER, ordrar = [], nr = 1041, rader = [], fixes = { a: false, b: false, c: false };
+
+  var STEPS = [
+    { kort: "API", titel: "API:et tar emot", file: "OrderController.java",
+      text: "När du klickar Köp skickar webbsidan en beställning till servern. Java tar emot den, men gör ingenting mer än.",
+      kod: '@PostMapping("/order")\nOrder bestall(@RequestBody Order order) {\n  logg.info("Ny order: " + order);\n  return order;\n}' },
+    { kort: "Logik", titel: "Logiken bestämmer", file: "OrderService.java",
+      text: "Java kollar lagret innan ordern godkänns. Köp tills det är slut och se vad som händer.",
+      kod: 'if (lager.antal("Pixel One") == 0) {\n  throw new SlutILagerException();\n}\nlager.minska("Pixel One");' },
+    { kort: "Databas", titel: "Databasen minns", file: "OrderService.java",
+      text: "Ordern sparas i en databas och får ett ordernummer. Nu finns den kvar även om servern startas om.",
+      kod: 'Order sparad = orderRepository.save(order);\nreturn sparad; // får ett ordernummer' },
+    { kort: "AI & kvalitet", titel: "AI hittar men du bestämmer", ai: true,
+      text: "AI granskar koden och föreslår förbättringar. Du bestämmer vilka som blir av." }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Dölj kortnumret", text: "Kortnumret syns i loggen. Det får det inte göra." },
+    { id: "b", titel: "Tydligt fel när det är slut", text: "Kunden ser bara \"fel 500\" när varan är slut." },
+    { id: "c", titel: "Skriv tester", text: "Så att lagret aldrig kan bli fel efter en ändring." }
+  ];
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var RX = /(\/\/.*$)|("[^"]*")|(@\w+)|(\b(?:if|return|throw|new|void|class)\b)/gm;
+  function hl(src) {
+    return esc(src).replace(RX, function (m, com, str, ann) {
+      return '<span class="tk-' + (com ? "com" : str ? "str" : ann ? "ann" : "kw") + '">' + m + "</span>";
+    });
+  }
+  function codeBlock(src, file) {
+    return '<pre class="code"><span class="file">' + file + "</span>" +
+      src.split("\n").map(function (l) { return '<span class="ln">' + (hl(l) || " ") + "</span>"; }).join("") + "</pre>";
+  }
+
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 4) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">Väntar på beställningar …</span>'; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function visaDb() {
+    $("jv-db").hidden = step < 2;
+    $("jv-rader").innerHTML = ordrar.length
+      ? ordrar.slice(-4).map(function (o) { return "<tr><td>#" + o + "</td><td>Pixel One</td><td>1 299 kr</td></tr>"; }).join("")
+      : '<tr><td class="tomt">Inga ordrar än</td></tr>';
+  }
+  function visaLager() {
+    lagerEl.hidden = step < 1;
+    lagerEl.textContent = lager > 0 ? lager + " i lager" : "Slut i lager";
+    lagerEl.classList.toggle("slut", lager === 0);
+    $("jv-fyll").hidden = !(step >= 1 && lager === 0);
+  }
+  function setSvar(cls, txt) { svar.className = "svar" + (cls ? " s-" + cls : ""); svar.textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+
+  function render() {
+    var s = STEPS[step];
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("jv-titel").textContent = s.titel;
+    $("jv-text").textContent = s.text;
+    if (s.ai) {
+      $("jv-kod").innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår</div>' +
+        SUGS.map(function (g) {
+          return '<div class="sug' + (fixes[g.id] ? " on" : "") + '"><div class="sug-top"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<button type="button" class="ok" data-fix="' + g.id + '" aria-pressed="' + fixes[g.id] + '">' + (fixes[g.id] ? "Godkänt" : "Godkänn") + "</button></div></div>";
+        }).join("") + "</div>";
+    } else {
+      $("jv-kod").innerHTML = codeBlock(s.kod, s.file);
+    }
+    $("jv-klar").hidden = !(step === 3 && fixes.a && fixes.b && fixes.c);
+    $("jv-bak").hidden = step === 0;
+    $("jv-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("jv-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    $("jv-test").hidden = !(step === 3 && fixes.c);
+    hint.hidden = true;
+    setSvar("", "");
+    visaLager(); visaDb(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    step = n; lager = STARTLAGER; rader = [];
+    if (step < 2) ordrar = [];
+    // I steg 4 finns redan en order i loggen och bara en vara kvar, så att alla tre förslagen syns direkt
+    if (step === 3) {
+      lager = 1;
+      if (!ordrar.length) { nr++; ordrar.push(nr); }
+      rader = [{ cls: "in", txt: "POST /order {vara: Pixel One, kort: " + (fixes.a ? "**** **** **** 1111" : "4111 1111 1111 1111") + "}" },
+               { cls: "ok", txt: "Order #" + ordrar[ordrar.length - 1] + " sparad i databasen" }];
+    }
+    render();
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("jv-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("jv-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+  $("jv-fyll").addEventListener("click", function () { lager = STARTLAGER; logga("ok", "Lagret påfyllt: " + lager + " st"); visaLager(); setSvar("", ""); send(); });
+
+  kop.addEventListener("click", function () {
+    var kort = step === 3 && fixes.a ? "**** **** **** 1111" : "4111 1111 1111 1111";
+    logga("in", "POST /order {vara: Pixel One, kort: " + kort + "}");
+    if (step === 0) {
+      setSvar("info", "Skickat … men ingen order skapades.");
+      showHint("Servern tog emot beställningen men gör inget med den. Logiken kommer i steg 2.");
+      return;
+    }
+    if (lager === 0) {
+      if (step === 3 && fixes.b) { logga("ok", "Slutsåld: kunden fick ett tydligt svar"); setSvar("info", "Slutsåld just nu. Vi meddelar dig när den är tillbaka."); }
+      else { logga("fel", "SlutILagerException: Pixel One"); setSvar("fel", "Något gick fel (fel 500)"); }
+      visaLager(); send(); return;
+    }
+    lager--;
+    logga("ok", "Lager kollat ✓ " + lager + " kvar");
+    if (step >= 2) {
+      nr++; ordrar.push(nr);
+      logga("ok", "Order #" + nr + " sparad i databasen");
+      setSvar("ok", "Tack! Ditt ordernummer är #" + nr + ".");
+    } else {
+      setSvar("ok", "Ordern är godkänd.");
+      if (lager === 1) showHint("Ordrarna sparas inte. Startas servern om är de borta. Databasen kommer i steg 3.");
+    }
+    visaLager(); visaDb(); send();
+  });
+
+  $("jv-kod").addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b) return;
+    var k = b.getAttribute("data-fix");
+    fixes[k] = !fixes[k];
+    if (k === "a") rader.forEach(function (r) { r.txt = fixes.a ? r.txt.replace("4111 1111 1111 1111", "**** **** **** 1111") : r.txt.replace("**** **** **** 1111", "4111 1111 1111 1111"); });
+    render();
+    var nb = root.querySelector('.ok[data-fix="' + k + '"]');
+    if (nb) nb.focus({ preventScroll: true });
+    if (fixes[k] && root.clientWidth <= 600) {
+      var br = $("jv-browser");
+      var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(function () {
+        br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+        br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+      }, 60);
+    }
+  });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "java-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  render();
+})();
+</script>
+
+</body>
+</html>

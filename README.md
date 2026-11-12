@@ -98,3 +98,11 @@ Mappen `java-fakta/` innehåller en klickbar faktatabell för utbildningssidan J
 - Källan är `java-fakta/snippet.html` (raderna står i `RADER`). Kör `python3 tools/build-java-fakta.py` efter ändringar, så byggs `java-fakta/index.html` (GitHub Pages) och `wordpress/java-fakta-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-java-fakta`.
 - Iframe: tabellen skickar sin höjd med `postMessage` (`type: "java-fakta-height"`), så iframen växer och krymper när rader öppnas.
+
+## Vad är Java? (levande demo)
+
+Mappen `vad-ar-java/` innehåller en demo för utbildningssidan Javautvecklare: "Vad händer när du klickar på Köp?". Samma webbshop som i "Vad är frontend?", men nu syns servern bakom i fyra steg: API, logik (lagerkoll), databas och AI & kvalitet.
+
+- Källan är `vad-ar-java/snippet.html`. Kör `python3 tools/build-vad-ar-java.py` efter ändringar, så byggs `vad-ar-java/index.html` (GitHub Pages) och `wordpress/vad-ar-java-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-java-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "java-demo-height"`).
