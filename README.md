@@ -192,4 +192,4 @@ Mappen `framtidsyrke/` innehåller fyra kort för avsnittet med samma namn på u
 
 ## Vem är du? (vem-ar-du/)
 
-Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg (4–5 → intresseanmälan, 0–3 → quizet). Redigera `vem-ar-du/snippet.html` och kör `python3 tools/build-vem-ar-du.py`. Länkarna ställs in i `LANKAR` i skriptet. WPCode-version: `wordpress/vem-ar-du-wpcode.html`.
+Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg (4–5 → "Det låter som du!", 0–3 → quizet). Redigera `vem-ar-du/snippet.html` och kör `python3 tools/build-vem-ar-du.py`. Länkarna ställs in i `LANKAR` i skriptet. WPCode-version: `wordpress/vem-ar-du-wpcode.html`.

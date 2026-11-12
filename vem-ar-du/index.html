@@ -11,7 +11,7 @@
 <!-- IT-Högskolan: "Vem är du?" – snabb självkoll för utbildningssidan Frontend-utvecklare. Klistra in hela snutten i ett HTML-snippet i WPCode. All CSS är avgränsad till #iths-fe-vem. Länkarna ställs in i LANKAR i skriptet längst ner. -->
 <style>
 /* Fem påståenden som besökaren bockar i. En mätare visar hur många som stämmer, och en rad under ger ett nästa steg:
-   4–5 → intresseanmälan, 0–3 → quizet. Behörighetslänken ligger kvar längst ner.
+   4–5 → bekräftelse utan knapp, 0–3 → quizet. Behörighetslänken ligger kvar längst ner.
    Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
 #iths-fe-vem {
   --kod: #662247; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
@@ -52,6 +52,7 @@
 #iths-fe-vem .svar p { font-size: 16px; }
 #iths-fe-vem .svar b { color: var(--pixel); font-family: var(--font-display); font-weight: 800; }
 #iths-fe-vem .cta { justify-self: start; display: inline-block; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 10px 18px; }
+#iths-fe-vem .cta[hidden] { display: none; }
 #iths-fe-vem .cta:hover { background: #ffc469; }
 #iths-fe-vem .cta:focus-visible { outline-color: var(--pixel); }
 #iths-fe-vem .beh { font-size: 15px; color: var(--muted); }
@@ -91,9 +92,8 @@
 (function () {
   var root = document.getElementById("iths-fe-vem");
   if (!root) return;
-  // Länkar. INTRESSE: byt till adressen för intresseanmälan till Frontend-utvecklare.
+  // Länkar
   var LANKAR = {
-    INTRESSE: "https://www.iths.se/utbildningar/frontend/#intresseanmalan",
     QUIZ: "https://www.iths.se/vilken-utbildning-passar-mig/"
   };
   var knappar = root.querySelectorAll(".p");
@@ -112,17 +112,18 @@
     if (!rort) return;
     svar.hidden = false;
     if (n >= 4) {
-      text.innerHTML = "<b>Det låter som du!</b> Gör en intresseanmälan så påminner vi dig när ansökan öppnar.";
-      cta.textContent = "Gör en intresseanmälan";
-      cta.href = LANKAR.INTRESSE;
+      text.innerHTML = "<b>Det låter som du!</b> Frontend-utvecklare kan vara rätt utbildning för dig.";
+      cta.hidden = true;
     } else if (n >= 2) {
       text.innerHTML = "<b>Du verkar nyfiken.</b> Gör quizet och se vilken utbildning som passar dig bäst.";
       cta.textContent = "Gör quizet";
       cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
     } else {
       text.innerHTML = "<b>Kanske passar en annan utbildning bättre?</b> Quizet hjälper dig att hitta rätt.";
       cta.textContent = "Gör quizet";
       cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
     }
   }
   knappar.forEach(function (k) {
