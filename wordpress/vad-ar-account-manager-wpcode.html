@@ -1,0 +1,648 @@
+<!-- IT-Högskolan: "Vad är Account Manager inom IT?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-account-manager/ som iframe. All CSS är avgränsad till #iths-am-demo. -->
+<style>
+/* Vinn och behåll kunden. Samma webbshop som i de andra demona, men nu är butiken din kund: behov, erbjudande, förhandling och AI & relation.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-am-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-am-demo *, #iths-am-demo *::before, #iths-am-demo *::after { box-sizing: border-box; }
+#iths-am-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-am-demo h2, #iths-am-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-am-demo p { margin: 0; }
+#iths-am-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-am-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-am-demo .intro { display: grid; gap: 8px; min-width: 0; overflow-wrap: break-word; }
+#iths-am-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-am-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-am-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-am-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-am-demo .step:hover { border-color: var(--server); }
+#iths-am-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-am-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+#iths-am-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-am-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-am-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-am-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-am-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-am-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-am-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-am-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-am-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-am-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-am-demo .btn.ghost:hover { background: var(--soft); }
+#iths-am-demo .btn[hidden] { display: none; }
+
+/* Listor i panelen: frågor, delar i erbjudandet, invändningar */
+#iths-am-demo .tc { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+#iths-am-demo .tc li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--surface); }
+#iths-am-demo .tc li:first-child { border-top: 0; }
+#iths-am-demo .tc li.klar { background: #f3faf6; }
+#iths-am-demo .tc li.miss { background: #fdecec; }
+#iths-am-demo .tc b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-am-demo .tc span.f { font-size: 14px; color: var(--muted); display: block; }
+#iths-am-demo .tc span.f em { font-style: normal; font-family: var(--font-display); font-weight: 800; color: var(--kod); }
+#iths-am-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-am-demo .ok:hover { background: var(--soft); }
+#iths-am-demo .ok:disabled { opacity: .4; cursor: default; background: var(--surface); }
+#iths-am-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; opacity: 1; }
+#iths-am-demo .ok.fel[aria-pressed="true"], #iths-am-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); }
+
+/* Förhandlingen: kundens invändning och dina svarsalternativ */
+#iths-am-demo .inv { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 10px; }
+#iths-am-demo .vem { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-am-demo .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--soft); color: var(--kod); display: grid; place-items: center; flex: none; font-size: 13px; }
+#iths-am-demo .citat { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.25; }
+#iths-am-demo .alts { display: grid; gap: 8px; }
+#iths-am-demo .alt { font: inherit; font-size: 15px; text-align: left; border-radius: 10px; padding: 9px 12px; cursor: pointer; border: 2px solid var(--line); background: var(--surface); color: var(--ink); line-height: 1.35; }
+#iths-am-demo .alt:hover { border-color: var(--server); background: var(--moln); }
+#iths-am-demo .alt.miss { border-color: #f2c2c8; background: #fdecec; color: #8a2330; }
+
+/* AI-förslag */
+#iths-am-demo .ai { display: grid; gap: 10px; }
+#iths-am-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-am-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-am-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-am-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-am-demo .sug.nej { background: var(--moln); }
+#iths-am-demo .sug.nej b, #iths-am-demo .sug.nej p { color: var(--muted); }
+#iths-am-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-am-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-am-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-am-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-am-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-am-demo .done-box span { white-space: nowrap; }
+#iths-am-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: kundens webbshop överst, CRM-kortet och anteckningarna under */
+#iths-am-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-am-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-am-demo .dots { display: flex; gap: 5px; }
+#iths-am-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-am-demo .url { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#iths-am-demo .kund { flex: none; font-family: var(--font-display); font-weight: 800; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 3px 9px; }
+#iths-am-demo .shop { background: var(--moln); padding: 14px; position: relative; display: grid; gap: 10px; }
+#iths-am-demo .shop-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--muted); }
+#iths-am-demo .shop-top b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 999px; background: var(--kod); color: #fff; font-size: 11px; padding: 0 5px; margin-left: 4px; }
+#iths-am-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: start; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-am-demo .bild { grid-row: span 3; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-am-demo .bild svg { width: 56px; color: var(--kod); }
+#iths-am-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-am-demo .pris { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--kod); line-height: 1.1; }
+#iths-am-demo .besk { font-size: 13px; color: var(--muted); line-height: 1.4; }
+#iths-am-demo .knappar { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 6px; }
+#iths-am-demo .kop { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 11px 14px; background: var(--kod); color: #fff; border: 0; cursor: pointer; }
+#iths-am-demo .kop:hover { background: var(--terminal); }
+#iths-am-demo .kop.swish { background: var(--pixel); color: var(--terminal); animation: am-ny .8s ease; }
+#iths-am-demo .kop.swish:hover { background: #ffc66e; }
+#iths-am-demo .kop[hidden] { display: none; }
+#iths-am-demo .svar { grid-column: 1 / -1; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; background: #e9f6ef; color: #23633f; }
+#iths-am-demo .svar:empty { display: none; }
+#iths-am-demo .chatt { justify-self: end; max-width: 250px; display: grid; gap: 4px; font-size: 12px; line-height: 1.35; }
+#iths-am-demo .chatt span { border-radius: 12px; padding: 6px 10px; }
+#iths-am-demo .chatt .q { justify-self: end; background: var(--surface); border: 1px solid var(--line); border-bottom-right-radius: 3px; }
+#iths-am-demo .chatt .a { justify-self: start; background: var(--kod); color: #fff; border-bottom-left-radius: 3px; }
+#iths-am-demo .chatt .a b { color: var(--pixel); font-family: var(--font-display); font-weight: 800; }
+#iths-am-demo .chatt[hidden] { display: none; }
+#iths-am-demo .chatt.ny { animation: am-ny .8s ease; }
+#iths-am-demo .flaggor { display: flex; flex-wrap: wrap; gap: 6px; }
+#iths-am-demo .flaggor:empty { display: none; }
+#iths-am-demo .fl { display: inline-flex; gap: 5px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 12px; line-height: 1.2; border-radius: 999px; padding: 4px 10px; background: #fdecec; color: #8a2330; border: 1px solid #f2c2c8; }
+#iths-am-demo .fl.on { background: #f3faf6; color: #23633f; border-color: #b7dcc7; }
+#iths-am-demo .fl.ny { animation: am-ny .8s ease; }
+
+/* CRM-kortet */
+#iths-am-demo .vy { padding: 12px 14px; border-top: 1px solid var(--line); display: grid; gap: 10px; background: var(--surface); }
+#iths-am-demo .vy-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+#iths-am-demo .vy-head em { font-style: normal; letter-spacing: 0; text-transform: none; color: var(--kod); }
+#iths-am-demo .kv { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; font-size: 13px; align-items: baseline; }
+#iths-am-demo .kv dt { font-family: var(--font-display); font-weight: 800; color: var(--muted); font-size: 12px; }
+#iths-am-demo .kv dd { margin: 0; font-family: var(--font-display); font-weight: 800; }
+#iths-am-demo .kv dd.tom { color: #b6a6b2; font-family: var(--font-body); font-weight: 400; font-style: italic; }
+#iths-am-demo .kv dd.ny { animation: am-ny .8s ease; }
+#iths-am-demo .kv dd s { color: var(--muted); font-weight: 400; margin-right: 6px; }
+#iths-am-demo .bc { display: grid; gap: 7px; }
+#iths-am-demo .rad { display: grid; grid-template-columns: 92px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12px; }
+#iths-am-demo .rad span { color: var(--muted); font-family: var(--font-display); font-weight: 800; }
+#iths-am-demo .rad b { font-family: var(--font-display); font-weight: 800; text-align: right; white-space: nowrap; }
+#iths-am-demo .bar { height: 10px; border-radius: 999px; background: var(--soft); overflow: hidden; position: relative; }
+#iths-am-demo .bar i { display: block; height: 100%; width: 0; background: var(--server); border-radius: 999px; transition: width .4s; }
+#iths-am-demo .bar i.over { background: var(--err); }
+#iths-am-demo .bar i.vinst { background: var(--ok); }
+#iths-am-demo .bar u { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--terminal); }
+#iths-am-demo .roi { font-family: var(--font-display); font-weight: 800; font-size: 14px; padding: 7px 10px; border-radius: 8px; background: var(--moln); color: var(--muted); }
+#iths-am-demo .roi.on { background: #e9f6ef; color: #23633f; }
+#iths-am-demo .roi.over { background: #fdecec; color: #8a2330; }
+#iths-am-demo .pipe { display: flex; gap: 4px; }
+#iths-am-demo .pipe span { flex: 1 1 auto; font-family: var(--font-display); font-weight: 800; font-size: 11px; text-align: center; padding: 5px 4px; border-radius: 6px; background: var(--soft); color: var(--muted); line-height: 1.2; }
+#iths-am-demo .pipe span.on { background: var(--ok); color: #fff; }
+#iths-am-demo .pipe span.nu { background: var(--kod); color: #fff; }
+#iths-am-demo .resurser { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 6px; }
+#iths-am-demo .res { border: 1px solid #f2c2c8; background: #fdecec; border-radius: 10px; padding: 7px 9px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 7px; align-items: center; }
+#iths-am-demo .res svg { width: 18px; height: 18px; grid-row: span 2; color: var(--err); }
+#iths-am-demo .res b { font-family: var(--font-display); font-weight: 800; font-size: 13px; line-height: 1.2; }
+#iths-am-demo .res span { font-size: 11px; color: #8a2330; line-height: 1.3; }
+#iths-am-demo .res.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-am-demo .res.on svg { color: var(--ok); }
+#iths-am-demo .res.on span { color: #23633f; }
+#iths-am-demo .res.neutral { border-color: var(--line); background: var(--moln); }
+#iths-am-demo .res.neutral svg { color: var(--muted); }
+#iths-am-demo .res.neutral span { color: var(--muted); }
+#iths-am-demo .res.ny { animation: am-ny .8s ease; }
+
+#iths-am-demo .logbox { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-size: 13px; line-height: 1.5; display: grid; gap: 8px; }
+#iths-am-demo .log-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-am-demo .log-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-am-demo .logg { display: grid; gap: 3px; min-height: 64px; align-content: start; }
+#iths-am-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-am-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-am-demo .logg .l-du { color: #e4b8d2; }
+#iths-am-demo .logg .l-kund { color: #fff; }
+#iths-am-demo .logg .l-ok { color: #a8e1c4; }
+#iths-am-demo .logg .l-fel { color: #ff9aa8; }
+#iths-am-demo .logg .l-sum { color: var(--pixel); font-family: var(--font-display); font-weight: 800; }
+#iths-am-demo .logg .ny { animation: am-ny .6s ease; }
+@keyframes am-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-am-demo .kor { justify-self: start; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; background: var(--pixel); border: 0; color: var(--terminal); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#iths-am-demo .kor:hover { background: #ffc66e; }
+#iths-am-demo .kor:disabled { opacity: .5; cursor: default; }
+#iths-am-demo .kor[hidden] { display: none; }
+#iths-am-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-am-demo .hint[hidden] { display: none; }
+#iths-am-demo .browser.blink { animation: am-blink 1.4s ease .3s; }
+@keyframes am-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-am-demo .stage { gap: 16px; }
+  #iths-am-demo .bild { width: 60px; height: 60px; }
+  #iths-am-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-am-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-am-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-am-demo .steps { gap: 6px; }
+  #iths-am-demo .step { padding: 8px 8px 9px; }
+  #iths-am-demo .step .l { font-size: 14px; }
+  #iths-am-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-am-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-am-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-am-demo .shop { padding: 10px; }
+  #iths-am-demo .vy { padding: 10px 12px; }
+  #iths-am-demo .logbox { font-size: 12px; padding: 10px 12px 12px; }
+  #iths-am-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-am-demo .tc li { padding: 9px 12px; }
+  #iths-am-demo .rad { grid-template-columns: 76px minmax(0, 1fr) auto; }
+  #iths-am-demo .citat { font-size: 17px; }
+  #iths-am-demo .done-box { padding: 14px 12px; }
+  #iths-am-demo .done-box b { font-size: 17px; }
+  #iths-am-demo .done-box span { font-size: 15px; letter-spacing: -0.01em; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-am-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-am-demo" aria-labelledby="am-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är Account Manager inom IT?</span>
+      <h2 id="am-demo-rubrik">Vinn kunden och behåll den</h2>
+      <p>En Account Manager inom IT arbetar mellan kund, affär och teknik. Du tar reda på vad kunden behöver, visar hur en IT-lösning skapar värde och bygger en långsiktig relation. Sälj en lösning till samma webbshop i fyra steg, från första mötet till AI.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Behov</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Erbjudande</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Förhandling</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; relation</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="am-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">pixelbutiken.se</span><span class="kund">Din kund</span></div>
+        <div class="shop">
+          <div class="shop-top"><span>Pixelbutiken</span><span>Varukorg<b id="am-count">0</b></span></div>
+          <div class="produkt">
+            <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="pris">1 299 kr</div>
+            <p class="besk">Trådlösa hörlurar med brusreducering och 30 timmars batteri.</p>
+            <div class="knappar">
+              <button type="button" class="kop" id="am-kop">Lägg i varukorg</button>
+              <button type="button" class="kop swish" id="am-swish" hidden>Betala med Swish</button>
+            </div>
+            <p class="svar" id="am-svar" role="status" aria-live="polite"></p>
+          </div>
+          <div class="chatt" id="am-chatt" hidden><span class="q">Var är mitt paket?</span><span class="a"><b>Butikens AI-chatt:</b> Det är på väg och kommer i morgon.</span></div>
+          <div class="flaggor" id="am-flaggor"></div>
+        </div>
+        <div class="vy" id="am-vy" aria-live="polite"></div>
+        <div class="logbox" aria-label="Anteckningar">
+          <div class="log-head"><i aria-hidden="true"></i><span id="am-loghead">Mötesanteckningar</span></div>
+          <div class="logg" id="am-logg" aria-live="polite"></div>
+          <button type="button" class="kor" id="am-kor" hidden>Presentera för Sara</button>
+        </div>
+        <p class="hint" id="am-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="am-panel">
+        <h3 class="t" id="am-titel"></h3>
+        <p class="lead" id="am-text"></p>
+        <div id="am-innehall"></div>
+        <div class="done-box" id="am-klar" hidden>
+          <b>Klart! Det här är IT-försäljning.</b>
+          <span>Bli Account Manager inom IT hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="am-bak">Föregående</button>
+          <button type="button" class="btn" id="am-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-am-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var logg = $("am-logg"), hint = $("am-hint"), kor = $("am-kor"), innehall = $("am-innehall"), vy = $("am-vy");
+  var stepBtns = root.querySelectorAll(".step");
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var IKON = {
+    graf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>',
+    chatt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+    dok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg>',
+    kal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="1.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+    tel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg>',
+    hand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>'
+  };
+
+  var STEPS = [
+    { kort: "Behov", titel: "Vad behöver kunden egentligen?",
+      text: "Sara driver Pixelbutiken, webbshopen som säljer hörlurar. Ditt IT-företag vill sälja en lösning till henne. Ställ frågor som får henne att berätta om verksamheten, innan du pratar om vad du säljer." },
+    { kort: "Erbjudande", titel: "Sätt ihop ett erbjudande som skapar värde",
+      text: "Välj de delar som löser Saras problem och ryms i budgeten. Business caset visar vad lösningen är värd för butiken. Presentera sedan erbjudandet." },
+    { kort: "Förhandling", titel: "Förhandla fram avtalet",
+      text: "Omar, butikens ekonomichef, har läst offerten och har invändningar. Svara så att affären blir bra för båda, och lönsam för ditt eget företag." },
+    { kort: "AI & relation", titel: "AI sköter rutinen, du relationen",
+      text: "Tre månader senare. AI i CRM-systemet har gått igenom mejl, möten och butikens försäljning och föreslår vad du ska göra. Men förtroende bygger du själv." }
+  ];
+  // Steg 1: frågor på mötet. "falt" är raden i CRM-kortet som svaret fyller i.
+  var FRAGOR = [
+    { id: "salj", q: "Hur går försäljningen i dag?", kund: "Bra på datorn. Men två av tre handlar på mobilen, och hälften av dem lämnar kassan innan de har betalat.",
+      falt: "Problem", info: "Hälften lämnar mobilkassan", flagga: "Mobilkassan: 50 % avbryter" },
+    { id: "paket", q: "Vill ni köpa vårt premiumpaket?", bad: true, kund: "Jag vet inte ens vad det är. Vad ingår?",
+      tips: "För tidigt! Du vet inte vad Sara behöver än, så du kan inte veta om paketet passar. Fråga om verksamheten först." },
+    { id: "tid", q: "Vad tar mest tid för ert team?", kund: "Kundtjänsten. Vi får 300 mejl i veckan om var paketet är.",
+      falt: "Tidstjuv", info: "300 mejl i veckan om leveranser", flagga: "300 leveransmejl i veckan" },
+    { id: "mal", q: "Vad är viktigast det närmaste halvåret?", kund: "Black Friday. Förra året kraschade kassan i två timmar mitt på dagen.",
+      falt: "Mål", info: "Klara Black Friday utan krasch", flagga: "Kassan kraschade på Black Friday" },
+    { id: "budget", q: "Vilken budget har ni, och vem beslutar?", kund: "Runt 15 000 kr i månaden. Jag och vår ekonomichef Omar beslutar tillsammans.",
+      falt: "Budget", info: "15 000 kr/mån · Sara och Omar" }
+  ];
+  var BRA = FRAGOR.filter(function (f) { return !f.bad; });
+  // Steg 2: delar i erbjudandet. Kostnad och värde i kr per månad (påhittade exempel).
+  var BUDGET = 15000;
+  var MODULER = [
+    { id: "kassa", namn: "Snabbkassa för mobilen", f: "Betala med Swish i ett klick", pris: 6000, varde: 18000, loser: "salj", flagga: "Swish i mobilkassan" },
+    { id: "chatt", namn: "AI-chatt för leveransfrågor", f: "Svarar direkt på var paketet är", pris: 4000, varde: 9000, loser: "tid", flagga: "AI-chatten svarar kunderna" },
+    { id: "skala", namn: "Automatisk skalning i molnet", f: "Kassan klarar tio gånger fler besök", pris: 3000, varde: 6000, loser: "mal", flagga: "Redo för Black Friday" },
+    { id: "klocka", namn: "App för smartklockor", f: "Handla hörlurar direkt från klockan", pris: 8000, varde: 0,
+      tips: "Sara har aldrig nämnt klockor, och nu spricker budgeten. Sälj det kunden behöver, inte det som är roligast att sälja." }
+  ];
+  // Steg 3: Omars invändningar, i tur och ordning. Ett svar per invändning är rätt ("ok").
+  var INV = [
+    { fraga: "13 000 kr i månaden är för dyrt.", alts: [
+      { t: "Okej, ni får 30 % rabatt.", fel: "Du gav bort marginalen direkt, och ditt företag tjänar nästan inget på affären. Visa vad lösningen är värd i stället." },
+      { t: "Business caset visar att ni får tillbaka 33 000 kr i månaden.", ok: "Bra! Du flyttar samtalet från pris till värde." },
+      { t: "Då får ni klara er utan.", fel: "Nu tappar du både affären och relationen. Visa varför priset är rimligt." }
+    ] },
+    { fraga: "Vad händer om kassan går ner på Black Friday?", alts: [
+      { t: "Det kommer inte att hända.", fel: "Ett löfte utan garanti ger inget förtroende. Vad står i avtalet om något går fel?" },
+      { t: "Vi skriver in ett SLA: 99,9 % drifttid och svar inom en timme.", ok: "Rätt! Ett SLA gör löftet konkret i avtalet." }
+    ] },
+    { fraga: "Kan vi ändå få ett lägre pris?", alts: [
+      { t: "Ni får de tre första månaderna gratis.", fel: "Då ger du bort 39 000 kr utan att få något tillbaka. Byt något mot något i stället." },
+      { t: "Ja, 10 % lägre om ni tecknar avtal på två år.", ok: "Bra förhandling! Butiken får ett lägre pris och ditt företag en längre affär." }
+    ] }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Sammanfatta mötet och följ upp", text: "AI skriver en sammanfattning av förra mötet och ett utkast till uppföljningsmejl. Du läser igenom och justerar innan det skickas.", log: "✓ Utkast till uppföljning klart att läsa" },
+    { id: "b", titel: "Visa kunden resultatet", text: "Mobilköpen har ökat med 18 % sedan snabbkassan kom. AI tar fram siffrorna inför ditt kvartalsmöte med Sara.", log: "✓ Underlag till kvartalsmötet klart" },
+    { id: "c", titel: "Låt AI svara Sara automatiskt", text: "Sara har mejlat och är irriterad över en driftstörning i går. AI svarar med ett standardmejl och en rabattkod, så slipper du ringa.", log: "✗ Standardsvar skickat till Sara" }
+  ];
+
+  var step = 0, rader = [], fragat = [], valda = {}, presenterat = false, inv = 0, missar = [], ai = { a: null, b: null, c: null },
+      korg = 0, spelar = false, nyFlagga = null, timer;
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function kr(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " kr"; }
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 6) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Mötet har inte börjat …", "Inget presenterat än …", "", ""][step] + "</span>"; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function setSvar(txt) { $("am-svar").textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+  function harFragat(id) { return fragat.indexOf(id) >= 0; }
+  function allaFragor() { return BRA.every(function (f) { return harFragat(f.id); }); }
+  function sald(id) { return step >= 2 || (step === 1 && !!valda[id]); }
+  function summa(k) { return MODULER.reduce(function (s, m) { return s + (valda[m.id] ? m[k] : 0); }, 0); }
+  function rattErbj() { return valda.kassa && valda.chatt && valda.skala && !valda.klocka; }
+
+  function visaShop() {
+    $("am-count").textContent = korg;
+    $("am-swish").hidden = !sald("kassa");
+    $("am-chatt").hidden = !sald("chatt");
+    var fl = [];
+    if (step === 0) {
+      FRAGOR.forEach(function (f) { if (f.flagga && harFragat(f.id)) fl.push('<span class="fl' + (nyFlagga === f.id ? " ny" : "") + '">' + f.flagga + "</span>"); });
+    } else {
+      MODULER.forEach(function (m) { if (m.flagga && sald(m.id)) fl.push('<span class="fl on' + (nyFlagga === m.id ? " ny" : "") + '">✓ ' + m.flagga + "</span>"); });
+      if (step === 3) fl.push('<span class="fl on">✓ Mobilköp +18 %</span>');
+    }
+    $("am-flaggor").innerHTML = fl.join("");
+    nyFlagga = null;
+  }
+
+  function res(cls, namn, txt, ikon, ny) { return '<div class="res ' + cls + (ny ? " ny" : "") + '">' + IKON[ikon] + "<b>" + namn + "</b><span>" + txt + "</span></div>"; }
+  function visaVy(ny) {
+    var h = "";
+    if (step === 0) {
+      h = '<div class="vy-head"><span>Kundkort i CRM</span><em>Pixelbutiken AB</em></div><dl class="kv">' +
+        BRA.map(function (f) {
+          var k = harFragat(f.id);
+          return "<dt>" + f.falt + '</dt><dd class="' + (k ? (ny === f.id ? "ny" : "") : "tom") + '">' + (k ? f.info : "Inte känt än") + "</dd>";
+        }).join("") + "</dl>";
+    } else if (step === 1) {
+      var kost = summa("pris"), varde = summa("varde"), max = 36000;
+      var roi = !kost ? ["", "Välj delar i listan"] : kost > BUDGET ? ["over", "Över budget med " + kr(kost - BUDGET) + " i månaden"]
+        : ["on", "Butiken får tillbaka " + (varde / kost).toFixed(1).replace(".", ",") + " kr per satsad krona"];
+      h = '<div class="vy-head"><span>Business case</span><em>per månad</em></div><div class="bc">' +
+        '<div class="rad"><span>Kostnad</span><div class="bar"><i class="' + (kost > BUDGET ? "over" : "") + '" style="width:' + Math.round(kost / max * 100) + '%"></i><u style="left:' + Math.round(BUDGET / max * 100) + '%" title="Budget"></u></div><b>' + kr(kost) + "</b></div>" +
+        '<div class="rad"><span>Värde</span><div class="bar"><i class="vinst" style="width:' + Math.round(varde / max * 100) + '%"></i></div><b>' + kr(varde) + "</b></div>" +
+        '<div class="roi ' + roi[0] + '">' + roi[1] + "</div></div>";
+    } else if (step === 2) {
+      var klar = inv >= INV.length, nu = function (i) { return inv > i; };
+      h = '<div class="vy-head"><span>Affären</span><em>' + (klar ? "Vunnen" : "Förhandling") + '</em></div>' +
+        '<div class="pipe"><span class="on">Behov</span><span class="on">Offert</span><span class="' + (klar ? "on" : "nu") + '">Förhandling</span><span class="' + (klar ? "on" : "") + '">Avtal</span></div>' +
+        '<dl class="kv">' +
+        "<dt>Pris</dt><dd" + (ny === 2 ? ' class="ny"' : "") + ">" + (nu(2) ? "<s>13 000 kr</s>11 700 kr/mån" : "13 000 kr/mån") + "</dd>" +
+        "<dt>Avtalstid</dt><dd" + (ny === 2 ? ' class="ny"' : "") + ">" + (nu(2) ? "24 månader" : "12 månader") + "</dd>" +
+        "<dt>SLA</dt><dd class=\"" + (nu(1) ? (ny === 1 ? "ny" : "") : "tom") + '">' + (nu(1) ? "99,9 % drifttid, svar inom en timme" : "Saknas") + "</dd>" +
+        "<dt>Ordervärde</dt><dd" + (ny === 2 ? ' class="ny"' : "") + ">" + (nu(2) ? "280 800 kr" : "156 000 kr") + "</dd>" +
+        "</dl>";
+    } else {
+      h = '<div class="vy-head"><span>Kundrelationen</span><em>Pixelbutiken AB</em></div><div class="resurser">' +
+        res("on", "Försäljning", "Mobilköp +18 %", "graf") +
+        res("on", "Kundtjänst", "250 färre mejl i veckan", "chatt") +
+        res(ai.a === "ja" ? "on" : "neutral", "Uppföljning", ai.a === "ja" ? "Utkast klart att läsa" : "Inte gjord", "dok", ny === "a") +
+        res(ai.b === "ja" ? "on" : "neutral", "Kvartalsmöte", ai.b === "ja" ? "Underlag klart" : "Inget underlag", "kal", ny === "b") +
+        res(ai.c === "nej" ? "on" : "", "Sara", ai.c === "ja" ? "Fick ett standardsvar, ännu argare" : ai.c === "nej" ? "Du ringer och löser det" : "Irriterad, väntar på svar", ai.c === "nej" ? "tel" : "hand", ny === "c") +
+        "</div>";
+    }
+    vy.innerHTML = h;
+  }
+
+  function knapp(attr, id, on, txt, dis, cls) {
+    return '<button type="button" class="ok' + (cls ? " " + cls : "") + '" ' + attr + '="' + id + '" aria-pressed="' + on + '"' + (dis ? " disabled" : "") + ">" + txt + "</button>";
+  }
+  function visaInnehall() {
+    var s = STEPS[step];
+    if (step === 0) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Frågor till Sara">' + FRAGOR.map(function (f) {
+        var on = harFragat(f.id);
+        return '<li class="' + (on ? (f.bad ? "miss" : "klar") : "") + '"><div><b>' + f.q + '</b><span class="f">' + (on ? "<em>Sara:</em> " + f.kund : f.bad ? "Gå rakt på försäljningen" : "Öppen fråga om verksamheten") + "</span></div>" +
+          knapp("data-fraga", f.id, on, on ? "Ställd" : "Fråga", on || spelar, f.bad ? "fel" : "") + "</li>";
+      }).join("") + "</ul>";
+    } else if (step === 1) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Delar i erbjudandet">' + MODULER.map(function (m) {
+        var on = !!valda[m.id];
+        return '<li class="' + (on ? (m.tips ? "miss" : "klar") : "") + '"><div><b>' + m.namn + '</b><span class="f">' + m.f + " · " + kr(m.pris) + "/mån</span></div>" +
+          knapp("data-modul", m.id, on, on ? "Med" : "Lägg till", spelar || presenterat, m.tips ? "fel" : "") + "</li>";
+      }).join("") + "</ul>";
+    } else if (step === 2) {
+      var klara = INV.slice(0, inv).map(function (x) {
+        var r = x.alts.filter(function (a) { return a.ok; })[0];
+        return '<li class="klar"><div><b>' + x.fraga + '</b><span class="f"><em>Du:</em> ' + r.t + "</span></div></li>";
+      }).join("");
+      var cur = INV[inv];
+      innehall.innerHTML = (klara ? '<ul class="tc" aria-label="Lösta invändningar">' + klara + "</ul>" : "") +
+        (cur ? '<div class="inv" style="margin-top:' + (klara ? "10px" : "0") + '"><div class="vem"><span class="avatar" aria-hidden="true">O</span>Omar, ekonomichef · invändning ' + (inv + 1) + " av " + INV.length + '</div><p class="citat">”' + cur.fraga + '”</p><div class="alts" role="group" aria-label="Ditt svar">' +
+          cur.alts.map(function (a, i) {
+            return '<button type="button" class="alt' + (missar.indexOf(i) >= 0 ? " miss" : "") + '" data-alt="' + i + '"' + (spelar ? " disabled" : "") + ">" + a.t + "</button>";
+          }).join("") + "</div></div>" : "");
+    } else {
+      innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI i CRM-systemet föreslår</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    }
+    $("am-titel").textContent = s.titel;
+    $("am-text").textContent = s.text;
+    $("am-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "nej");
+  }
+  function visaKor() {
+    kor.hidden = step !== 1;
+    kor.disabled = spelar;
+    kor.textContent = presenterat ? "Erbjudandet är presenterat" : "Presentera för Sara";
+    if (presenterat) kor.disabled = true;
+  }
+
+  function render() {
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("am-loghead").textContent = ["Mötesanteckningar", "Presentationen", "Förhandlingen", "CRM-systemet"][step];
+    $("am-bak").hidden = step === 0;
+    $("am-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("am-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    visaInnehall(); visaShop(); visaVy(); visaKor(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    clearTimeout(timer);
+    step = n; rader = []; spelar = false; korg = 0;
+    fragat = []; valda = {}; presenterat = false; inv = 0; missar = [];
+    ai = { a: null, b: null, c: null };
+    if (step === 2) rader = [{ cls: "sum", txt: "Offert skickad: 13 000 kr/mån i 12 månader" }, { cls: "kund", txt: "Omar: Jag har några frågor innan vi skriver på." }];
+    if (step === 3) rader = [{ cls: "ok", txt: "✓ Avtal i 24 månader, lösningen i drift" }, { cls: "du", txt: "AI: 3 förslag efter 214 mejl och 6 möten" }];
+    hint.hidden = true; setSvar("");
+    render();
+  }
+
+  // Spelar upp repliker med lite tid emellan, som ett riktigt samtal.
+  function kedja(fns, klar) {
+    spelar = true; visaKor(); visaInnehall();
+    var i = 0;
+    (function nasta() {
+      fns[i++](); send();
+      if (i < fns.length) timer = setTimeout(nasta, lugn ? 150 : 700);
+      else { spelar = false; visaKor(); visaInnehall(); if (klar) klar(); send(); }
+    })();
+  }
+
+  // Steg 1: behovsanalys
+  function fraga(id) {
+    var f = FRAGOR.filter(function (x) { return x.id === id; })[0];
+    hint.hidden = true;
+    kedja([
+      function () { logga("du", "Du: " + f.q); },
+      function () {
+        fragat.push(id); nyFlagga = id;
+        logga(f.bad ? "fel" : "kund", "Sara: " + f.kund);
+        visaVy(id); visaShop();
+      }
+    ], function () {
+      if (f.bad) showHint(f.tips);
+      else if (allaFragor()) { logga("sum", "Behovet är klart. Nästa steg: ett erbjudande."); showHint("Nu vet du vad Sara behöver, vad hon vill uppnå och vad hon kan betala. Det är grunden för erbjudandet."); }
+      else showHint(["Bra fråga! Den fyller i kundkortet.", "Bra! Ju mer du vet, desto bättre kan du hjälpa till.", "Bra! Fortsätt fråga."][fragat.filter(function (x) { return x !== "paket"; }).length - 1] || "Bra!");
+      blinka();
+    });
+  }
+
+  // Steg 2: presentera erbjudandet
+  function presentera() {
+    hint.hidden = true;
+    var saknas = MODULER.filter(function (m) { return m.loser && !valda[m.id]; });
+    var kost = summa("pris");
+    if (!kost) { showHint("Lägg till de delar du vill erbjuda först."); blinka(); return; }
+    kedja([
+      function () { logga("du", "Du presenterar: " + MODULER.filter(function (m) { return valda[m.id]; }).map(function (m) { return /^[A-ZÅÄÖ]{2}/.test(m.namn) ? m.namn : m.namn.charAt(0).toLowerCase() + m.namn.slice(1); }).join(", ")); },
+      function () {
+        if (valda.klocka) logga("fel", "Sara: Klockor? Det har vi aldrig pratat om. Och det är över budget.");
+        else if (saknas.length) logga("fel", "Sara: Bra, men vad gör vi åt " + { salj: "mobilkassan", tid: "alla leveransmejl", mal: "Black Friday" }[saknas[0].loser] + "?");
+        else { presenterat = true; logga("kund", "Sara: Det här löser precis det vi pratade om. Skicka en offert, så tar jag den med Omar."); }
+      }
+    ], function () {
+      if (valda.klocka) showHint("Ta bort det kunden inte behöver och presentera igen.");
+      else if (saknas.length) showHint("Erbjudandet löser inte alla Saras problem. Titta i kundkortet från steg 1 och lägg till det som saknas.");
+      else { logga("sum", "Offert skickad: " + kr(kost) + "/mån"); showHint("Erbjudandet löser alla tre problemen, ryms i budgeten och butiken får tillbaka mer än den betalar. Nu väntar förhandlingen."); }
+      blinka();
+    });
+  }
+
+  // Steg 3: förhandling
+  function svara(i) {
+    var x = INV[inv], a = x.alts[i];
+    hint.hidden = true;
+    kedja([
+      function () { logga("du", "Du: " + a.t); },
+      function () {
+        if (a.ok) {
+          logga("kund", "Omar: " + ["Okej, det är en bra poäng.", "Bra, då vet vi vad som gäller.", "Två år fungerar för oss."][inv]);
+          inv++; missar = [];
+          visaVy(inv);
+        } else {
+          missar.push(i);
+          logga("fel", "Omar: " + ["Toppen! Då tar vi det.", "Hur kan du veta det?", "Gärna, men vad tjänar ni på det?"][inv]);
+        }
+      }
+    ], function () {
+      if (!a.ok) showHint(a.fel);
+      else if (inv >= INV.length) { logga("sum", "✓ Avtal signerat: 11 700 kr/mån i 24 månader"); showHint("Affären är klar! Den är bra för Pixelbutiken och lönsam för ditt företag."); }
+      else showHint(a.ok);
+      var nb = root.querySelector(".alt:not(.miss)");
+      if (nb) nb.focus({ preventScroll: true });
+      blinka();
+    });
+  }
+
+  kor.addEventListener("click", function () { if (!spelar && step === 1 && !presenterat) presentera(); });
+
+  $("am-kop").addEventListener("click", function () {
+    korg++; visaShop(); setSvar("Tillagd i varukorgen."); send();
+  });
+  $("am-swish").addEventListener("click", function () {
+    korg = 0; visaShop(); setSvar("Betalt med Swish på fem sekunder."); send();
+  });
+
+  innehall.addEventListener("click", function (e) {
+    var alt = e.target.closest(".alt");
+    if (alt && !spelar) { svara(+alt.getAttribute("data-alt")); return; }
+    var b = e.target.closest(".ok");
+    if (!b || b.disabled || spelar) return;
+    var sel, ny;
+    if (b.hasAttribute("data-fraga")) {
+      fraga(b.getAttribute("data-fraga"));
+      return;
+    } else if (b.hasAttribute("data-modul")) {
+      var id = b.getAttribute("data-modul"), m = MODULER.filter(function (y) { return y.id === id; })[0];
+      valda[id] = !valda[id];
+      if (valda[id]) nyFlagga = id;
+      logga(valda[id] ? (m.tips ? "fel" : "ok") : "du", (valda[id] ? "+ " : "− ") + m.namn + " (" + kr(m.pris) + "/mån)");
+      if (valda[id] && m.tips) showHint(m.tips);
+      else if (rattErbj()) showHint("Det här löser alla tre problemen och ryms i budgeten. Presentera erbjudandet för Sara.");
+      else if (summa("pris") > BUDGET) showHint("Kostnaden är över Saras budget. Vad behöver hon egentligen?");
+      else hint.hidden = true;
+      sel = '.ok[data-modul="' + id + '"]';
+    } else {
+      var a = b.getAttribute("data-ai"), v = b.getAttribute("data-val");
+      ai[a] = ai[a] === v ? null : v;
+      var g = SUGS.filter(function (y) { return y.id === a; })[0];
+      if (ai[a] === "ja") logga(a === "c" ? "fel" : "ok", g.log);
+      else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+      if (a === "c" && ai.c === "ja") showHint("Sara är irriterad och behöver höra från dig, inte få en standardtext. Förtroende bygger du själv, det kan ingen AI göra åt dig. Avvisa förslaget.");
+      else if (a === "c" && ai.c === "nej") { logga("ok", "✓ Du ringer Sara i dag"); showHint("Rätt! AI tar rutinen, du tar samtalet."); }
+      else hint.hidden = true;
+      ny = a;
+      sel = '.ok[data-ai="' + a + '"][data-val="' + v + '"]';
+    }
+    visaInnehall(); visaShop(); visaVy(ny);
+    var nb = root.querySelector(sel);
+    if (nb && !nb.disabled) nb.focus({ preventScroll: true });
+    blinka();
+    send();
+  });
+
+  function blinka() {
+    if (root.clientWidth > 600) return;
+    var br = $("am-browser");
+    setTimeout(function () {
+      br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+      br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+    }, 60);
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("am-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("am-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "am-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>
