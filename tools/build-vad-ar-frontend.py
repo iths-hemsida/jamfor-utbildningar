@@ -8,7 +8,8 @@ page = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är frontend? | IT-Högskolan</title>
-<style>html, body {{ margin: 0; background: #fff; }} body {{ padding: 0 16px; }}</style>
+<style>html, body {{ margin: 0; background: #fff; }} body {{ padding: 0 16px; }} html.inbaddad body {{ padding: 0 2px; }}</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
 {snippet}
