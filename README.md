@@ -163,3 +163,11 @@ Mappen `vad-ar-it-sakerhetstest/` innehåller en demo för utbildningssidan IT-s
 - Källan är `vad-ar-it-sakerhetstest/snippet.html`. Kör `python3 tools/build-vad-ar-it-sakerhetstest.py` efter ändringar, så byggs `vad-ar-it-sakerhetstest/index.html` (GitHub Pages) och `wordpress/vad-ar-it-sakerhetstest-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-pen-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "pentest-demo-height"`).
+
+## Vad är Account Manager inom IT? (levande demo)
+
+Mappen `vad-ar-account-manager/` innehåller en demo för utbildningssidan Account Manager inom IT: "Vinn kunden och behåll den". Samma webbshop som i de andra demona, men nu är butiken kunden och besökaren säljer en IT-lösning till den i fyra steg: behov (ställ frågor till butikens ägare Sara och fyll i kundkortet i CRM, men gå inte rakt på försäljningen), erbjudande (välj de delar som löser butikens tre problem och ryms i budgeten, se business caset och presentera, utan appen för smartklockor som ingen bett om), förhandling (svara på ekonomichefens invändningar med värde, ett SLA och lägre pris mot längre avtal, i stället för att ge bort marginalen) och AI & relation (godkänn AI:s mötessammanfattning och kvartalsunderlag, men avvisa förslaget att låta AI svara en irriterad kund med ett standardmejl). Innehållet bygger på iths.se/utbildningar/account-manager-inom-it/ (hämtad 12 november 2026), som beskriver rollen i gränslandet mellan kund, affär och teknik: hela säljprocessen från prospektering till avslut, kundbehov och värdebaserade IT-lösningar, CRM, förhandling och avtal, business case och ROI, och AI för att effektivisera säljet medan relationer och förtroende förblir mänskligt arbete. Namn, priser och siffror i demon är påhittade exempel.
+
+- Källan är `vad-ar-account-manager/snippet.html`. Kör `python3 tools/build-vad-ar-account-manager.py` efter ändringar, så byggs `vad-ar-account-manager/index.html` (GitHub Pages) och `wordpress/vad-ar-account-manager-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-am-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "am-demo-height"`).
