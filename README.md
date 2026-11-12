@@ -178,4 +178,5 @@ Mappen `vad-ar-it-projektledare/` innehåller en demo för utbildningssidan IT-p
 
 - Källan är `vad-ar-it-projektledare/snippet.html`. Kör `python3 tools/build-vad-ar-it-projektledare.py` efter ändringar, så byggs `vad-ar-it-projektledare/index.html` (GitHub Pages) och `wordpress/vad-ar-it-projektledare-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-pl-demo`.
+- På mobil (när demon är högst 600 px bred) är butiken ihopfälld bakom "Visa butiken", loggen visar de tre senaste raderna, user stories visas på begäran och korten i steg 3 och 4 öppnas ett i taget. På dator är allt utfällt.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "projektledare-demo-height"`).
