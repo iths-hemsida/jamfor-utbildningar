@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Därför är frontend ett framtidsyrke | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Därför är frontend-utvecklare ett framtidsyrke" – fyra levande kort. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/framtidsyrke/ som iframe. All CSS är avgränsad till #iths-fe-framtid. -->
+<style>
+/* Fyra skäl, vart och ett med en liten interaktiv illustration:
+   1 enheter (mobil/surfplatta/dator), 2 AI föreslår och du godkänner, 3 reglage mellan kod och design, 4 yrkesroller.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547.
+   Avenir Heavy för rubriker och knappar, Avenir Book för brödtext. Medvetet bara ljust tema, som iths.se. */
+#iths-fe-framtid {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef; --ok: #2f7d55;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-fe-framtid *, #iths-fe-framtid *::before, #iths-fe-framtid *::after { box-sizing: border-box; }
+#iths-fe-framtid .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-fe-framtid h2, #iths-fe-framtid h3 { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+#iths-fe-framtid p { margin: 0; }
+#iths-fe-framtid button { font: inherit; color: inherit; cursor: pointer; }
+#iths-fe-framtid :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-fe-framtid .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-fe-framtid .intro { display: grid; gap: 8px; }
+#iths-fe-framtid .intro h2 { color: var(--kod); font-size: clamp(26px, 4.2vw, 38px); }
+#iths-fe-framtid .intro p { color: var(--muted); max-width: 64ch; }
+#iths-fe-framtid .avslut { max-width: 64ch; }
+
+/* Korten */
+#iths-fe-framtid .kort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#iths-fe-framtid .k { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+#iths-fe-framtid .illu { background: var(--soft); height: 190px; position: relative; overflow: hidden; display: grid; place-items: center; padding: 14px; }
+#iths-fe-framtid .txt { padding: 16px 18px 18px; display: grid; gap: 6px; align-content: start; }
+#iths-fe-framtid .txt h3 { font-size: 19px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+#iths-fe-framtid .txt h3::before { content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--pixel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%232D1A2E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; transform: translateY(2px); }
+#iths-fe-framtid .txt p { color: var(--muted); font-size: 15px; }
+
+/* Små knappar i illustrationerna */
+#iths-fe-framtid .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
+#iths-fe-framtid .seg button { border: 0; background: transparent; border-radius: 999px; padding: 5px 11px; font-family: var(--font-display); font-weight: 800; font-size: 12px; color: var(--muted); }
+#iths-fe-framtid .seg button[aria-pressed="true"] { background: var(--kod); color: #fff; }
+#iths-fe-framtid .mini { border-radius: 999px; padding: 6px 13px; font-family: var(--font-display); font-weight: 800; font-size: 12px; border: 2px solid var(--kod); background: var(--kod); color: #fff; }
+#iths-fe-framtid .mini.ghost { background: var(--surface); color: var(--kod); }
+
+/* 1: Enheter */
+#iths-fe-framtid .enh { width: 100%; height: 100%; display: grid; grid-template-rows: auto 1fr; gap: 10px; justify-items: center; }
+#iths-fe-framtid .skarm { width: 100%; height: 100%; display: grid; place-items: center; min-height: 0; }
+#iths-fe-framtid .ram { height: 100%; width: 100%; max-width: 100%; background: var(--surface); border: 3px solid var(--terminal); border-radius: 10px; padding: 7px; display: grid; grid-template-rows: auto auto 1fr; gap: 6px; overflow: hidden; transition: width .45s ease, border-radius .45s ease; }
+#iths-fe-framtid .ram[data-enhet="mobil"] { width: 30%; border-radius: 14px; }
+#iths-fe-framtid .ram[data-enhet="platta"] { width: 58%; border-radius: 12px; }
+#iths-fe-framtid .ram .topp { height: 8px; border-radius: 4px; background: var(--kod); }
+#iths-fe-framtid .ram .hero { height: 22px; border-radius: 5px; background: var(--pixel); }
+#iths-fe-framtid .ram .rutor { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; align-content: start; }
+#iths-fe-framtid .ram[data-enhet="platta"] .rutor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#iths-fe-framtid .ram[data-enhet="mobil"] .rutor { grid-template-columns: minmax(0, 1fr); }
+#iths-fe-framtid .ram .rutor i { display: block; height: 18px; border-radius: 4px; background: #e2cfdb; }
+
+/* 2: AI */
+#iths-fe-framtid .ai { width: 100%; display: grid; gap: 8px; }
+#iths-fe-framtid .rad { background: var(--terminal); color: #f3e9f0; border-radius: 10px; padding: 9px 12px; font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+#iths-fe-framtid .rad .tg { color: var(--pixel); }
+#iths-fe-framtid .rad .at { color: #e4b8d2; }
+#iths-fe-framtid .rad .st { color: #a8e1c4; }
+#iths-fe-framtid .rad .ny { background: rgba(90, 200, 140, .28); border-radius: 3px; }
+#iths-fe-framtid .bubbla { background: var(--surface); border-radius: 10px; padding: 9px 11px; display: grid; gap: 8px; font-size: 13px; box-shadow: 0 4px 14px rgba(45, 26, 46, .1); }
+#iths-fe-framtid .bubbla .vem { display: flex; gap: 7px; align-items: center; }
+#iths-fe-framtid .ai-dot { width: 20px; height: 20px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-family: var(--font-display); font-weight: 800; font-size: 9px; }
+#iths-fe-framtid .knappar { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+#iths-fe-framtid .klart { color: var(--ok); font-family: var(--font-display); font-weight: 800; }
+#iths-fe-framtid .lank { border: 0; background: none; padding: 0; color: var(--kod); text-decoration: underline; font-size: 12px; }
+
+/* 3: Kod möter design */
+#iths-fe-framtid .kd { position: relative; width: 100%; height: 100%; border-radius: 10px; overflow: hidden; }
+#iths-fe-framtid .kd .lager { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; }
+#iths-fe-framtid .kd .kodlager { background: var(--terminal); color: #f3e9f0; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; place-items: center start; white-space: pre; }
+#iths-fe-framtid .kd .kodlager .pr { color: #e4b8d2; }
+#iths-fe-framtid .kd .kodlager .sel { color: var(--pixel); }
+#iths-fe-framtid .kd .designlager { background: var(--surface); clip-path: inset(0 0 0 var(--delning, 50%)); }
+#iths-fe-framtid .kd .designlager .demo-knapp { font-family: var(--font-display); font-weight: 800; font-size: 15px; background: var(--kod); color: #fff; border-radius: 999px; padding: 11px 22px; box-shadow: 0 6px 16px rgba(102, 34, 71, .3); }
+#iths-fe-framtid .kd .linje { position: absolute; top: 0; bottom: 0; left: var(--delning, 50%); width: 3px; margin-left: -1.5px; background: var(--pixel); pointer-events: none; }
+#iths-fe-framtid .kd .linje::after { content: ""; position: absolute; top: 50%; left: 50%; width: 24px; height: 24px; margin: -12px 0 0 -12px; border-radius: 50%; background: var(--pixel); box-shadow: 0 2px 8px rgba(45, 26, 46, .3); }
+#iths-fe-framtid .kd .linje::before { content: "\2039\00a0\203A"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -54%); z-index: 1; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--terminal); white-space: nowrap; }
+#iths-fe-framtid .kd .etikett { position: absolute; top: 8px; font-family: var(--font-display); font-weight: 800; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 7px; border-radius: 5px; }
+#iths-fe-framtid .kd .etikett.v { left: 8px; background: rgba(255,255,255,.14); color: #f3e9f0; }
+#iths-fe-framtid .kd .etikett.h { right: 8px; background: var(--soft); color: var(--kod); }
+#iths-fe-framtid .kd input[type="range"] { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+#iths-fe-framtid .kd:has(input:focus-visible) { outline: 3px solid var(--kod); outline-offset: 2px; }
+
+/* 4: Yrkesroller */
+#iths-fe-framtid .roller { width: 100%; display: grid; gap: 10px; align-content: center; }
+#iths-fe-framtid .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+#iths-fe-framtid .chip { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-family: var(--font-display); font-weight: 800; font-size: 13px; }
+#iths-fe-framtid .chip:hover { border-color: var(--kod); }
+#iths-fe-framtid .chip[aria-pressed="true"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-fe-framtid .roll-text { background: var(--surface); border-radius: 10px; padding: 10px 12px; font-size: 13.5px; min-height: 64px; }
+
+/* Smal yta: en spalt */
+@container (max-width: 600px) {
+  #iths-fe-framtid .kort { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-fe-framtid * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-fe-framtid" aria-labelledby="fe-framtid-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Ett yrke med framtid</span>
+      <h2 id="fe-framtid-rubrik">Därför är frontend-utvecklare ett framtidsyrke</h2>
+      <p>Frontend handlar om mer än att bygga hemsidor. Du skapar digitala produkter, webbappar och tjänster som människor använder varje dag, där teknik möter design och användarupplevelse.</p>
+    </div>
+
+    <div class="kort">
+      <article class="k">
+        <div class="illu">
+          <div class="enh">
+            <div class="seg" role="group" aria-label="Välj enhet">
+              <button type="button" data-enhet="mobil" aria-pressed="false">Mobil</button>
+              <button type="button" data-enhet="platta" aria-pressed="false">Surfplatta</button>
+              <button type="button" data-enhet="dator" aria-pressed="true">Dator</button>
+            </div>
+            <div class="skarm" aria-hidden="true">
+              <div class="ram" id="ff-ram" data-enhet="dator"><span class="topp"></span><span class="hero"></span><span class="rutor"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Digitala upplevelser växer</h3>
+          <p>Företag behöver användarvänliga webbappar och digitala tjänster som fungerar på olika enheter.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="ai" id="ff-ai" aria-live="polite"></div>
+        </div>
+        <div class="txt">
+          <h3>AI förändrar utvecklingen</h3>
+          <p>AI effektiviserar kodningen, men det behövs utvecklare som kan förstå användarnas behov, granska kod och skapa fungerande lösningar.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="kd" id="ff-kd">
+            <div class="lager kodlager" aria-hidden="true"><span><span class="sel">.knapp</span> {
+  <span class="pr">background</span>: #662247;
+  <span class="pr">color</span>: #fff;
+  <span class="pr">border-radius</span>: 999px;
+}</span></div>
+            <div class="lager designlager" aria-hidden="true"><span class="demo-knapp">Anmäl dig</span></div>
+            <span class="linje" aria-hidden="true"></span>
+            <span class="etikett v" aria-hidden="true">Kod</span>
+            <span class="etikett h" aria-hidden="true">Design</span>
+            <input type="range" min="0" max="100" value="50" aria-label="Dra mellan kod och design">
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Teknik möter kreativitet</h3>
+          <p>Kombinera programmering, design och problemlösning för att skapa bättre användarupplevelser.</p>
+        </div>
+      </article>
+
+      <article class="k">
+        <div class="illu">
+          <div class="roller">
+            <div class="chips" role="group" aria-label="Yrkesroller">
+              <button type="button" class="chip" data-roll="0" aria-pressed="true">Frontend-utvecklare</button>
+              <button type="button" class="chip" data-roll="1" aria-pressed="false">Webbutvecklare</button>
+              <button type="button" class="chip" data-roll="2" aria-pressed="false">Webbdesigner</button>
+            </div>
+            <p class="roll-text" id="ff-roll" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="txt">
+          <h3>Många möjligheter</h3>
+          <p>Frontendkompetens kan öppna dörrar till roller inom webbutveckling, digital produktutveckling och interaktiva tjänster.</p>
+        </div>
+      </article>
+    </div>
+
+    <p class="avslut">På IT-Högskolan bygger du en stabil grund inom JavaScript, React och modern webbutveckling och lär dig använda AI som ett verktyg i utvecklingsarbetet.</p>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-fe-framtid");
+  if (!root) return;
+
+  // 1: Enheter
+  var ram = document.getElementById("ff-ram");
+  var segBtns = root.querySelectorAll(".seg button");
+  segBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      ram.setAttribute("data-enhet", b.getAttribute("data-enhet"));
+      segBtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    });
+  });
+
+  // 2: AI föreslår, du bestämmer
+  var ai = document.getElementById("ff-ai");
+  var FORE = '<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="st">"hund.jpg"</span><span class="tg">&gt;</span>';
+  var EFTER = '<span class="tg">&lt;img</span> <span class="at">src</span>=<span class="st">"hund.jpg"</span> <span class="ny"><span class="at">alt</span>=<span class="st">"Hund som springer"</span></span><span class="tg">&gt;</span>';
+  function aiVisa(lage) {
+    var rad = '<div class="rad">' + (lage === "ja" ? EFTER : FORE) + "</div>";
+    var b;
+    if (lage === "fraga") {
+      b = '<div class="bubbla"><div class="vem"><span class="ai-dot" aria-hidden="true">AI</span><span>Bilden saknar alt-text. Ska jag lägga till en?</span></div>' +
+          '<div class="knappar"><button type="button" class="mini" data-ai="ja">Godkänn</button><button type="button" class="mini ghost" data-ai="nej">Avböj</button></div></div>';
+    } else {
+      b = '<div class="bubbla"><div class="knappar"><span class="klart">' + (lage === "ja" ? "✓ Du granskade och godkände." : "Du bestämde att låta bli.") + '</span>' +
+          '<button type="button" class="lank" data-ai="fraga">Börja om</button></div></div>';
+    }
+    ai.innerHTML = rad + b;
+  }
+  ai.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-ai]");
+    if (!t) return;
+    aiVisa(t.getAttribute("data-ai"));
+    var f = ai.querySelector("button");
+    if (f) f.focus({ preventScroll: true });
+  });
+  aiVisa("fraga");
+
+  // 3: Reglage mellan kod och design
+  var kd = document.getElementById("ff-kd");
+  var reg = kd.querySelector("input");
+  function dela() { kd.style.setProperty("--delning", reg.value + "%"); }
+  reg.addEventListener("input", dela);
+  dela();
+
+  // 4: Yrkesroller
+  var ROLLER = [
+    "Bygger det användaren ser och klickar på i webbappar och digitala tjänster, ofta med React.",
+    "Arbetar med hela webbplatser: struktur, funktioner, prestanda och att allt fungerar i alla webbläsare.",
+    "Kombinerar design och kod och tar fram gränssnitt som är snygga, tydliga och tillgängliga."
+  ];
+  var chips = root.querySelectorAll(".chip");
+  var rollText = document.getElementById("ff-roll");
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+      rollText.textContent = ROLLER[+c.getAttribute("data-roll")];
+    });
+  });
+  rollText.textContent = ROLLER[0];
+
+  // Höjd till förälder när komponenten visas i en iframe. Mät komponenten, inte dokumentet,
+  // eftersom dokumentet är minst lika högt som iframen och då aldrig kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "fe-framtid-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
+
+</body>
+</html>
