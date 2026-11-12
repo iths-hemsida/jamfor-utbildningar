@@ -1,0 +1,610 @@
+<!-- IT-Högskolan: "Vad är IT-säkerhet?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-it-sakerhet/ som iframe. All CSS är avgränsad till #iths-sak-demo. -->
+<style>
+/* Skydda butiken mot angrepp. Samma webbshop som i de andra demona, men nu ska den skyddas: kryptering, logganalys, incidenthantering och AI & säkerhet.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-sak-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-sak-demo *, #iths-sak-demo *::before, #iths-sak-demo *::after { box-sizing: border-box; }
+#iths-sak-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-sak-demo h2, #iths-sak-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-sak-demo p { margin: 0; }
+#iths-sak-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-sak-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-sak-demo .intro { display: grid; gap: 8px; min-width: 0; overflow-wrap: break-word; }
+#iths-sak-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-sak-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-sak-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-sak-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-sak-demo .step:hover { border-color: var(--server); }
+#iths-sak-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-sak-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+#iths-sak-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-sak-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-sak-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-sak-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-sak-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-sak-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-sak-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-sak-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-sak-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-sak-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-sak-demo .btn.ghost:hover { background: var(--soft); }
+#iths-sak-demo .btn[hidden] { display: none; }
+
+/* Listor i panelen: kryptering, IP-adresser, incidentens steg */
+#iths-sak-demo .tc { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+#iths-sak-demo .tc li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--surface); }
+#iths-sak-demo .tc li:first-child { border-top: 0; }
+#iths-sak-demo .tc li.klar { background: #f3faf6; }
+#iths-sak-demo .tc li.miss { background: #fdecec; }
+#iths-sak-demo .tc b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-sak-demo .tc b code { font-family: var(--font-mono); font-size: 14px; font-weight: 700; }
+#iths-sak-demo .tc span.f { font-size: 14px; color: var(--muted); display: block; }
+#iths-sak-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-sak-demo .ok:hover { background: var(--soft); }
+#iths-sak-demo .ok:disabled { opacity: .4; cursor: default; background: var(--surface); }
+#iths-sak-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; opacity: 1; }
+#iths-sak-demo .ok.fel[aria-pressed="true"], #iths-sak-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); }
+
+/* AI-förslag */
+#iths-sak-demo .ai { display: grid; gap: 10px; }
+#iths-sak-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-sak-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-sak-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-sak-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-sak-demo .sug.nej { background: var(--moln); }
+#iths-sak-demo .sug.nej b, #iths-sak-demo .sug.nej p { color: var(--muted); }
+#iths-sak-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-sak-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-sak-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-sak-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-sak-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-sak-demo .done-box span { white-space: nowrap; }
+#iths-sak-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, säkerhetsläget och loggen under */
+#iths-sak-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-sak-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-sak-demo .dots { display: flex; gap: 5px; }
+#iths-sak-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-sak-demo .url { flex: 1; min-width: 0; display: flex; align-items: center; gap: 5px; font-size: 12px; color: #8a2330; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); white-space: nowrap; transition: background .3s, color .3s; }
+#iths-sak-demo .url svg { width: 12px; height: 12px; flex: none; }
+#iths-sak-demo .url span { overflow: hidden; text-overflow: ellipsis; }
+#iths-sak-demo .url.sak { color: #23633f; background: #e9f6ef; border-color: #b7dcc7; }
+#iths-sak-demo .shop { background: var(--moln); padding: 14px; position: relative; }
+#iths-sak-demo .shop-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+#iths-sak-demo .shop-top b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 999px; background: var(--kod); color: #fff; font-size: 11px; padding: 0 5px; margin-left: 4px; }
+#iths-sak-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: start; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-sak-demo .bild { grid-row: span 3; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-sak-demo .bild svg { width: 56px; color: var(--kod); }
+#iths-sak-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-sak-demo .pris { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--kod); line-height: 1.1; }
+#iths-sak-demo .besk { font-size: 13px; color: var(--muted); line-height: 1.4; }
+#iths-sak-demo .kop { grid-column: 1 / -1; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 11px 18px; background: var(--kod); color: #fff; border: 0; cursor: pointer; margin-top: 6px; }
+#iths-sak-demo .kop:hover { background: var(--terminal); }
+#iths-sak-demo .svar { grid-column: 1 / -1; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; background: #e9f6ef; color: #23633f; }
+#iths-sak-demo .svar:empty { display: none; }
+#iths-sak-demo .nere { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 6px; text-align: center; padding: 16px; background: rgba(45, 26, 46, .97); font-family: var(--font-display); font-weight: 800; color: #ff9aa8; }
+#iths-sak-demo .nere svg { width: 30px; height: 30px; }
+#iths-sak-demo .nere b { font-size: 20px; line-height: 1.1; color: #fff; }
+#iths-sak-demo .nere span { font-size: 14px; color: #f3e9f0; font-family: var(--font-mono); font-weight: 400; }
+#iths-sak-demo .nere[hidden] { display: none; }
+
+/* Säkerhetsläget: nätverket, inloggningar och skydd */
+#iths-sak-demo .vy { padding: 12px 14px; border-top: 1px solid var(--line); display: grid; gap: 10px; background: var(--surface); }
+#iths-sak-demo .vy-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+#iths-sak-demo .flode { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px; align-items: center; }
+#iths-sak-demo .nod { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; display: grid; gap: 2px; min-width: 0; background: var(--moln); }
+#iths-sak-demo .nod b { font-family: var(--font-display); font-weight: 800; font-size: 14px; display: flex; gap: 6px; align-items: center; }
+#iths-sak-demo .nod b svg { width: 18px; height: 18px; flex: none; color: var(--kod); }
+#iths-sak-demo .nod span { font-size: 12px; color: var(--muted); line-height: 1.3; }
+#iths-sak-demo .pil { display: grid; justify-items: center; font-family: var(--font-display); font-weight: 800; color: var(--err); font-size: 18px; line-height: 1; }
+#iths-sak-demo .pil svg { width: 16px; height: 16px; }
+#iths-sak-demo .pil.on { color: var(--ok); }
+#iths-sak-demo .snoop { border-radius: 10px; padding: 8px 10px; display: grid; gap: 2px; background: var(--moln); border: 1px dashed var(--line); }
+#iths-sak-demo .snoop small { font-size: 11px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+#iths-sak-demo .snoop small svg { width: 14px; height: 14px; flex: none; }
+#iths-sak-demo .snoop code { font-family: var(--font-mono); font-size: 13px; overflow-wrap: anywhere; color: var(--muted); }
+#iths-sak-demo .snoop.fel { background: #fdecec; border: 1px solid #f2c2c8; }
+#iths-sak-demo .snoop.fel code { color: #8a2330; font-weight: 700; }
+#iths-sak-demo .snoop.on { background: #f3faf6; border: 1px solid #b7dcc7; }
+#iths-sak-demo .snoop.on code { color: #23633f; }
+#iths-sak-demo .ips { display: grid; gap: 7px; }
+#iths-sak-demo .ip { display: grid; grid-template-columns: 112px minmax(0, 1fr) 26px; gap: 8px; align-items: center; font-size: 12px; }
+#iths-sak-demo .ip code { font-family: var(--font-mono); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-sak-demo .ip.stop code { text-decoration: line-through; color: var(--muted); }
+#iths-sak-demo .ip b { font-family: var(--font-display); font-weight: 800; text-align: right; }
+#iths-sak-demo .bar { height: 10px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+#iths-sak-demo .bar i { display: block; height: 100%; width: 0; background: var(--server); border-radius: 999px; transition: width .4s; }
+#iths-sak-demo .bar i.hog { background: var(--err); }
+#iths-sak-demo .ip.stop .bar i { background: #cbbfc8; }
+#iths-sak-demo .resurser { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 6px; }
+#iths-sak-demo .res { border: 1px solid #f2c2c8; background: #fdecec; border-radius: 10px; padding: 7px 9px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0 7px; align-items: center; }
+#iths-sak-demo .res svg { width: 18px; height: 18px; grid-row: span 2; color: var(--err); }
+#iths-sak-demo .res b { font-family: var(--font-display); font-weight: 800; font-size: 13px; line-height: 1.2; }
+#iths-sak-demo .res span { font-size: 11px; color: #8a2330; line-height: 1.3; }
+#iths-sak-demo .res.on { border-color: #b7dcc7; background: #f3faf6; }
+#iths-sak-demo .res.on svg { color: var(--ok); }
+#iths-sak-demo .res.on span { color: #23633f; }
+#iths-sak-demo .res.ny { animation: sk-ny .8s ease; }
+
+#iths-sak-demo .logbox { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-sak-demo .log-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-sak-demo .log-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-sak-demo .logg { display: grid; gap: 2px; min-height: 64px; align-content: start; }
+#iths-sak-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-sak-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-sak-demo .logg .l-in { color: #e4b8d2; }
+#iths-sak-demo .logg .l-ok { color: #a8e1c4; }
+#iths-sak-demo .logg .l-fel { color: #ff9aa8; }
+#iths-sak-demo .logg .l-sum { color: var(--pixel); font-weight: 700; }
+#iths-sak-demo .logg .ny { animation: sk-ny .6s ease; }
+@keyframes sk-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-sak-demo .kor { justify-self: start; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; background: var(--pixel); border: 0; color: var(--terminal); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#iths-sak-demo .kor:hover { background: #ffc66e; }
+#iths-sak-demo .kor:disabled { opacity: .5; cursor: default; }
+#iths-sak-demo .kor[hidden] { display: none; }
+#iths-sak-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-sak-demo .hint[hidden] { display: none; }
+#iths-sak-demo .browser.blink { animation: sk-blink 1.4s ease .3s; }
+@keyframes sk-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-sak-demo .stage { gap: 16px; }
+  #iths-sak-demo .bild { width: 60px; height: 60px; }
+  #iths-sak-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-sak-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-sak-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-sak-demo .steps { gap: 6px; }
+  #iths-sak-demo .step { padding: 8px 8px 9px; }
+  #iths-sak-demo .step .l { font-size: 14px; }
+  #iths-sak-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-sak-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-sak-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-sak-demo .shop { padding: 10px; }
+  #iths-sak-demo .vy { padding: 10px 12px; }
+  #iths-sak-demo .logbox { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-sak-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-sak-demo .tc li { padding: 9px 12px; }
+  #iths-sak-demo .ip { grid-template-columns: 100px minmax(0, 1fr) 24px; }
+  #iths-sak-demo .done-box { padding: 14px 14px; }
+  #iths-sak-demo .done-box b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-sak-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-sak-demo" aria-labelledby="sk-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är IT-säkerhet?</span>
+      <h2 id="sk-demo-rubrik">Skydda butiken mot angrepp</h2>
+      <p>En IT-säkerhetsspecialist skyddar företag mot digitala hot. Det handlar om att hitta sårbarheter, upptäcka angrepp i loggarna och få igång systemen igen efter en attack. Skydda samma webbshop i fyra steg, från kryptering till AI.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Kryptering</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Loggar</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Incident</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; säkerhet</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="sk-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="sk-url"></span></div>
+        <div class="shop">
+          <div class="shop-top"><span>Butiken</span><span>Varukorg<b id="sk-count">0</b></span></div>
+          <div class="produkt">
+            <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="pris">1 299 kr</div>
+            <p class="besk">Trådlösa hörlurar med brusreducering och 30 timmars batteri.</p>
+            <button type="button" class="kop" id="sk-kop">Lägg i varukorg</button>
+            <p class="svar" id="sk-svar" role="status" aria-live="polite"></p>
+          </div>
+          <div class="nere" id="sk-nere" hidden></div>
+        </div>
+        <div class="vy" id="sk-vy" aria-live="polite"></div>
+        <div class="logbox" aria-label="Logg">
+          <div class="log-head"><i aria-hidden="true"></i><span id="sk-loghead">Nätverket</span></div>
+          <div class="logg" id="sk-logg" aria-live="polite"></div>
+          <button type="button" class="kor" id="sk-kor">Logga in från caféets wifi</button>
+        </div>
+        <p class="hint" id="sk-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="sk-panel">
+        <h3 class="t" id="sk-titel"></h3>
+        <p class="lead" id="sk-text"></p>
+        <div id="sk-innehall"></div>
+        <div class="done-box" id="sk-klar" hidden>
+          <b>Klart! Det här är IT-säkerhet.</b>
+          <span>Bli IT-säkerhetsspecialist hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="sk-bak">Föregående</button>
+          <button type="button" class="btn" id="sk-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-sak-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var logg = $("sk-logg"), hint = $("sk-hint"), kor = $("sk-kor"), innehall = $("sk-innehall"), vy = $("sk-vy");
+  var stepBtns = root.querySelectorAll(".step");
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var IKON = {
+    dator: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/></svg>',
+    server: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="7" rx="1.5"/><rect x="4" y="13" width="16" height="7" rx="1.5"/><path d="M8 7.5h.01M8 16.5h.01"/></svg>',
+    las: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+    oppen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 7.75-1.4"/></svg>',
+    oga: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    skold: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/></svg>',
+    backup: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>',
+    dok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h6"/></svg>',
+    logg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 6h14M5 10h14M5 14h9M5 18h6"/></svg>',
+    mobil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg>'
+  };
+
+  var STEPS = [
+    { kort: "Kryptering", titel: "Vem läser med på wifi?",
+      text: "Anna loggar in i butiken från ett café. Utan kryptering skickas hennes lösenord som vanlig text, och alla på samma wifi kan läsa det. Logga in och se vad de ser. Slå sedan på HTTPS." },
+    { kort: "Loggar", titel: "Hitta angreppet i loggarna",
+      text: "Flera kunder har fått mejl om misslyckade inloggningar. Läs inloggningsloggen, hitta mönstret och blockera rätt IP-adress i brandväggen. Kunderna ska fortfarande kunna handla." },
+    { kort: "Incident", titel: "Ransomware! Vad gör du först?",
+      text: "Klockan 03:12 krypterades butikens filer och en lapp kräver lösen i bitcoin. Butiken ligger nere. Gör stegen i rätt ordning för att få igång den igen." },
+    { kort: "AI & säkerhet", titel: "AI förutser attacker, du avgör",
+      text: "AI går igenom miljontals loggrader och ser mönster som en människa missar. Men alla förslag gör inte butiken säkrare. Granska dem innan de genomförs." }
+  ];
+  var KRYPTO = [
+    { id: "cert", namn: "Skaffa ett certifikat", f: "Bevisar för webbläsaren att det verkligen är butiken", knapp: "Skaffa",
+      log: [["in", "$ certbot --domain pixelbutiken.se"], ["ok", "✓ Certifikat klart, giltigt i 90 dagar"]] },
+    { id: "https", namn: "Slå på HTTPS", f: "All trafik krypteras med TLS, även inloggningen", knapp: "Slå på",
+      log: [["in", "$ redirect http:// → https://"], ["ok", "✓ HTTPS påslaget för hela butiken"]] }
+  ];
+  var IPS = [
+    { ip: "81.226.14.7", namn: "En kund", f: "2 fel lösenord, sedan inloggad", fel: 2,
+      tips: "Det är Erik, en kund som skrev fel lösenord två gånger. Blockerar du honom kan han inte handla. Ångra och leta vidare." },
+    { ip: "185.220.101.4", namn: "Okänd", f: "48 fel lösenord mot 12 konton", fel: 48 },
+    { ip: "10.0.0.12", namn: "Butikens server", f: "Hälsokoll var tionde sekund", fel: 0,
+      tips: "Det är butikens egen server som kollar att allt fungerar. Blockerar du den slår driften larm. Ångra och leta vidare." }
+  ];
+  var ANGRIPARE = "185.220.101.4";
+  // Incidentens steg i den ordning de visas. Rätt ordning står i ORDNING.
+  var INC = [
+    { id: "aterstall", namn: "Återställ från backup", f: "Läs tillbaka filerna från nattens backup", log: "✓ Filerna återställda från backup 02:00" },
+    { id: "betala", namn: "Betala lösensumman", f: "0,5 bitcoin, så lovar angriparen att låsa upp filerna" },
+    { id: "rapport", namn: "Skriv en incidentrapport", f: "Vad hände, och hur stoppar vi det nästa gång?", log: "✓ Incidentrapport sparad" },
+    { id: "isolera", namn: "Isolera servern", f: "Koppla bort den från nätet så att viruset inte sprids", log: "✓ Servern bortkopplad från nätet" },
+    { id: "tappa", namn: "Täpp till hålet", f: "Byt det läckta admin-lösenordet och uppdatera systemet", log: "✓ Nytt admin-lösenord, systemet uppdaterat" }
+  ];
+  var ORDNING = ["isolera", "tappa", "aterstall", "rapport"];
+  var INC_TIPS = {
+    betala: "Betala aldrig. Det finns ingen garanti att du får tillbaka filerna, och pengarna betalar nästa attack. Det finns en backup.",
+    isolera: "Viruset finns kvar på servern och kan spridas vidare. Stoppa spridningen först.",
+    tappa: "Angriparen kom in med ett läckt admin-lösenord. Är hålet öppet kan angriparen komma tillbaka direkt och kryptera allt igen.",
+    aterstall: "Butiken ligger fortfarande nere. Få igång den innan du skriver rapporten."
+  };
+  var SUGS = [
+    { id: "a", titel: "Stoppa nästa attack i förväg", text: "Samma nätverk som i går testar nu lösenord långsamt, ett försök i minuten, för att inte synas. Blockera hela nätverket innan angriparen hittar ett konto.", log: "✓ Brandväggen blockerar 185.220.0.0/16" },
+    { id: "b", titel: "Kräv en extra kod vid ny inloggning", text: "Loggar någon in från en ny enhet eller ett nytt land skickas en kod till kundens mobil. Ett stulet lösenord räcker då inte.", log: "✓ Tvåstegsverifiering påslagen" },
+    { id: "c", titel: "Stäng av loggningen", text: "Loggarna tar 40 GB i månaden och larmen stör teamet på natten. Stäng av loggningen, så går butiken snabbare och blir billigare.", log: "✗ Loggningen avstängd" }
+  ];
+
+  var step = 0, rader = [], krypto = {}, blockerat = {}, last = false, gjort = [], ai = { a: null, b: null, c: null },
+      korg = 0, spelar = false, inloggad = null, timer;
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 7) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Inget skickat än …", "Loggen är inte läst än …", "", "Inga ändringar än …"][step] + "</span>"; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function setSvar(txt) { $("sk-svar").textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+  function https() { return step > 0 || !!krypto.https; }
+  function antalKrypto() { return KRYPTO.filter(function (k) { return krypto[k.id]; }).length; }
+  function nere() { return step === 2 && gjort.indexOf("aterstall") < 0; }
+  function ratt() { return !!blockerat[ANGRIPARE] && IPS.every(function (x) { return x.ip === ANGRIPARE || !blockerat[x.ip]; }); }
+
+  function visaShop() {
+    var s = https();
+    var u = $("sk-url");
+    u.innerHTML = (s ? IKON.las : IKON.oppen) + "<span>" + (s ? "https://" : "http://") + "pixelbutiken.se</span>";
+    u.classList.toggle("sak", s);
+    $("sk-count").textContent = korg;
+    var n = $("sk-nere");
+    n.hidden = !nere();
+    if (nere()) n.innerHTML = IKON.las + (gjort.length ? "<b>Servern är isolerad</b><span>Butiken är nere tills filerna är återställda.</span>" : "<b>Dina filer är krypterade</b><span>Betala 0,5 BTC inom 48 timmar.</span>");
+  }
+
+  function nod(ikon, namn, txt) { return '<div class="nod"><b>' + IKON[ikon] + namn + "</b><span>" + txt + "</span></div>"; }
+  function res(on, namn, txt, ikon, ny) { return '<div class="res' + (on ? " on" : "") + (ny ? " ny" : "") + '">' + IKON[ikon] + "<b>" + namn + "</b><span>" + txt + "</span></div>"; }
+  function visaVy(nyRes) {
+    var h = "";
+    if (step === 0) {
+      var s = https(), sn = inloggad === null ? "" : inloggad ? " on" : " fel";
+      var kod = inloggad === null ? "Inget skickat än" : inloggad ? "17 03 03 00 4a e1 9c 3f 0b 7d d2 88 … (oläsligt)" : "e-post: anna@mejl.se<br>lösenord: Sommar2026!";
+      h = '<div class="vy-head"><span>Vad ser någon på samma wifi?</span></div><div class="flode">' +
+        nod("mobil", "Anna", "Loggar in på caféet") +
+        '<span class="pil' + (s ? " on" : "") + '" aria-label="' + (s ? "Krypterat" : "Inte krypterat") + '">' + (s ? IKON.las : IKON.oppen) + "→</span>" +
+        nod("server", "Butiken", s ? "Tar bara emot HTTPS" : "Tar emot vanlig text") + "</div>" +
+        '<div class="snoop' + sn + '"><small>' + IKON.oga + "Det angriparen på wifi ser</small><code>" + kod + "</code></div>";
+    } else if (step === 1) {
+      h = '<div class="vy-head"><span>Fel lösenord senaste minuten</span></div><div class="ips">' +
+        IPS.map(function (x) {
+          var n = last ? x.fel : 0;
+          return '<div class="ip' + (blockerat[x.ip] ? " stop" : "") + '"><code>' + x.ip + '</code><div class="bar"><i class="' + (n > 10 ? "hog" : "") + '" style="width:' + Math.max(n ? 4 : 0, Math.round(n / 48 * 100)) + '%"></i></div><b>' + (last ? n : "–") + "</b></div>";
+        }).join("") + "</div>";
+    } else if (step === 2) {
+      var g = function (id) { return gjort.indexOf(id) >= 0; };
+      h = '<div class="vy-head"><span>Läget just nu</span></div><div class="resurser">' +
+        res(g("aterstall"), "Servern", g("aterstall") ? "Igång igen" : g("isolera") ? "Isolerad" : "Krypterad, viruset sprids", "server", nyRes === "isolera" || nyRes === "aterstall") +
+        res(g("tappa"), "Admin-lösenord", g("tappa") ? "Bytt" : "Läckt", g("tappa") ? "las" : "oppen", nyRes === "tappa") +
+        res(true, "Backup", g("aterstall") ? "Återläst" : "Från i natt 02:00", "backup", false) +
+        res(g("rapport"), "Rapport", g("rapport") ? "Klar" : "Inte skriven", "dok", nyRes === "rapport") +
+        "</div>";
+    } else {
+      h = '<div class="vy-head"><span>Butikens skydd</span></div><div class="resurser">' +
+        res(true, "HTTPS", "All trafik krypterad", "las") +
+        res(true, "Brandvägg", ai.a === "ja" ? "Blockerar hela nätverket" : "Blockerar angriparen", "skold", nyRes === "a") +
+        res(true, "Backup", "Varje natt", "backup") +
+        res(ai.c !== "ja", "Loggning", ai.c === "ja" ? "Avstängd, inget syns" : "På", "logg", nyRes === "c") +
+        (ai.b === "ja" ? res(true, "Inloggning", "Extra kod via mobilen", "mobil", nyRes === "b") : "") +
+        "</div>";
+    }
+    vy.innerHTML = h;
+  }
+
+  function knapp(attr, id, on, txt, dis, cls) {
+    return '<button type="button" class="ok' + (cls ? " " + cls : "") + '" ' + attr + '="' + id + '" aria-pressed="' + on + '"' + (dis ? " disabled" : "") + ">" + txt + "</button>";
+  }
+  function visaInnehall() {
+    var s = STEPS[step];
+    if (step === 0) {
+      var n = antalKrypto();
+      innehall.innerHTML = '<ul class="tc" aria-label="Kryptering">' + KRYPTO.map(function (k, i) {
+        var on = !!krypto[k.id];
+        return '<li class="' + (on ? "klar" : "") + '"><div><b>' + (i + 1) + ". " + k.namn + '</b><span class="f">' + k.f + "</span></div>" +
+          knapp("data-krypto", k.id, on, on ? "Klart" : k.knapp, on || i !== n || spelar) + "</li>";
+      }).join("") + "</ul>";
+    } else if (step === 1) {
+      innehall.innerHTML = '<ul class="tc" aria-label="IP-adresser">' + IPS.map(function (x) {
+        var on = !!blockerat[x.ip], rattIp = x.ip === ANGRIPARE;
+        return '<li class="' + (on ? (rattIp ? "klar" : "miss") : "") + '"><div><b><code>' + x.ip + "</code></b>" + '<span class="f">' + (last ? x.namn + " · " + x.f : "Läs loggen för att se vad adressen gör") + "</span></div>" +
+          knapp("data-ip", x.ip, on, on ? "Blockerad" : "Blockera", spelar, rattIp ? "" : "fel") + "</li>";
+      }).join("") + "</ul>";
+    } else if (step === 2) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Incidentens steg">' + INC.map(function (x) {
+        var nr = gjort.indexOf(x.id);
+        return '<li class="' + (nr >= 0 ? "klar" : "") + '"><div><b>' + x.namn + '</b><span class="f">' + x.f + "</span></div>" +
+          knapp("data-inc", x.id, nr >= 0, nr >= 0 ? "Steg " + (nr + 1) : "Gör", nr >= 0 || spelar) + "</li>";
+      }).join("") + "</ul>";
+    } else {
+      innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI har analyserat loggarna</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    }
+    $("sk-titel").textContent = s.titel;
+    $("sk-text").textContent = s.text;
+    $("sk-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "nej");
+  }
+  function visaKor() {
+    kor.hidden = step >= 2;
+    kor.disabled = spelar;
+    if (step === 0) kor.textContent = inloggad === null ? "Logga in från caféets wifi" : "Logga in igen";
+    else if (step === 1) kor.textContent = last ? "Läs loggen igen" : "Läs inloggningsloggen";
+  }
+
+  function render() {
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("sk-loghead").textContent = ["Nätverket", "Inloggningsloggen", "Larm i natt", "Ändringar i skyddet"][step];
+    $("sk-bak").hidden = step === 0;
+    $("sk-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("sk-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    visaInnehall(); visaShop(); visaVy(); visaKor(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    clearTimeout(timer);
+    step = n; rader = []; spelar = false; korg = 0; inloggad = null; last = false;
+    krypto = {}; blockerat = {}; gjort = [];
+    ai = { a: null, b: null, c: null };
+    if (step === 2) rader = [
+      { cls: "in", txt: "02:58 admin inloggad från 45.155.205.9" },
+      { cls: "fel", txt: "03:12 ✗ okänt program krypterar filer" },
+      { cls: "fel", txt: "03:13 ✗ butiken svarar inte" },
+      { cls: "sum", txt: "LÄS_MIG.txt: Betala 0,5 BTC" }
+    ];
+    if (step === 3) rader = [{ cls: "ok", txt: "✓ Butiken igång, backup varje natt" }, { cls: "in", txt: "AI: 3 förslag efter analys av 2,1 miljoner loggrader" }];
+    hint.hidden = true; setSvar("");
+    render();
+  }
+
+  // Kör en serie loggrader med lite tid emellan, som en riktig terminal.
+  function kedja(fns, klar) {
+    spelar = true; visaKor(); visaInnehall();
+    var i = 0;
+    (function nasta() {
+      fns[i++](); send();
+      if (i < fns.length) timer = setTimeout(nasta, lugn ? 150 : 650);
+      else { spelar = false; visaKor(); visaInnehall(); if (klar) klar(); send(); }
+    })();
+  }
+
+  // Steg 1: kryptering
+  function kryptera(id) {
+    var k = KRYPTO.filter(function (x) { return x.id === id; })[0];
+    kedja(k.log.map(function (r, i) {
+      return function () { logga(r[0], r[1]); if (i === k.log.length - 1) { krypto[id] = true; if (id === "https") inloggad = null; visaShop(); visaVy(); } };
+    }), function () {
+      if (id === "cert") showHint("Certifikatet visar att butiken är äkta. Slå nu på HTTPS så att trafiken krypteras.");
+      else { showHint("Låset syns i adressfältet. Logga in igen och se vad angriparen ser nu."); visaKor(); }
+      blinka();
+    });
+  }
+  function loggaIn() {
+    var s = https();
+    hint.hidden = true;
+    kedja([
+      function () { logga("in", "Anna: POST " + (s ? "https" : "http") + "://pixelbutiken.se/login"); },
+      function () {
+        inloggad = s; visaVy();
+        if (s) logga("ok", "Avlyssnat: 17 03 03 00 4a e1 9c … oläsligt");
+        else logga("fel", "Avlyssnat: anna@mejl.se / Sommar2026!");
+      }
+    ], function () {
+      if (s) showHint("Nu ser angriparen bara krypterad data. Lösenordet är skyddat på vägen till butiken.");
+      else showHint("Angriparen läste Annas lösenord rakt av. Skaffa ett certifikat och slå på HTTPS i listan.");
+      blinka();
+    });
+  }
+
+  // Steg 2: logganalys
+  function lasLogg() {
+    rader = []; hint.hidden = true;
+    var b = blockerat[ANGRIPARE];
+    var a = function (konto, t) { return function () { logga(b ? "ok" : "fel", "10:41:0" + t + " " + ANGRIPARE + (b ? " ✓ stoppad i brandväggen" : " " + konto + " fel lösenord")); }; };
+    kedja([
+      function () { logga("in", "$ grep login /var/log/butiken.log"); },
+      function () { logga("in", "10:41:01 81.226.14.7 erik@… fel lösenord"); },
+      a("anna@…", 2), a("lisa@…", 2),
+      function () { logga("in", "10:41:03 10.0.0.12 hälsokoll ok"); },
+      a("omar@…", 4),
+      function () { logga("in", "10:41:05 81.226.14.7 erik@… inloggad"); }
+    ], function () {
+      last = true;
+      if (b) { logga("sum", "Inga nya försök från " + ANGRIPARE); showHint(ratt() ? "Angreppet är stoppat och kunderna kan handla som vanligt." : "Angreppet är stoppat, men du har blockerat fel adress också. Ångra den."); }
+      else { logga("sum", ANGRIPARE + ": 48 försök mot 12 konton"); showHint("Ser du mönstret? En adress provar lösenord mot många konton på kort tid. Blockera den i listan."); }
+      visaVy(); visaInnehall(); blinka();
+    });
+  }
+
+  // Steg 3: incidenthantering
+  function incident(id) {
+    var nasta = ORDNING[gjort.length];
+    if (id !== nasta) {
+      logga("fel", id === "betala" ? "✗ Betalning stoppad" : "✗ Inte än: " + INC.filter(function (x) { return x.id === id; })[0].namn.toLowerCase());
+      showHint(id === "betala" ? INC_TIPS.betala : INC_TIPS[nasta]);
+      return null;
+    }
+    gjort.push(id);
+    logga("ok", INC.filter(function (x) { return x.id === id; })[0].log);
+    if (id === "isolera") showHint("Bra! Viruset kan inte spridas längre. Vad gör du nu?");
+    else if (id === "tappa") showHint("Hålet är stängt. Nu kan du återställa utan att angriparen kommer tillbaka.");
+    else if (id === "aterstall") { logga("ok", "✓ Butiken svarar igen"); showHint("Butiken är igång! Ett sista steg: dokumentera vad som hände."); }
+    else { logga("sum", "Incidenten är löst. Butiken var nere i 4 timmar."); showHint("Klart! Isolera, täpp till, återställ och dokumentera. Med en backup behövde ingen betala."); }
+    return id;
+  }
+
+  kor.addEventListener("click", function () {
+    if (spelar) return;
+    if (step === 0) loggaIn();
+    else if (step === 1) lasLogg();
+  });
+
+  $("sk-kop").addEventListener("click", function () {
+    korg++; visaShop(); setSvar("Tillagd i varukorgen."); send();
+  });
+
+  innehall.addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b || b.disabled || spelar) return;
+    var sel, nyRes;
+    if (b.hasAttribute("data-krypto")) {
+      kryptera(b.getAttribute("data-krypto"));
+      return;
+    } else if (b.hasAttribute("data-ip")) {
+      var ip = b.getAttribute("data-ip"), x = IPS.filter(function (y) { return y.ip === ip; })[0];
+      blockerat[ip] = !blockerat[ip];
+      logga(blockerat[ip] ? (ip === ANGRIPARE ? "ok" : "fel") : "in", (blockerat[ip] ? "Brandvägg: blockerar " : "Ångrat: blockerar inte ") + ip);
+      if (blockerat[ip] && x.tips) showHint(x.tips);
+      else if (ratt()) showHint("Rätt adress! Läs loggen igen och kontrollera att angreppet är stoppat.");
+      else if (blockerat[ANGRIPARE]) showHint("Angriparen är blockerad, men en annan adress också. Ångra den.");
+      else hint.hidden = true;
+      sel = '.ok[data-ip="' + ip + '"]';
+    } else if (b.hasAttribute("data-inc")) {
+      nyRes = incident(b.getAttribute("data-inc"));
+      var nasta = INC.filter(function (y) { return gjort.indexOf(y.id) < 0; })[0];
+      sel = nyRes && nasta ? '.ok[data-inc="' + nasta.id + '"]' : '.ok[data-inc="' + b.getAttribute("data-inc") + '"]';
+    } else {
+      var a = b.getAttribute("data-ai"), v = b.getAttribute("data-val");
+      ai[a] = ai[a] === v ? null : v;
+      var g = SUGS.filter(function (y) { return y.id === a; })[0];
+      if (ai[a] === "ja") logga(a === "c" ? "fel" : "ok", g.log);
+      else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+      if (a === "c" && ai.c === "ja") showHint("Butiken blir lite snabbare, men nu syns inga angrepp. Utan loggar kan varken du eller AI upptäcka nästa attack. Avvisa förslaget.");
+      else if (a === "c" && ai.c === "nej") showHint("Rätt! Loggarna är säkerhetens ögon. Du granskar, AI hjälper.");
+      else hint.hidden = true;
+      nyRes = a;
+      sel = '.ok[data-ai="' + a + '"][data-val="' + v + '"]';
+    }
+    visaInnehall(); visaShop(); visaVy(nyRes);
+    var nb = root.querySelector(sel);
+    if (nb && !nb.disabled) nb.focus({ preventScroll: true });
+    blinka();
+    send();
+  });
+
+  function blinka() {
+    if (root.clientWidth > 600) return;
+    var br = $("sk-browser");
+    setTimeout(function () {
+      br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+      br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+    }, 60);
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("sk-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("sk-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "sakerhet-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>
