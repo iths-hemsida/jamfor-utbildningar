@@ -171,3 +171,11 @@ Mappen `vad-ar-account-manager/` innehåller en demo för utbildningssidan Accou
 - Källan är `vad-ar-account-manager/snippet.html`. Kör `python3 tools/build-vad-ar-account-manager.py` efter ändringar, så byggs `vad-ar-account-manager/index.html` (GitHub Pages) och `wordpress/vad-ar-account-manager-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-am-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "am-demo-height"`).
+
+## Vad är IT-projektledare? (levande demo)
+
+Mappen `vad-ar-it-projektledare/` innehåller en demo för utbildningssidan IT-projektledare: "Led projektet hela vägen till lansering". Samma webbshop som i de andra demona, men nu ska den lanseras till Black Friday i fyra steg: planera (kunden vill ha sex funktioner på 31 poäng men teamet hinner 20, så besökaren prioriterar och ser att produktsida, varukorg och betalning måste vara med), sprint (spela upp en Scrum-sprint där betalningen blockeras på daily standup dag 4, och bara om du som Scrum Master tar bort hindret blir allt klart i tid), risker (hantera en risk och två intressenter, VD:n som vill ha en chattbot i sista stund och kundtjänst som inte vet vad som lanseras, och se lamporna för tid, kvalitet och kund) och AI & projekt (godkänn AI:s statusrapport och riskanalys av tidplanen, men avvisa förslaget att lägga kundregistret i en gratis AI-tjänst). Innehållet bygger på iths.se/utbildningar/it-projektledare/ (hämtad 12 november 2026), som nämner Scrum, Agile och Lean, att planera och driva IT-projekt från behovsanalys till leverans, kommunikation med kunder, intressenter och utvecklingsteam, resurser, risker och deadlines samt rollen som Scrum Master, och på kursen Projektverktyg och dokumentation i ansökan till MYH 2026, som tar upp AI-verktyg för analys, planering och riskidentifiering.
+
+- Källan är `vad-ar-it-projektledare/snippet.html`. Kör `python3 tools/build-vad-ar-it-projektledare.py` efter ändringar, så byggs `vad-ar-it-projektledare/index.html` (GitHub Pages) och `wordpress/vad-ar-it-projektledare-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-pl-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "projektledare-demo-height"`).
