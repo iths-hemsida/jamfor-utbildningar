@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är IT-säkerhetstest? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är IT-säkerhetstest?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-it-sakerhetstest/ som iframe. All CSS är avgränsad till #iths-pen-demo. -->
+<style>
+/* Hacka butiken innan någon annan gör det. Samma webbshop som i de andra demona, men nu penetrationstestas den: kartlägg, hitta hålet, rapport och AI & pentest.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-pen-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-pen-demo *, #iths-pen-demo *::before, #iths-pen-demo *::after { box-sizing: border-box; }
+#iths-pen-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-pen-demo h2, #iths-pen-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-pen-demo p { margin: 0; }
+#iths-pen-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-pen-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-pen-demo .intro { display: grid; gap: 8px; min-width: 0; }
+#iths-pen-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-pen-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-pen-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-pen-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-pen-demo .step:hover { border-color: var(--server); }
+#iths-pen-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-pen-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+#iths-pen-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-pen-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-pen-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-pen-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-pen-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-pen-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-pen-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-pen-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-pen-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-pen-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-pen-demo .btn.ghost:hover { background: var(--soft); }
+#iths-pen-demo .btn[hidden] { display: none; }
+#iths-pen-demo .btn:disabled { opacity: .55; cursor: default; }
+
+/* Listor: uppdrag, checklista och fynd */
+#iths-pen-demo .lista { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+#iths-pen-demo .lista > li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--surface); }
+#iths-pen-demo .lista > li:first-child { border-top: 0; }
+#iths-pen-demo .lista b { font-family: var(--font-display); font-weight: 800; display: block; overflow-wrap: anywhere; }
+#iths-pen-demo .lista span.f { font-size: 14px; color: var(--muted); display: block; }
+#iths-pen-demo .chip { font-family: var(--font-display); font-weight: 800; font-size: 12px; border-radius: 999px; padding: 3px 10px; white-space: nowrap; background: var(--moln); color: var(--muted); border: 1px solid var(--line); }
+#iths-pen-demo .chip.c-ok { background: #e9f6ef; color: #23633f; border-color: #b7dcc7; }
+#iths-pen-demo .chip.c-fel { background: #fdecec; color: #8a2330; border-color: #f2c2c8; }
+#iths-pen-demo .chip.c-info { background: #fff6e3; color: var(--terminal); border-color: #f4dfb0; }
+#iths-pen-demo .mini { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-pen-demo .mini:hover { background: var(--soft); }
+#iths-pen-demo .mini:disabled { opacity: .5; cursor: default; background: var(--surface); }
+#iths-pen-demo .uppdrag { border: 1px dashed var(--server); border-radius: 12px; padding: 10px 14px; font-size: 14px; background: var(--moln); display: grid; gap: 2px; }
+#iths-pen-demo .uppdrag b { font-family: var(--font-display); font-weight: 800; color: var(--kod); }
+
+/* Rapport med riskbedömning */
+#iths-pen-demo .fynd > li { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+#iths-pen-demo .risk { display: flex; gap: 6px; flex-wrap: wrap; }
+#iths-pen-demo .risk button { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 5px 13px; cursor: pointer; border: 2px solid var(--line); background: var(--surface); color: var(--ink); }
+#iths-pen-demo .risk button:hover { border-color: var(--server); }
+#iths-pen-demo .risk button[aria-pressed="true"].r-ratt { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-pen-demo .risk button[aria-pressed="true"].r-fel { background: var(--terminal); border-color: var(--terminal); color: #fff; }
+#iths-pen-demo .risk button:disabled { cursor: default; }
+#iths-pen-demo .fb { font-size: 14px; color: var(--muted); }
+#iths-pen-demo .fb.ratt { color: #23633f; }
+
+/* AI-förslag */
+#iths-pen-demo .ai { display: grid; gap: 10px; }
+#iths-pen-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-pen-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-pen-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-pen-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-pen-demo .sug.nej { background: var(--moln); }
+#iths-pen-demo .sug.nej b, #iths-pen-demo .sug.nej p { color: var(--muted); }
+#iths-pen-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-pen-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-pen-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-pen-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-pen-demo .ok:hover { background: var(--soft); }
+#iths-pen-demo .ok[data-val="ja"][aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-pen-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); color: #fff; }
+#iths-pen-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-pen-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-pen-demo .done-box span { white-space: nowrap; }
+#iths-pen-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, verktyget under */
+#iths-pen-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-pen-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-pen-demo .dots { display: flex; gap: 5px; }
+#iths-pen-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-pen-demo .url { flex: 1; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-pen-demo .shop { background: var(--moln); padding: 14px; position: relative; }
+#iths-pen-demo .proxy { position: absolute; top: 6px; right: 8px; z-index: 1; font-family: var(--font-display); font-weight: 800; font-size: 11px; letter-spacing: .04em; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 2px 9px; }
+#iths-pen-demo .proxy[hidden] { display: none; }
+#iths-pen-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: center; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-pen-demo .bild { grid-row: span 2; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-pen-demo .bild svg { width: 56px; color: var(--kod); }
+#iths-pen-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-pen-demo .meta { font-size: 14px; color: var(--muted); }
+#iths-pen-demo .meta b { font-family: var(--font-display); color: var(--kod); }
+#iths-pen-demo .kop { grid-column: 1 / -1; font-family: var(--font-display); font-weight: 800; font-size: 15px; border: 0; border-radius: 999px; padding: 11px 18px; background: var(--kod); color: #fff; cursor: pointer; width: 100%; margin-top: 4px; }
+#iths-pen-demo .kop:hover { background: var(--terminal); }
+#iths-pen-demo .kop:disabled { opacity: .55; cursor: default; background: var(--kod); }
+#iths-pen-demo .svar { grid-column: 1 / -1; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; }
+#iths-pen-demo .svar:empty { display: none; }
+#iths-pen-demo .svar.s-ok { background: #e9f6ef; color: #23633f; }
+#iths-pen-demo .svar.s-fel { background: #fdecec; color: #8a2330; }
+#iths-pen-demo .svar.s-info { background: #fff6e3; color: var(--terminal); }
+
+#iths-pen-demo .logbox { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-pen-demo .log-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-pen-demo .log-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-pen-demo .logg { display: grid; gap: 2px; min-height: 64px; }
+#iths-pen-demo .logg span { display: block; overflow-wrap: anywhere; white-space: pre-wrap; }
+#iths-pen-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-pen-demo .logg .l-in { color: #e4b8d2; }
+#iths-pen-demo .logg .l-ok { color: #a8e1c4; }
+#iths-pen-demo .logg .l-fel { color: #ff9aa8; }
+#iths-pen-demo .logg .l-sum { color: var(--pixel); font-weight: 700; }
+#iths-pen-demo .logg .ny { animation: pt-ny .6s ease; }
+@keyframes pt-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-pen-demo .verktyg { display: grid; gap: 8px; }
+#iths-pen-demo .verktyg:empty { display: none; }
+#iths-pen-demo .kor { justify-self: start; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; background: var(--pixel); border: 0; color: var(--terminal); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#iths-pen-demo .kor:hover { background: #ffc66e; }
+#iths-pen-demo .kor:disabled { opacity: .5; cursor: default; }
+#iths-pen-demo .kor.av { background: transparent; color: var(--pixel); box-shadow: inset 0 0 0 2px var(--pixel); }
+#iths-pen-demo .req { margin: 0; border: 1px solid #5a3d5b; border-radius: 8px; padding: 8px 10px; white-space: pre-wrap; overflow-wrap: anywhere; color: #f3e9f0; }
+#iths-pen-demo .req .k { color: #e4b8d2; }
+#iths-pen-demo .req .s { color: #a8e1c4; }
+#iths-pen-demo .req input { font: inherit; font-weight: 700; width: 7ch; background: #fff; color: var(--terminal); border: 2px solid var(--pixel); border-radius: 5px; padding: 0 4px; text-align: right; }
+#iths-pen-demo .req-rad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+#iths-pen-demo .req-tips { color: #bfa8b8; font-size: 11.5px; }
+#iths-pen-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-pen-demo .hint.stopp { background: #fdecec; border-top-color: #f2c2c8; color: #8a2330; }
+#iths-pen-demo .hint[hidden] { display: none; }
+#iths-pen-demo .browser.blink { animation: pt-blink 1.4s ease .3s; }
+@keyframes pt-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-pen-demo .stage { gap: 16px; }
+  #iths-pen-demo .bild { width: 60px; height: 60px; }
+  #iths-pen-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-pen-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-pen-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-pen-demo .steps { gap: 6px; }
+  #iths-pen-demo .step { padding: 8px 8px 9px; }
+  #iths-pen-demo .step .l { font-size: 14px; }
+  #iths-pen-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-pen-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-pen-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-pen-demo .shop { padding: 10px; }
+  #iths-pen-demo .logbox { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-pen-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-pen-demo .lista > li { padding: 9px 12px; }
+  #iths-pen-demo .done-box { padding: 14px 14px; }
+  #iths-pen-demo .done-box b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-pen-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-pen-demo" aria-labelledby="pt-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är IT-säkerhetstest?</span>
+      <h2 id="pt-demo-rubrik">Hacka butiken innan någon annan gör det</h2>
+      <p>En IT-säkerhetstestare, eller penetrationstestare, letar efter säkerhetshål på uppdrag av företaget. Testa samma webbshop i fyra steg, från första skanningen till färdig rapport.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Kartlägg</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Hitta hålet</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Rapport</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; pentest</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="pt-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
+        <div class="shop">
+          <span class="proxy" id="pt-proxy" hidden>Burp avlyssnar</span>
+          <div class="produkt">
+            <div class="bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="meta"><b>1 299 kr</b> · 1 st</div>
+            <button type="button" class="kop" id="pt-kop">Köp</button>
+            <p class="svar" id="pt-svar" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="logbox" aria-label="Verktyg">
+          <div class="log-head"><i aria-hidden="true"></i><span id="pt-loghead">Terminal</span></div>
+          <div class="logg" id="pt-logg" aria-live="polite"></div>
+          <div class="verktyg" id="pt-verktyg"></div>
+        </div>
+        <p class="hint" id="pt-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="pt-panel">
+        <h3 class="t" id="pt-titel"></h3>
+        <p class="lead" id="pt-text"></p>
+        <div id="pt-innehall"></div>
+        <div class="done-box" id="pt-klar" hidden>
+          <b>Klart! Det här är IT-säkerhetstest.</b>
+          <span>Bli IT-säkerhetstestare hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="pt-bak">Föregående</button>
+          <button type="button" class="btn" id="pt-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-pen-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var PRIS = 1299;
+  var kop = $("pt-kop"), svar = $("pt-svar"), logg = $("pt-logg"), hint = $("pt-hint"), verktyg = $("pt-verktyg"), innehall = $("pt-innehall");
+  var stepBtns = root.querySelectorAll(".step");
+
+  var step = 0, rader = [], timer, upptagen = false,
+      scan = {},                                  // steg 1: { butiken: "ok", betala: "stopp" }
+      burp = { pa: false, fangad: false, hal: false }, // steg 2
+      risk = {}, skickad = false, omtest = false,  // steg 3
+      ai = { a: null, b: null, c: null };          // steg 4
+
+  var STEPS = [
+    { kort: "Kartlägg", titel: "Kartlägg med tillstånd", head: "Terminal · Nmap",
+      text: "En penetrationstestare attackerar system på uppdrag, för att hitta hålen innan de kriminella gör det. Allt börjar med ett skriftligt tillstånd. Välj vad du får skanna." },
+    { kort: "Hitta hålet", titel: "Hitta en sårbarhet", head: "Burp Suite · Proxy",
+      text: "Burp Suite fångar trafiken mellan webbläsaren och servern. Ändra köpet innan det skickas och se om servern märker något." },
+    { kort: "Rapport", titel: "Bedöm risken och rapportera", head: "Omtest",
+      text: "Pentestrapporten visar vad du hittade och hur allvarligt det är. Då vet kunden vad som ska fixas först. Bedöm risken för varje fynd." },
+    { kort: "AI & pentest", titel: "AI-agenten hjälper, du bestämmer", head: "AI-agent",
+      text: "AI-agenter kan skriva kod och automatisera delar av ett penetrationstest. Men det är du som ansvarar för vad som testas. Granska förslagen." }
+  ];
+  var MAL = [
+    { id: "butiken", namn: "butiken.se", f: "Webbshopen. Ingår i uppdraget." },
+    { id: "betala", namn: "betala.se", f: "Betaltjänsten i kassan. Ägs av ett annat företag." }
+  ];
+  var FYND = [
+    { id: "f1", namn: "Priset går att ändra i köpet", f: "Hittat med Burp Suite i steg 2", ratt: "Hög",
+      ja: "Rätt. Vem som helst kan köpa allt för 1 kr. Det kostar pengar direkt.",
+      nej: "Tänk på följden: vem som helst kan handla allt för 1 kr. Hur allvarligt är det?" },
+    { id: "f2", namn: "Admininloggningen syns från internet", f: "Port 8080, hittad med Nmap i steg 1", ratt: "Medel",
+      ja: "Rätt. Ingen kommer in direkt, men inloggningen kan attackeras med gissade lösenord.",
+      nej: "Ingen kommer in utan lösenord, men sidan kan attackeras. Allvarligt, men inte akut." },
+    { id: "f3", namn: "Servern visar sitt versionsnummer", f: "nginx 1.18 i svaret från servern", ratt: "Låg",
+      ja: "Rätt. Det hjälper en angripare att leta, men ger ingen åtkomst.",
+      nej: "Versionsnumret ger ingen åtkomst i sig. Det hjälper bara en angripare att leta." }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Skriv ett Python-skript som testar priset på alla 200 produkter", text: "Samma test som du gjorde för hand, men för hela butiken.",
+      log: [["in", "$ python pristest.py butiken.se"], ["ok", "✓ 200 produkter testade på 4 s. Inget pris går att ändra."]] },
+    { id: "b", titel: "Granska koden för kassan och leta efter fler hål", text: "AI läser koden och pekar ut misstänkta rader. Du kontrollerar fynden.",
+      log: [["in", "AI: rabattkoden kan användas flera gånger"], ["ok", "✓ Du testade: stämmer. Nytt fynd i rapporten."]] },
+    { id: "c", titel: "Kör samma attack mot betala.se, det går snabbt", text: "Betaltjänsten hanterar ju också butikens köp.",
+      log: [["fel", "✗ Stoppat: betala.se ingår inte i uppdraget"]] }
+  ];
+
+  function kr(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " kr"; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 7) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) {
+      var tom = ["Ingen skanning gjord än …", "Ingen trafik fångad än …", "Inget omtest gjort än …", "Agenten väntar på ditt beslut …"][step];
+      logg.innerHTML = '<span class="tom">' + tom + "</span>"; return;
+    }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function setSvar(cls, txt) { svar.className = "svar" + (cls ? " s-" + cls : ""); svar.textContent = txt; }
+  function showHint(t, stopp) { hint.textContent = t; hint.className = "hint" + (stopp ? " stopp" : ""); hint.hidden = false; send(); }
+  function kedja(lista, klar) {
+    upptagen = true; render();
+    var i = 0;
+    (function nasta() {
+      var r = lista[i++]; logga(r[0], r[1]); send();
+      if (i < lista.length) timer = setTimeout(nasta, lugn ? 120 : 380);
+      else { upptagen = false; klar(); }
+    })();
+  }
+
+  // Panelens innehåll per steg
+  function chip(cls, t) { return '<span class="chip' + (cls ? " c-" + cls : "") + '">' + t + "</span>"; }
+  function bock(klar) { return klar ? chip("ok", "Klart") : chip("", "Att göra"); }
+  function visaInnehall() {
+    var s = STEPS[step], h = "";
+    if (step === 0) {
+      h = '<div class="uppdrag"><b>Uppdrag från Butiken AB</b><span>Tillstånd att testa: butiken.se · Tid: i dag 09–17</span></div>' +
+        '<ul class="lista" aria-label="Mål" style="margin-top:10px">' + MAL.map(function (m) {
+          var st = scan[m.id];
+          var hoger = st === "ok" ? chip("ok", "Skannad") : st === "stopp" ? chip("fel", "Ej tillåten") :
+            '<button type="button" class="mini" data-scan="' + m.id + '"' + (upptagen ? " disabled" : "") + ">Skanna</button>";
+          return "<li><div><b>" + m.namn + '</b><span class="f">' + m.f + "</span></div>" + hoger + "</li>";
+        }).join("") + "</ul>";
+    } else if (step === 1) {
+      h = '<ul class="lista" aria-label="Att göra">' +
+        "<li><div><b>1. Slå på avlyssning</b><span class=\"f\">Knappen under butiken</span></div>" + bock(burp.pa || burp.fangad || burp.hal) + "</li>" +
+        "<li><div><b>2. Klicka på Köp</b><span class=\"f\">Burp fångar köpet innan det når servern</span></div>" + bock(burp.fangad || burp.hal) + "</li>" +
+        "<li><div><b>3. Ändra priset och skicka vidare</b><span class=\"f\">Godkänner servern ett falskt pris?</span></div>" + (burp.hal ? chip("fel", "Sårbar!") : bock(false)) + "</li></ul>";
+    } else if (step === 2) {
+      var alla = FYND.every(function (f) { return risk[f.id] === f.ratt; });
+      h = '<ul class="lista fynd" aria-label="Fynd">' + FYND.map(function (f) {
+        var v = risk[f.id];
+        return "<li><div><b>" + f.namn + '</b><span class="f">' + f.f + '</span></div><div class="risk" role="group" aria-label="Risk">' +
+          ["Hög", "Medel", "Låg"].map(function (r) {
+            var vald = v === r;
+            return '<button type="button" data-risk="' + f.id + '" data-v="' + r + '" aria-pressed="' + vald + '"' +
+              (vald ? ' class="' + (r === f.ratt ? "r-ratt" : "r-fel") + '"' : "") + (skickad ? " disabled" : "") + ">" + r + "</button>";
+          }).join("") + "</div>" +
+          (v ? '<p class="fb' + (v === f.ratt ? " ratt" : "") + '">' + (v === f.ratt ? f.ja : f.nej) + "</p>" : "") + "</li>";
+      }).join("") + "</ul>" +
+        (skickad ? '<p style="margin-top:12px">' + chip("ok", "Rapporten skickad") + "</p>" :
+          '<button type="button" class="btn" id="pt-skicka" style="margin-top:12px"' + (alla ? "" : " disabled") + ">Skicka rapporten till kunden</button>");
+    } else {
+      h = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI-agenten föreslår nästa steg</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-fix="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-fix="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    }
+    innehall.innerHTML = h;
+    $("pt-titel").textContent = s.titel;
+    $("pt-text").textContent = s.text;
+    $("pt-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "nej");
+  }
+
+  // Verktyget under butiken: Burp i steg 2, omtest i steg 3
+  function visaVerktyg() {
+    var h = "";
+    if (step === 1) {
+      if (burp.fangad) {
+        h = '<pre class="req"><span class="k">POST</span> /api/order\n<span class="k">Host:</span> butiken.se\n\n{ <span class="s">"produkt"</span>: <span class="s">"pixel-one"</span>,\n  <span class="s">"antal"</span>: 1,\n  <span class="s">"pris"</span>: <input id="pt-pris" type="text" inputmode="numeric" maxlength="6" value="1299" aria-label="Pris i förfrågan"> }</pre>' +
+          '<div class="req-rad"><button type="button" class="kor" id="pt-vidare">Skicka vidare</button><span class="req-tips">Tips: skriv 1</span></div>';
+      } else {
+        h = '<button type="button" class="kor' + (burp.pa ? "" : " av") + '" id="pt-avlyssna" aria-pressed="' + burp.pa + '">Avlyssning: ' + (burp.pa ? "PÅ" : "AV") + "</button>";
+      }
+    } else if (step === 2 && skickad) {
+      h = '<button type="button" class="kor" id="pt-omtest"' + (upptagen ? " disabled" : "") + ">" + (omtest ? "Testa igen" : "Gör om attacken: pris 1 kr") + "</button>";
+    }
+    verktyg.innerHTML = h;
+    $("pt-proxy").hidden = !(step === 1 && burp.pa);
+    kop.disabled = upptagen || (step === 1 && burp.fangad);
+  }
+
+  function render() {
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("pt-loghead").textContent = STEPS[step].head;
+    $("pt-bak").hidden = step === 0;
+    $("pt-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("pt-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    visaInnehall(); visaVerktyg(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    clearTimeout(timer);
+    step = n; rader = []; upptagen = false; scan = {}; burp = { pa: false, fangad: false, hal: false };
+    risk = {}; skickad = false; omtest = false;
+    hint.hidden = true; setSvar("", "");
+    if (step === 3) rader = [{ cls: "in", txt: "Agent redo. Uppdrag: butiken.se" }];
+    render();
+  }
+
+  function blinka() {
+    if (root.clientWidth > 600) return;
+    var br = $("pt-browser");
+    setTimeout(function () {
+      br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+      br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+    }, 60);
+  }
+
+  // Köp i butiken
+  kop.addEventListener("click", function () {
+    if (step === 1 && burp.pa) {
+      burp.fangad = true;
+      setSvar("info", "Köpet väntar i Burp …");
+      logga("in", "Fångade: POST /api/order");
+      hint.hidden = true;
+      render();
+      var inp = $("pt-pris"); if (inp) { inp.focus({ preventScroll: true }); inp.select(); }
+      return;
+    }
+    if (step === 2 && skickad) { setSvar("ok", "Tack! 1 st för " + kr(PRIS) + "."); send(); return; }
+    setSvar("ok", "Tack! 1 st för " + kr(PRIS) + ".");
+    if (step === 1 && !burp.hal) showHint("Köpet gick rakt igenom. Slå på avlyssning först, så fångar Burp köpet.");
+    send();
+  });
+
+  verktyg.addEventListener("click", function (e) {
+    var id = e.target.id;
+    if (id === "pt-avlyssna") {
+      burp.pa = !burp.pa;
+      logga("in", burp.pa ? "Avlyssning på. Webbläsaren går via Burp." : "Avlyssning av.");
+      hint.hidden = true;
+      render();
+      if (burp.pa) showHint("Klicka nu på Köp i butiken.");
+    } else if (id === "pt-vidare") vidare();
+    else if (id === "pt-omtest") {
+      setSvar("", "");
+      kedja([["in", "POST /api/order  pris: 1"], ["ok", "← 400 Priset stämmer inte"], ["sum", "✓ Sårbarheten är åtgärdad"]], function () {
+        omtest = true;
+        setSvar("ok", "Köpet stoppades: fel pris.");
+        showHint("Omtestet visar att hålet är tätat. Servern räknar nu ut priset själv och litar inte på webbläsaren.");
+        render();
+      });
+    }
+  });
+  verktyg.addEventListener("keydown", function (e) { if (e.target.id === "pt-pris" && e.key === "Enter") { e.preventDefault(); vidare(); } });
+
+  function vidare() {
+    var v = ($("pt-pris").value || "").replace(/\s/g, "");
+    if (!/^\d{1,6}$/.test(v)) { showHint("Skriv ett pris i hela kronor, till exempel 1."); return; }
+    var p = +v;
+    burp.fangad = false;
+    if (p === PRIS) {
+      logga("ok", "→ Skickat oförändrat. 200 OK");
+      setSvar("ok", "Tack! 1 st för " + kr(PRIS) + ".");
+      showHint("Inget konstigt med ett vanligt köp. Klicka på Köp igen och ändra priset den här gången.");
+    } else {
+      burp.hal = true;
+      logga("fel", "→ pris ändrat till " + p + ". 200 OK");
+      logga("sum", "! Sårbarhet: servern godtar priset från webbläsaren");
+      setSvar("fel", "Tack! 1 st för " + kr(p) + ".");
+      showHint("Sårbarhet hittad! Servern litar på priset som webbläsaren skickar. En riktig angripare kunde handla gratis. Nästa steg: rapportera.");
+    }
+    render(); blinka();
+  }
+
+  innehall.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    // Steg 1: skanna
+    var m = b.getAttribute("data-scan");
+    if (m === "betala") {
+      scan.betala = "stopp";
+      logga("fel", "✗ Avbrutet: betala.se saknar tillstånd");
+      showHint("Stopp! Att testa ett system utan tillstånd är dataintrång, även om avsikten är god. Håll dig till butiken.se.", true);
+      render(); blinka();
+      return;
+    }
+    if (m === "butiken") {
+      rader = []; hint.hidden = true;
+      kedja([["in", "$ nmap -sV butiken.se"], ["ok", "22/tcp   öppen  ssh"], ["ok", "443/tcp  öppen  https  nginx 1.18"], ["fel", "8080/tcp öppen  http   /admin"], ["sum", "3 öppna portar. 1 fynd: adminsidan"]], function () {
+        scan.butiken = "ok";
+        showHint("Webbshopen finns på port 443, men en admininloggning syns också på 8080. Den skriver du upp. Nästa steg: testa köpet.");
+        render();
+      });
+      blinka();
+      return;
+    }
+    // Steg 3: riskbedömning och rapport
+    var f = b.getAttribute("data-risk");
+    if (f) {
+      risk[f] = b.getAttribute("data-v");
+      render();
+      var nb = root.querySelector('[data-risk="' + f + '"][data-v="' + risk[f] + '"]');
+      if (nb) nb.focus({ preventScroll: true });
+      return;
+    }
+    if (b.id === "pt-skicka") {
+      skickad = true;
+      logga("in", "Rapport skickad till Butiken AB");
+      logga("ok", "Version 1.1: priset räknas på servern");
+      showHint("Kunden har fixat det allvarligaste felet. Gör om attacken och kontrollera att hålet är tätat.");
+      render(); blinka();
+      return;
+    }
+    // Steg 4: AI-förslag
+    if (b.classList.contains("ok")) {
+      var k = b.getAttribute("data-fix"), v = b.getAttribute("data-val");
+      ai[k] = ai[k] === v ? null : v;
+      var g = SUGS.filter(function (x) { return x.id === k; })[0];
+      var txts = g.log.map(function (r) { return r[1]; });
+      rader = rader.filter(function (r) { return txts.indexOf(r.txt) < 0; });
+      if (ai[k] === "ja") g.log.forEach(function (r) { logga(r[0], r[1]); }); else visaLogg(false);
+      if (k === "c" && ai.c === "ja") showHint("Avvisa! betala.se ingår inte i uppdraget. AI vet inte vad du har tillstånd till, det gör du.", true);
+      else if (k === "c" && ai.c === "nej") showHint("Rätt! AI kan göra jobbet snabbare, men du ansvarar för att hålla dig inom uppdraget.");
+      else hint.hidden = true;
+      visaInnehall();
+      var nb2 = root.querySelector('.ok[data-fix="' + k + '"][data-val="' + v + '"]');
+      if (nb2) nb2.focus({ preventScroll: true });
+      if (ai[k] === "ja") blinka();
+      send();
+    }
+  });
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("pt-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("pt-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "pentest-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  render();
+})();
+</script>
+
+</body>
+</html>
