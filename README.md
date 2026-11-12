@@ -181,3 +181,11 @@ Mappen `vad-ar-it-projektledare/` innehåller en demo för utbildningssidan IT-p
 - All CSS är avgränsad till `#iths-pl-demo`.
 - På mobil (när demon är högst 600 px bred) är butiken ihopfälld bakom "Visa butiken", loggen visar de tre senaste raderna, user stories visas på begäran och korten i steg 3 och 4 öppnas ett i taget. På dator är allt utfällt.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "projektledare-demo-height"`).
+
+## Därför är frontend-utvecklare ett framtidsyrke
+
+Mappen `framtidsyrke/` innehåller fyra kort för avsnittet med samma namn på utbildningssidan för Frontend-utvecklare. Varje kort har en liten interaktiv illustration: enheter, AI-förslag, ett reglage mellan kod och design, och yrkesroller.
+
+- Källan är `framtidsyrke/snippet.html`. Kör `python3 tools/build-framtidsyrke.py` efter ändringar.
+- WPCode: `wordpress/framtidsyrke-wpcode.html`. All CSS är avgränsad till `#iths-fe-framtid`.
+- Iframe: höjden skickas med `postMessage` (`type: "fe-framtid-height"`).
