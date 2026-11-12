@@ -23,10 +23,9 @@
 #iths-fe-framtid :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
 #iths-fe-framtid .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
 #iths-fe-framtid .intro { display: grid; gap: 8px; }
-/* Huvudrubriken i Futura semibold, som rubrikerna på iths.se. I WPCode ärver den temats eget rubriktypsnitt
-   (raden märkt FRISTÅENDE tas bort av byggskriptet). Fristående och i iframe används listan nedan. */
-#iths-fe-framtid .intro h2 { color: var(--kod); font-size: clamp(26px, 4.2vw, 38px); font-weight: 600; letter-spacing: -0.01em; text-transform: none; }
-#iths-fe-framtid .intro h2 { font-family: "futura-pt", "Futura PT", "Futura LT W01 Medium", "FuturaPT-Demi", Futura, "Century Gothic", var(--font-display); } /* FRISTÅENDE */
+/* Huvudrubriken i Futura semibold, samma som rubrikerna på iths.se (font-family: futura; font-weight: 600).
+   I WPCode används sidans egen webbfont. I iframe används Futura som finns inbyggt i Mac och iPhone, annars Avenir. */
+#iths-fe-framtid .intro h2 { color: var(--kod); font-size: clamp(26px, 4.2vw, 38px); font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-transform: none; }
 #iths-fe-framtid .intro p { color: var(--muted); max-width: 64ch; }
 
 /* Korten */
