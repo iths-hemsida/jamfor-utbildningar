@@ -170,6 +170,7 @@ Mappen `vad-ar-account-manager/` innehåller en demo för utbildningssidan Accou
 
 - Källan är `vad-ar-account-manager/snippet.html`. Kör `python3 tools/build-vad-ar-account-manager.py` efter ändringar, så byggs `vad-ar-account-manager/index.html` (GitHub Pages) och `wordpress/vad-ar-account-manager-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-am-demo`.
+- På mobil (när demon är högst 600 px bred) är butiken ihopfälld bakom "Visa butiken" (det som ändrats i butiken syns ändå som gröna och röda etiketter), anteckningarna visar de tre senaste raderna med "Hela loggen", svaren på frågorna och de lösta invändningarna visas bara i kundkortet och anteckningarna, och AI-korten i steg 4 öppnas ett i taget och fälls ihop till en svarsrad. På dator är allt utfällt.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "am-demo-height"`).
 
 ## Vad är IT-projektledare? (levande demo)
