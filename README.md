@@ -148,6 +148,14 @@ Mappen `vad-ar-cloud/` innehåller en demo för utbildningssidan .NET Cloud Deve
 - All CSS är avgränsad till `#iths-cloud-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "cloud-demo-height"`).
 
+## Vad är IT-säkerhet? (levande demo)
+
+Mappen `vad-ar-it-sakerhet/` innehåller en demo för utbildningssidan IT-säkerhetsspecialist: "Skydda butiken mot angrepp". Samma webbshop som i de andra demona, men nu ska den skyddas i fyra steg: kryptering (Anna loggar in från ett café och angriparen på samma wifi läser lösenordet, tills besökaren skaffar ett certifikat och slår på HTTPS), loggar (läs inloggningsloggen, hitta adressen som provar lösenord mot många konton och blockera den i brandväggen, utan att blockera en kund eller butikens egen server), incident (ransomware har krypterat butiken: isolera servern, täpp till hålet, återställ från backup och skriv en incidentrapport i rätt ordning, och betala aldrig lösensumman) och AI & säkerhet (godkänn eller avvisa AI:s förslag, där ett av dem stänger av loggningen). Innehållet bygger på iths.se/utbildningar/it-sakerhetsspecialist/ (hämtad 12 november 2026), som nämner hot som virus, ransomware och nätverksintrång, logganalys, incidenthantering, spårbarhet, återställning efter attacker, kryptering, nätverkssäkerhet och AI för att förutse attacker. IP-adresser, lösenord och belopp i demon är påhittade exempel.
+
+- Källan är `vad-ar-it-sakerhet/snippet.html`. Kör `python3 tools/build-vad-ar-it-sakerhet.py` efter ändringar, så byggs `vad-ar-it-sakerhet/index.html` (GitHub Pages) och `wordpress/vad-ar-it-sakerhet-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-sak-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "sakerhet-demo-height"`).
+
 ## Vad är IT-säkerhetstest? (levande demo)
 
 Mappen `vad-ar-it-sakerhetstest/` innehåller en demo för utbildningssidan IT-säkerhetstestare: "Hacka butiken innan någon annan gör det". Samma webbshop som i de andra demona, men nu penetrationstestas den i fyra steg: kartlägg (skanna butiken.se med Nmap och hitta en adminsida på port 8080, men stoppas om du försöker skanna betaltjänsten som inte ingår i uppdraget), hitta hålet (fånga köpet i Burp Suite, ändra priset till 1 kr och se servern godta det), rapport (bedöm risken Hög, Medel eller Låg för tre fynd, skicka rapporten och gör ett omtest som visar att hålet är tätat) och AI & pentest (godkänn AI-agentens Python-skript och kodgranskning, men avvisa förslaget att attackera betala.se). Innehållet bygger på IT-Högskolans kursplaner 2026 för IT-säkerhetstestare (samma underlag som i jämförelsen och kursplansutforskaren), som nämner pentestrapporter, NIS2 och GDPR, Nmap och Wireshark, Nessus, OWASP, Burp Suite, Python och AI-agenter för att skriva kod och automatisera penetrationstester.
