@@ -17,5 +17,7 @@ page = f"""<!doctype html>
 </html>
 """
 (root / "framtidsyrke" / "index.html").write_text(page, encoding="utf-8")
-(root / "wordpress" / "framtidsyrke-wpcode.html").write_text(snippet, encoding="utf-8")
+# I WPCode ska huvudrubriken ärva temats rubriktypsnitt, så raden märkt FRISTÅENDE tas bort där.
+wp = "\n".join(l for l in snippet.split("\n") if "/* FRISTÅENDE */" not in l)
+(root / "wordpress" / "framtidsyrke-wpcode.html").write_text(wp, encoding="utf-8")
 print("ok")
