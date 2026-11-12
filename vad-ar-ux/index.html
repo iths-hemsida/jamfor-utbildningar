@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vad är UX? | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vad är UX?" – levande demo. Klistra in hela snutten i ett HTML-snippet i WPCode, eller bädda in https://iths-hemsida.github.io/jamfor-utbildningar/vad-ar-ux/ som iframe. All CSS är avgränsad till #iths-ux-demo. -->
+<style>
+/* Design som människor vill använda. Samma webbshop som i "Vad är frontend?", "Vad är Java?" och "Vad är mjukvarutest?", men nu gör vi den lätt att använda: research, prototyp, tillgänglighet och AI & UX.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-ux-demo {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --ok: #2f7d55; --err: #b3263a;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0 auto; padding-block: 24px 40px;
+}
+#iths-ux-demo *, #iths-ux-demo *::before, #iths-ux-demo *::after { box-sizing: border-box; }
+#iths-ux-demo .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-ux-demo h2, #iths-ux-demo .t { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+#iths-ux-demo p { margin: 0; }
+#iths-ux-demo :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-ux-demo .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-ux-demo .intro { display: grid; gap: 8px; min-width: 0; }
+#iths-ux-demo .intro h2 { color: var(--kod); font-size: clamp(28px, 4.4vw, 40px); }
+#iths-ux-demo .intro p { color: var(--muted); max-width: 62ch; }
+
+/* Steg */
+#iths-ux-demo .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+#iths-ux-demo .step { width: 100%; height: 100%; text-align: left; display: grid; gap: 2px; padding: 10px 12px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); cursor: pointer; font: inherit; }
+#iths-ux-demo .step:hover { border-color: var(--server); }
+#iths-ux-demo .step .n { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; color: var(--muted); }
+#iths-ux-demo .step .l { font-family: var(--font-display); font-weight: 800; font-size: 17px; line-height: 1.15; overflow-wrap: anywhere; }
+#iths-ux-demo .step.done { background: var(--soft); border-color: var(--soft); }
+#iths-ux-demo .step[aria-current="step"] { background: var(--kod); border-color: var(--kod); color: #fff; }
+#iths-ux-demo .step[aria-current="step"] .n { color: var(--pixel); }
+
+/* Huvudyta */
+#iths-ux-demo .stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+#iths-ux-demo .panel { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+#iths-ux-demo .panel .t { font-size: clamp(22px, 3vw, 28px); color: var(--kod); }
+#iths-ux-demo .nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+#iths-ux-demo .btn { font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 10px 20px; cursor: pointer; border: 2px solid var(--kod); background: var(--kod); color: #fff; line-height: 1.2; }
+#iths-ux-demo .btn:hover { background: var(--terminal); border-color: var(--terminal); }
+#iths-ux-demo .btn.ghost { background: transparent; color: var(--kod); }
+#iths-ux-demo .btn.ghost:hover { background: var(--soft); }
+#iths-ux-demo .btn[hidden] { display: none; }
+
+/* Listor i panelen: observationer, designändringar, färgval */
+#iths-ux-demo .tc { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+#iths-ux-demo .tc li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line); background: var(--surface); }
+#iths-ux-demo .tc li:first-child { border-top: 0; }
+#iths-ux-demo .tc li.sedd { background: #fffaf0; }
+#iths-ux-demo .tc b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-ux-demo .tc span.f { font-size: 14px; color: var(--muted); display: block; }
+#iths-ux-demo .tc .prov { display: flex; gap: 10px; align-items: center; }
+#iths-ux-demo .tc .prov i { flex: none; width: 54px; height: 30px; border-radius: 999px; display: grid; place-items: center; font-style: normal; font-family: var(--font-display); font-weight: 800; font-size: 13px; border: 1px solid rgba(45, 26, 46, .12); }
+#iths-ux-demo .chip { font-family: var(--font-display); font-weight: 800; font-size: 12px; border-radius: 999px; padding: 3px 10px; white-space: nowrap; background: var(--moln); color: var(--muted); border: 1px solid var(--line); }
+#iths-ux-demo .chip.c-ok { background: #e9f6ef; color: #23633f; border-color: #b7dcc7; }
+#iths-ux-demo .chip.c-fel { background: #fdecec; color: #8a2330; border-color: #f2c2c8; }
+#iths-ux-demo .ok { flex: none; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; border-radius: 999px; padding: 6px 14px; cursor: pointer; border: 2px solid var(--kod); background: var(--surface); color: var(--kod); white-space: nowrap; }
+#iths-ux-demo .ok:hover { background: var(--soft); }
+#iths-ux-demo .ok[aria-pressed="true"] { background: var(--ok); border-color: var(--ok); color: #fff; }
+#iths-ux-demo .ok[data-val="nej"][aria-pressed="true"] { background: var(--terminal); border-color: var(--terminal); }
+
+/* AI-förslag */
+#iths-ux-demo .ai { display: grid; gap: 10px; }
+#iths-ux-demo .ai-head { display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--kod); }
+#iths-ux-demo .ai-dot { width: 26px; height: 26px; border-radius: 50%; background: var(--pixel); display: grid; place-items: center; flex: none; color: var(--terminal); font-size: 12px; }
+#iths-ux-demo .sug { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 12px 14px; display: grid; gap: 8px; }
+#iths-ux-demo .sug.ja { border-color: #b7dcc7; background: #f3faf6; }
+#iths-ux-demo .sug.nej { background: var(--moln); }
+#iths-ux-demo .sug.nej b, #iths-ux-demo .sug.nej p { color: var(--muted); }
+#iths-ux-demo .sug b { font-family: var(--font-display); font-weight: 800; display: block; }
+#iths-ux-demo .sug p { font-size: 14px; color: var(--muted); }
+#iths-ux-demo .val { display: flex; gap: 8px; flex-wrap: wrap; }
+#iths-ux-demo .done-box { background: var(--kod); color: #fff; border-radius: 12px; padding: 16px 18px; display: grid; gap: 6px; }
+#iths-ux-demo .done-box b { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: var(--pixel); }
+#iths-ux-demo .done-box span { white-space: nowrap; }
+#iths-ux-demo .done-box[hidden] { display: none; }
+
+/* Förhandsvisning: webbshop överst, användartestet under */
+#iths-ux-demo .browser { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--surface); box-shadow: 0 10px 30px rgba(45, 26, 46, .08); position: sticky; top: 16px; }
+#iths-ux-demo .chrome { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--moln); border-bottom: 1px solid var(--line); }
+#iths-ux-demo .dots { display: flex; gap: 5px; }
+#iths-ux-demo .dots i { width: 9px; height: 9px; border-radius: 50%; background: #dccfd8; display: block; }
+#iths-ux-demo .url { flex: 1; font-size: 12px; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#iths-ux-demo .shop { background: var(--moln); padding: 14px; position: relative; transition: filter .3s; }
+#iths-ux-demo .shop.syn { filter: blur(1.3px) contrast(.55) brightness(1.15); }
+#iths-ux-demo .shop-top { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+#iths-ux-demo .shop-top b { display: inline-grid; place-items: center; min-width: 20px; height: 20px; border-radius: 999px; background: var(--kod); color: #fff; font-size: 11px; padding: 0 5px; margin-left: 4px; }
+#iths-ux-demo .robot { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); z-index: 2; font-family: var(--font-display); font-weight: 800; font-size: 11px; letter-spacing: .04em; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+#iths-ux-demo .robot[hidden] { display: none; }
+#iths-ux-demo .produkt { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; align-items: start; background: var(--surface); border-radius: 14px; padding: 12px; box-shadow: 0 6px 18px rgba(45, 26, 46, .10); }
+#iths-ux-demo .bild { grid-row: span 3; width: 76px; height: 76px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-ux-demo .bild svg { width: 56px; color: var(--kod); transition: color .2s; }
+#iths-ux-demo .namn { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1.1; }
+#iths-ux-demo .besk { font-size: 13px; color: var(--muted); line-height: 1.4; }
+#iths-ux-demo .pris { font-size: 11px; color: #c4b6c0; text-align: right; grid-column: 1 / -1; order: 9; }
+#iths-ux-demo .produkt.f-pris .pris { order: 0; grid-column: auto; text-align: left; font-family: var(--font-display); font-weight: 800; font-size: 20px; color: var(--kod); line-height: 1.1; }
+#iths-ux-demo .farger { grid-column: 1 / -1; border: 0; margin: 4px 0 0; padding: 0; min-width: 0; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+#iths-ux-demo .farger legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+#iths-ux-demo .sw { font: inherit; border: 0; background: none; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-size: 13px; }
+#iths-ux-demo .sw .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); display: block; }
+#iths-ux-demo .sw .txt { display: none; }
+#iths-ux-demo .produkt.f-farg .farger { gap: 8px; }
+#iths-ux-demo .produkt.f-farg .farger legend { position: static; width: 100%; height: auto; clip: auto; overflow: visible; padding: 0; margin: 0 0 2px; font-size: 13px; color: var(--muted); }
+#iths-ux-demo .produkt.f-farg .farger legend b { font-family: var(--font-display); color: var(--ink); }
+#iths-ux-demo .produkt.f-farg .sw { border: 1px solid var(--line); border-radius: 999px; padding: 5px 10px 5px 6px; }
+#iths-ux-demo .produkt.f-farg .sw .dot { width: 20px; height: 20px; }
+#iths-ux-demo .produkt.f-farg .sw .txt { display: inline; }
+#iths-ux-demo .produkt.f-farg .sw[aria-pressed="true"] { border-color: var(--kod); box-shadow: inset 0 0 0 1px var(--kod); font-family: var(--font-display); font-weight: 800; }
+#iths-ux-demo .kop { grid-column: 1 / -1; order: 10; justify-self: end; font: inherit; font-size: 11px; border: 0; background: none; color: #c4b6c0; cursor: pointer; padding: 2px 0; text-decoration: underline; }
+#iths-ux-demo .produkt.f-kop .kop { order: 0; justify-self: stretch; font-family: var(--font-display); font-weight: 800; font-size: 15px; border-radius: 999px; padding: 11px 18px; background: var(--kb, var(--kod)); color: var(--kt, #fff); text-decoration: none; margin-top: 6px; }
+#iths-ux-demo .trygg { grid-column: 1 / -1; font-size: 12px; color: var(--muted); text-align: center; }
+#iths-ux-demo .brad { grid-column: 1 / -1; font-family: var(--font-display); font-weight: 800; font-size: 13px; text-align: center; background: var(--err); color: #fff; border-radius: 8px; padding: 6px 10px; }
+#iths-ux-demo .trygg[hidden], #iths-ux-demo .brad[hidden] { display: none; }
+#iths-ux-demo .fokus { outline: 3px solid var(--pixel); outline-offset: 3px; border-radius: 8px; }
+#iths-ux-demo .svar { grid-column: 1 / -1; order: 11; font-size: 14px; font-family: var(--font-display); font-weight: 800; padding: 7px 10px; border-radius: 8px; background: #e9f6ef; color: #23633f; }
+#iths-ux-demo .svar:empty { display: none; }
+
+#iths-ux-demo .logbox { background: var(--terminal); color: #f3e9f0; padding: 12px 14px 14px; font-family: var(--font-mono); font-size: 12px; line-height: 1.55; display: grid; gap: 8px; }
+#iths-ux-demo .log-head { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #bfa8b8; }
+#iths-ux-demo .log-head i { width: 8px; height: 8px; border-radius: 50%; background: #6fd39b; box-shadow: 0 0 0 3px rgba(111, 211, 155, .2); }
+#iths-ux-demo .logg { display: grid; gap: 2px; min-height: 64px; align-content: start; }
+#iths-ux-demo .logg span { display: block; overflow-wrap: anywhere; }
+#iths-ux-demo .logg .tom { color: #a48f9f; font-style: italic; }
+#iths-ux-demo .logg .l-in { color: #e4b8d2; }
+#iths-ux-demo .logg .l-ok { color: #a8e1c4; }
+#iths-ux-demo .logg .l-fel { color: #ff9aa8; }
+#iths-ux-demo .logg .l-sum { color: var(--pixel); font-weight: 700; }
+#iths-ux-demo .logg .ny { animation: ux-ny .6s ease; }
+@keyframes ux-ny { from { background: rgba(255, 181, 71, .35); } to { background: transparent; } }
+#iths-ux-demo .kor { justify-self: start; font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 13px; background: var(--pixel); border: 0; color: var(--terminal); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+#iths-ux-demo .kor:hover { background: #ffc66e; }
+#iths-ux-demo .kor:disabled { opacity: .5; cursor: default; }
+#iths-ux-demo .kor[hidden] { display: none; }
+#iths-ux-demo .hint { margin: 0; padding: 10px 14px; font-size: 14px; background: #fff6e3; border-top: 1px solid #f4dfb0; color: var(--terminal); }
+#iths-ux-demo .hint[hidden] { display: none; }
+#iths-ux-demo .browser.blink { animation: ux-blink 1.4s ease .3s; }
+@keyframes ux-blink { 0%, 100% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 0 rgba(255, 181, 71, 0); } 30% { box-shadow: 0 10px 30px rgba(45, 26, 46, .08), 0 0 0 5px rgba(255, 181, 71, .9); } }
+
+@container (max-width: 820px) {
+  #iths-ux-demo .stage { gap: 16px; }
+  #iths-ux-demo .bild { width: 60px; height: 60px; }
+  #iths-ux-demo .bild svg { width: 44px; }
+}
+@container (max-width: 600px) {
+  #iths-ux-demo .stage { grid-template-columns: minmax(0, 1fr); }
+  #iths-ux-demo .browser { position: static; }
+}
+@container (max-width: 520px) {
+  #iths-ux-demo .steps { gap: 6px; }
+  #iths-ux-demo .step { padding: 8px 8px 9px; }
+  #iths-ux-demo .step .l { font-size: 14px; }
+  #iths-ux-demo .step .n { font-size: 11px; }
+}
+@container (max-width: 400px) {
+  #iths-ux-demo .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-ux-demo .step { grid-template-columns: auto 1fr; align-items: baseline; gap: 8px; }
+  #iths-ux-demo .shop { padding: 10px; }
+  #iths-ux-demo .logbox { font-size: 11px; padding: 10px 12px 12px; }
+  #iths-ux-demo .btn { padding: 9px 16px; font-size: 14px; }
+  #iths-ux-demo .tc li { padding: 9px 12px; }
+  #iths-ux-demo .tc .prov i { width: 46px; }
+  #iths-ux-demo .done-box { padding: 14px 14px; }
+  #iths-ux-demo .done-box b { font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-ux-demo * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-ux-demo" aria-labelledby="ux-demo-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Vad är UX?</span>
+      <h2 id="ux-demo-rubrik">Design som människor vill använda</h2>
+      <p>En UX-designer tar reda på vad användarna behöver och designar efter det. Gör samma webbshop lättare att använda i fyra steg, från användartest till AI.</p>
+    </div>
+
+    <ol class="steps" aria-label="Steg">
+      <li><button type="button" class="step" data-step="0"><span class="n">1</span><span class="l">Research</span></button></li>
+      <li><button type="button" class="step" data-step="1"><span class="n">2</span><span class="l">Prototyp</span></button></li>
+      <li><button type="button" class="step" data-step="2"><span class="n">3</span><span class="l">Tillgänglighet</span></button></li>
+      <li><button type="button" class="step" data-step="3"><span class="n">4</span><span class="l">AI &amp; UX</span></button></li>
+    </ol>
+
+    <div class="stage">
+      <div class="browser" id="ux-browser" aria-label="Förhandsvisning">
+        <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">butiken.se/horlurar</span></div>
+        <div class="shop" id="ux-shop">
+          <span class="robot" id="ux-robot" hidden>Sara testar</span>
+          <div class="shop-top"><span>Butiken</span><span>Varukorg<b id="ux-count">0</b></span></div>
+          <div class="produkt" id="ux-produkt">
+            <div class="bild" id="ux-bild" aria-hidden="true"><svg viewBox="0 0 120 100"><path d="M22 64V52a38 38 0 0 1 76 0v12" fill="none" stroke="#2D1A2E" stroke-width="7" stroke-linecap="round"/><rect x="10" y="56" width="26" height="38" rx="11" fill="currentColor"/><rect x="84" y="56" width="26" height="38" rx="11" fill="currentColor"/></svg></div>
+            <div class="namn">Pixel One</div>
+            <div class="pris" id="ux-pris">1 299 kr</div>
+            <p class="besk">Trådlösa hörlurar med brusreducering och 30 timmars batteri.</p>
+            <fieldset class="farger" id="ux-farger">
+              <legend>Färg: <b id="ux-vald">Plommon</b></legend>
+              <button type="button" class="sw" data-farg="Plommon" style="--c:#662247" aria-pressed="true"><span class="dot" aria-hidden="true"></span><span class="txt">Plommon</span></button>
+              <button type="button" class="sw" data-farg="Gul" style="--c:#FFB547" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="txt">Gul</span></button>
+              <button type="button" class="sw" data-farg="Lavendel" style="--c:#c9a3bd" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="txt">Lavendel</span></button>
+            </fieldset>
+            <p class="brad" id="ux-brad" hidden>Bara 2 kvar! Erbjudandet går ut om 4:59</p>
+            <button type="button" class="kop" id="ux-kop">lägg i varukorg</button>
+            <p class="trygg" id="ux-trygg" hidden>Fri frakt · 30 dagars öppet köp</p>
+            <p class="svar" id="ux-svar" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="logbox" aria-label="Logg">
+          <div class="log-head"><i aria-hidden="true"></i><span id="ux-loghead">Användartest</span></div>
+          <div class="logg" id="ux-logg" aria-live="polite"></div>
+          <button type="button" class="kor" id="ux-kor">Spela upp användartestet</button>
+        </div>
+        <p class="hint" id="ux-hint" role="status" aria-live="polite" hidden></p>
+      </div>
+
+      <div class="panel" id="ux-panel">
+        <h3 class="t" id="ux-titel"></h3>
+        <p class="lead" id="ux-text"></p>
+        <div id="ux-innehall"></div>
+        <div class="done-box" id="ux-klar" hidden>
+          <b>Klart! Det här är UX-design.</b>
+          <span>Det här lär du dig hos oss.</span>
+        </div>
+        <div class="nav">
+          <button type="button" class="btn ghost" id="ux-bak">Föregående</button>
+          <button type="button" class="btn" id="ux-fram">Nästa steg</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-ux-demo");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var FARG = { Plommon: "#662247", Gul: "#FFB547", Lavendel: "#c9a3bd" };
+  var produkt = $("ux-produkt"), kop = $("ux-kop"), logg = $("ux-logg"), hint = $("ux-hint"), kor = $("ux-kor"),
+      innehall = $("ux-innehall"), shop = $("ux-shop");
+  var stepBtns = root.querySelectorAll(".step");
+
+  var step = 0, rader = [], sett = {}, fix = { pris: false, farg: false, kop: false }, farg = "Plommon", korg = 0,
+      spelar = false, spelat = 0, knapp = "gul", syn = false, ai = { a: null, b: null, c: null }, timer;
+
+  var STEPS = [
+    { kort: "Research", titel: "Se hur användarna gör",
+      text: "En UX-designer gissar inte, utan tittar på riktiga användare. Spela upp användartestet och se när Sara försöker köpa hörlurarna." },
+    { kort: "Prototyp", titel: "Designa om och testa igen",
+      text: "Gör om butiken utifrån det du såg. Fixa de tre problemen och låt Sara testa prototypen igen." },
+    { kort: "Tillgänglighet", titel: "Kan alla läsa knappen?",
+      text: "Sedan 2025 ska digitala tjänster gå att använda för fler. Text behöver kontrast på minst 4,5:1. Välj en färg på köpknappen som klarar kravet." },
+    { kort: "AI & UX", titel: "AI föreslår men du granskar",
+      text: "AI kan ge designförslag på sekunder. Men alla förslag är inte bra för användaren. Granska dem innan de hamnar i butiken." }
+  ];
+  var PROBLEM = [
+    { id: "pris", namn: "Priset syns dåligt", f: "Litet och ljusgrått längst ner", fixNamn: "Tydligt pris", fixF: "Stort pris direkt under namnet" },
+    { id: "farg", namn: "Oklart vilken färg som är vald", f: "Små prickar utan namn", fixNamn: "Färger med namn", fixF: "Större val som visar vald färg" },
+    { id: "kop", namn: "Köpknappen hittas inte", f: "Liten grå länk", fixNamn: "Tydlig köpknapp", fixF: "Stor knapp som syns direkt" }
+  ];
+  var KNAPPAR = [
+    { id: "gul", namn: "Kampanjgul", bg: "#FFB547", fg: "#ffffff" },
+    { id: "lav", namn: "Lavendel", bg: "#c9a3bd", fg: "#ffffff" },
+    { id: "plo", namn: "Plommon", bg: "#662247", fg: "#ffffff" }
+  ];
+  var SUGS = [
+    { id: "a", titel: "Skriv priset på knappen", text: "Köp · 1 299 kr. Då vet användaren vad som händer.", log: "✓ Knappen visar priset" },
+    { id: "b", titel: "Visa frakt och retur", text: "Fri frakt och 30 dagars öppet köp under knappen. Gör användaren trygg.", log: "✓ Frakt och retur syns" },
+    { id: "c", titel: "Skapa brådska", text: "Bara 2 kvar! Erbjudandet går ut om 4:59. Får fler att köpa snabbt.", log: "✗ Falsk brådska i butiken" }
+  ];
+
+  // Kontrast enligt WCAG
+  function lum(hex) {
+    var c = [1, 3, 5].map(function (i) { var v = parseInt(hex.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function kontrast(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  function ratio(k) { return (Math.floor(k.bg ? kontrast(k.bg, k.fg) * 10 : k * 10) / 10).toFixed(1).replace(".", ",") + ":1"; }
+  function godkand(k) { return kontrast(k.bg, k.fg) >= 4.5; }
+  function knappObj() { return KNAPPAR.filter(function (k) { return k.id === knapp; })[0]; }
+
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function logga(cls, txt) {
+    rader.push({ cls: cls, txt: txt });
+    if (rader.length > 6) rader.shift();
+    visaLogg(true);
+  }
+  function visaLogg(ny) {
+    if (!rader.length) { logg.innerHTML = '<span class="tom">' + (step <= 1 ? "Inget test gjort än …" : "Inga ändringar än …") + "</span>"; return; }
+    logg.innerHTML = rader.map(function (r, i) {
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+    }).join("");
+  }
+  function setSvar(txt) { $("ux-svar").textContent = txt; }
+  function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
+
+  function visaShop() {
+    produkt.classList.toggle("f-pris", fix.pris);
+    produkt.classList.toggle("f-farg", fix.farg);
+    produkt.classList.toggle("f-kop", fix.kop);
+    $("ux-bild").querySelector("svg").style.color = FARG[farg];
+    $("ux-vald").textContent = farg;
+    root.querySelectorAll(".sw").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-farg") === farg); });
+    var k = step >= 2 ? knappObj() : KNAPPAR[2];
+    produkt.style.setProperty("--kb", k.bg); produkt.style.setProperty("--kt", k.fg);
+    kop.textContent = !fix.kop ? "lägg i varukorg" : ai.a === "ja" ? "Köp · 1 299 kr" : "Köp";
+    $("ux-trygg").hidden = ai.b !== "ja";
+    $("ux-brad").hidden = ai.c !== "ja";
+    $("ux-count").textContent = korg;
+    shop.classList.toggle("syn", syn && step === 2);
+  }
+
+  function chip(cls, txt) { return '<span class="chip' + (cls ? " c-" + cls : "") + '">' + txt + "</span>"; }
+  function visaInnehall() {
+    var s = STEPS[step];
+    if (step === 0) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Observationer">' + PROBLEM.map(function (p) {
+        return '<li class="' + (sett[p.id] ? "sedd" : "") + '"><div><b>' + (sett[p.id] ? p.namn : "Observation " + (PROBLEM.indexOf(p) + 1)) + '</b><span class="f">' + (sett[p.id] ? p.f : "Spela upp testet …") + "</span></div>" +
+          (sett[p.id] ? chip("fel", "Problem") : chip("", "Ej sett")) + "</li>";
+      }).join("") + "</ul>";
+    } else if (step === 1) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Designändringar">' + PROBLEM.map(function (p) {
+        var on = fix[p.id];
+        return "<li><div><b>" + (on ? p.fixNamn : p.namn) + '</b><span class="f">' + (on ? p.fixF : p.f) + "</span></div>" +
+          '<button type="button" class="ok" data-fix="' + p.id + '" aria-pressed="' + on + '">' + (on ? "Fixat" : "Fixa") + "</button></li>";
+      }).join("") + "</ul>";
+    } else if (step === 2) {
+      innehall.innerHTML = '<ul class="tc" aria-label="Färg på köpknappen">' + KNAPPAR.map(function (k) {
+        var on = knapp === k.id;
+        return '<li><div class="prov"><i style="background:' + k.bg + ";color:" + k.fg + '" aria-hidden="true">Köp</i><div><b>' + k.namn + '</b><span class="f">Kontrast ' + ratio(k) + " " + (godkand(k) ? chip("ok", "Godkänt") : chip("fel", "Underkänt")) + "</span></div></div>" +
+          '<button type="button" class="ok" data-knapp="' + k.id + '" aria-pressed="' + on + '">' + (on ? "Vald" : "Välj") + "</button></li>";
+      }).join("") + "</ul>";
+    } else {
+      innehall.innerHTML = '<div class="ai"><div class="ai-head"><span class="ai-dot" aria-hidden="true">AI</span>AI föreslår ändringar</div>' +
+        SUGS.map(function (g) {
+          var v = ai[g.id];
+          return '<div class="sug' + (v ? " " + v : "") + '"><div><b>' + g.titel + "</b><p>" + g.text + "</p></div>" +
+            '<div class="val"><button type="button" class="ok" data-ai="' + g.id + '" data-val="ja" aria-pressed="' + (v === "ja") + '">' + (v === "ja" ? "Godkänt" : "Godkänn") + "</button>" +
+            '<button type="button" class="ok" data-ai="' + g.id + '" data-val="nej" aria-pressed="' + (v === "nej") + '">' + (v === "nej" ? "Avvisat" : "Avvisa") + "</button></div></div>";
+        }).join("") + "</div>";
+    }
+    $("ux-titel").textContent = s.titel;
+    $("ux-text").textContent = s.text;
+    $("ux-klar").hidden = !(step === 3 && ai.a === "ja" && ai.b === "ja" && ai.c === "nej");
+  }
+  function visaKor() {
+    kor.hidden = step === 3;
+    kor.disabled = spelar;
+    if (step === 0) kor.textContent = spelat ? "Spela upp igen" : "Spela upp användartestet";
+    else if (step === 1) kor.textContent = "Låt Sara testa prototypen";
+    else if (step === 2) kor.textContent = syn ? "Visa som vanligt" : "Se med nedsatt syn";
+    kor.setAttribute("aria-pressed", step === 2 ? String(syn) : "");
+    if (step !== 2) kor.removeAttribute("aria-pressed");
+  }
+
+  function render() {
+    stepBtns.forEach(function (b, i) {
+      if (i === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      b.classList.toggle("done", i < step);
+    });
+    $("ux-loghead").textContent = step <= 1 ? "Användartest · Sara, 34" : step === 2 ? "Kontrastkoll" : "Ändringar i butiken";
+    $("ux-bak").hidden = step === 0;
+    $("ux-fram").hidden = step === 3;
+    if (STEPS[step + 1]) $("ux-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    visaInnehall(); visaShop(); visaKor(); visaLogg(false);
+    send();
+  }
+  function bytSteg(n) {
+    clearTimeout(timer); fokus(null);
+    step = n; rader = []; sett = {}; spelar = false; spelat = 0; syn = false; farg = "Plommon"; korg = 0;
+    var alla = step >= 2;
+    fix = { pris: alla, farg: alla, kop: alla };
+    if (step <= 2) { ai = { a: null, b: null, c: null }; }
+    if (step === 2) knapp = "gul";
+    if (step === 3) { knapp = "plo"; rader = [{ cls: "ok", txt: "✓ Köpknapp: kontrast " + ratio(KNAPPAR[2]) }]; }
+    if (step === 2) logga("fel", "✗ Kampanjgul knapp: " + ratio(KNAPPAR[0]) + ", krav 4,5:1");
+    hint.hidden = true; setSvar(""); $("ux-robot").hidden = true;
+    render();
+  }
+
+  function fokus(el) {
+    root.querySelectorAll(".fokus").forEach(function (x) { x.classList.remove("fokus"); });
+    if (el) el.classList.add("fokus");
+  }
+
+  // Användartestet: Sara försöker köpa gula hörlurar. Hur det går beror på designen.
+  function spela() {
+    spelar = true; rader = []; korg = 0; farg = "Plommon"; setSvar(""); hint.hidden = true;
+    $("ux-robot").hidden = false;
+    visaShop(); visaKor();
+    var t = 0, gavUpp = !fix.kop;
+    var steg = [
+      function () { logga("in", "Uppgift: köp ett par gula hörlurar"); },
+      function () {
+        fokus($("ux-pris"));
+        if (fix.pris) { t += 2; logga("ok", "0:0" + t + " Sara: 1 299 kr, okej."); }
+        else { t += 12; logga("fel", "0:" + t + " Sara: Vad kostar de? … Jaha, där nere."); merk("pris"); }
+      },
+      function () {
+        fokus($("ux-farger")); farg = "Gul"; visaShop();
+        if (fix.farg) { t += 3; logga("ok", "0:" + pad(t) + " Sara: Gul. Den är vald."); }
+        else { t += 15; logga("fel", "0:" + pad(t) + " Sara: Blev den gul nu? Jag är inte säker."); merk("farg"); }
+      },
+      function () {
+        fokus(kop);
+        if (fix.kop) { t += 3; korg = 1; visaShop(); setSvar("Tillagd i varukorgen."); logga("ok", "0:" + pad(t) + " Sara: Köp. Klart!"); }
+        else { t = 41; logga("fel", "0:41 Sara: Var köper man? Jag ger upp."); merk("kop"); }
+      },
+      function () {
+        fokus(null); spelar = false; $("ux-robot").hidden = true;
+        logga("sum", gavUpp ? "Inget köp. Sara gav upp efter 41 s." : "Köpet klart på " + t + " s" + (t <= 8 ? ". Före: inget köp." : "."));
+        spelat++;
+        if (step === 0) showHint("Tre problem på 41 sekunder. Du såg dem hända i stället för att gissa. Nästa steg: designa om butiken.");
+        else if (gavUpp) showHint("Sara hittar fortfarande inte köpknappen. Fixa den och testa igen.");
+        else if (t > 8) showHint("Bättre! Men Sara tvekar fortfarande. Fixa resten och testa igen.");
+        else showHint("Från inget köp till klart på 8 sekunder. Så vet en UX-designer att designen blev bättre.");
+        visaShop(); visaKor(); send();
+      }
+    ];
+    var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var i = 0;
+    (function nasta() { steg[i++](); send(); if (i < steg.length) timer = setTimeout(nasta, lugn ? 200 : 900); })();
+  }
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+  function merk(id) { if (step !== 0) return; sett[id] = true; visaInnehall(); }
+
+  kor.addEventListener("click", function () {
+    if (spelar) return;
+    if (step === 2) {
+      syn = !syn; visaShop(); visaKor();
+      if (syn) { logga("in", "Simulerar nedsatt syn"); showHint(godkand(knappObj()) ? "Knappen går fortfarande att läsa. Bra kontrast hjälper alla." : "Ser du vad det står på knappen? Det gör inte alla. Välj en färg med bättre kontrast."); }
+      else hint.hidden = true;
+      blinka(); send();
+      return;
+    }
+    spela();
+  });
+
+  // Besökaren kan själv klicka i butiken
+  root.querySelectorAll(".sw").forEach(function (b) {
+    b.addEventListener("click", function () { if (spelar) return; farg = b.getAttribute("data-farg"); visaShop(); });
+  });
+  kop.addEventListener("click", function () {
+    if (spelar) return;
+    korg++; visaShop(); setSvar("Tillagd i varukorgen: " + farg + "."); send();
+  });
+
+  innehall.addEventListener("click", function (e) {
+    var b = e.target.closest(".ok");
+    if (!b || spelar) return;
+    var sel;
+    if (b.hasAttribute("data-fix")) {
+      var id = b.getAttribute("data-fix");
+      fix[id] = !fix[id];
+      logga(fix[id] ? "in" : "fel", (fix[id] ? "Prototyp: " : "Ångrat: ") + PROBLEM.filter(function (p) { return p.id === id; })[0].fixNamn.toLowerCase());
+      if (fix.pris && fix.farg && fix.kop) showHint("Alla tre är fixade. Låt Sara testa prototypen.");
+      else hint.hidden = true;
+      sel = '.ok[data-fix="' + id + '"]';
+    } else if (b.hasAttribute("data-knapp")) {
+      knapp = b.getAttribute("data-knapp");
+      var k = knappObj();
+      logga(godkand(k) ? "ok" : "fel", (godkand(k) ? "✓ " : "✗ ") + k.namn + " knapp: " + ratio(k) + (godkand(k) ? ", godkänt" : ", krav 4,5:1"));
+      if (godkand(k)) showHint("Godkänt! Nu kan fler läsa knappen, till exempel med nedsatt syn eller i solsken på mobilen.");
+      else showHint("För låg kontrast. Vit text syns dåligt mot ljus färg. Prova en mörkare färg.");
+      sel = '.ok[data-knapp="' + knapp + '"]';
+    } else {
+      var a = b.getAttribute("data-ai"), v = b.getAttribute("data-val");
+      ai[a] = ai[a] === v ? null : v;
+      var g = SUGS.filter(function (x) { return x.id === a; })[0];
+      if (ai[a] === "ja") logga(a === "c" ? "fel" : "ok", g.log);
+      else { rader = rader.filter(function (r) { return r.txt !== g.log; }); visaLogg(false); }
+      if (a === "c" && ai.c === "ja") showHint("Erbjudandet går inte ut på riktigt. Falsk brådska är ett mörkt mönster som lurar användaren. Avvisa förslaget.");
+      else if (a === "c" && ai.c === "nej") showHint("Rätt! Förslaget lurar användaren. Du granskar, AI hjälper.");
+      else hint.hidden = true;
+      sel = '.ok[data-ai="' + a + '"][data-val="' + v + '"]';
+    }
+    visaInnehall(); visaShop();
+    var nb = root.querySelector(sel);
+    if (nb) nb.focus({ preventScroll: true });
+    blinka();
+    send();
+  });
+
+  function blinka() {
+    if (root.clientWidth > 600) return;
+    var br = $("ux-browser");
+    var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setTimeout(function () {
+      br.scrollIntoView({ behavior: lugn ? "auto" : "smooth", block: "nearest" });
+      br.classList.remove("blink"); void br.offsetWidth; br.classList.add("blink");
+    }, 60);
+  }
+
+  stepBtns.forEach(function (b) { b.addEventListener("click", function () { bytSteg(+b.getAttribute("data-step")); }); });
+  $("ux-fram").addEventListener("click", function () { if (step < 3) bytSteg(step + 1); });
+  $("ux-bak").addEventListener("click", function () { if (step > 0) bytSteg(step - 1); });
+
+  // Höjd till förälder när demon visas i en iframe. Mät demon, inte dokumentet, så att iframen även kan krympa.
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "ux-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  bytSteg(0);
+})();
+</script>
+
+</body>
+</html>

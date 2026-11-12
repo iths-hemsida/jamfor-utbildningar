@@ -114,3 +114,11 @@ Mappen `vad-ar-mjukvarutest/` innehåller en demo för utbildningssidan Mjukvaru
 - Källan är `vad-ar-mjukvarutest/snippet.html`. Kör `python3 tools/build-vad-ar-mjukvarutest.py` efter ändringar, så byggs `vad-ar-mjukvarutest/index.html` (GitHub Pages) och `wordpress/vad-ar-mjukvarutest-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-test-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "test-demo-height"`).
+
+## Vad är UX? (levande demo)
+
+Mappen `vad-ar-ux/` innehåller en demo för utbildningssidan UX-designer: "Design som människor vill använda". Samma webbshop som i de andra demona, men nu görs den lätt att använda i fyra steg: research (spela upp ett användartest där Sara inte lyckas köpa), prototyp (fixa pris, färgval och köpknapp och låt Sara testa igen: från inget köp till klart på 8 sekunder), tillgänglighet (välj en färg på köpknappen som klarar kontrastkravet 4,5:1, och se butiken med nedsatt syn) och AI & UX (godkänn eller avvisa AI:s designförslag, där ett av dem är ett mörkt mönster). Innehållet bygger på iths.se/utbildningar/ux-designer/ (hämtad 12 november 2026), som nämner research, användarcentrerad design, prototyper, tillgänglighetslagen och AI som verktyg i designprocessen.
+
+- Källan är `vad-ar-ux/snippet.html`. Kör `python3 tools/build-vad-ar-ux.py` efter ändringar, så byggs `vad-ar-ux/index.html` (GitHub Pages) och `wordpress/vad-ar-ux-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-ux-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "ux-demo-height"`).
