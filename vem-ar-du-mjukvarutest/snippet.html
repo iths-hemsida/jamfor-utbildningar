@@ -1,0 +1,140 @@
+<!-- IT-Högskolan: "Vem är du?" – snabb självkoll för utbildningssidan Mjukvarutestare. Klistra in hela snutten i ett HTML-snippet i WPCode. All CSS är avgränsad till #iths-mt-vem. Länkarna ställs in i LANKAR i skriptet längst ner. -->
+<style>
+/* Fem påståenden som besökaren bockar i. En mätare visar hur många som stämmer, och en rad under ger ett nästa steg:
+   4–5 → bekräftelse utan knapp, 0–3 → quizet. Behörighetslänken ligger kvar längst ner.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-mt-vem {
+  --kod: #662247; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 720px; margin: 0; padding-block: 16px 24px;
+}
+#iths-mt-vem *, #iths-mt-vem *::before, #iths-mt-vem *::after { box-sizing: border-box; }
+#iths-mt-vem .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+#iths-mt-vem p { margin: 0; }
+#iths-mt-vem :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+/* Rubriken som rubrikerna på iths.se */
+#iths-mt-vem h2 { margin: 0; color: var(--kod); font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
+#iths-mt-vem .intro { display: grid; gap: 4px; }
+#iths-mt-vem .intro p { color: var(--muted); }
+
+/* Påståendena */
+#iths-mt-vem .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+/* Skydd mot temats list- och knappstilar (punkter, versaler, nowrap, fast höjd) så att det fungerar i mobilen */
+#iths-mt-vem .lista li { margin: 0; padding: 0; min-width: 0; list-style: none; background: none; }
+#iths-mt-vem .lista li::before, #iths-mt-vem .lista li::after { content: none; display: none; }
+#iths-mt-vem .p { min-width: 0; max-width: 100%; height: auto; min-height: 0; margin: 0; white-space: normal; overflow-wrap: break-word; text-transform: none; letter-spacing: normal; font-weight: 400; box-shadow: none; text-shadow: none; -webkit-appearance: none; appearance: none; }
+#iths-mt-vem .p { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font: inherit; font-size: 16px; line-height: 1.35; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+#iths-mt-vem .p:hover { border-color: var(--server); }
+#iths-mt-vem .p .box { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #d6c4cf; background: var(--surface); display: grid; place-items: center; transition: background .2s ease, border-color .2s ease, transform .25s ease; }
+#iths-mt-vem .p .box svg { width: 14px; height: 14px; opacity: 0; transform: scale(.4); transition: opacity .2s ease, transform .25s ease; }
+#iths-mt-vem .p[aria-pressed="true"] { background: var(--soft); border-color: var(--kod); }
+#iths-mt-vem .p[aria-pressed="true"] .box { background: var(--pixel); border-color: var(--pixel); transform: scale(1.08); }
+#iths-mt-vem .p[aria-pressed="true"] .box svg { opacity: 1; transform: scale(1); }
+
+/* Mätare och resultat */
+#iths-mt-vem .matare { display: grid; gap: 6px; }
+#iths-mt-vem .stapel { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+#iths-mt-vem .stapel i { display: block; height: 8px; border-radius: 4px; background: var(--line); transition: background .25s ease; }
+#iths-mt-vem .stapel i.on { background: var(--kod); }
+#iths-mt-vem .antal { font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--muted); }
+#iths-mt-vem .svar { background: var(--kod); color: #fff; border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; }
+#iths-mt-vem .svar[hidden] { display: none; }
+#iths-mt-vem .svar p { font-size: 16px; }
+#iths-mt-vem .svar b { color: var(--pixel); font-family: var(--font-display); font-weight: 800; }
+#iths-mt-vem .cta { box-sizing: border-box; width: 100%; max-width: 100%; white-space: normal; text-transform: none; letter-spacing: normal; line-height: 1.3; justify-self: stretch; display: block; text-align: center; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; background: var(--pixel); color: var(--terminal); border-radius: 999px; padding: 10px 18px; }
+#iths-mt-vem .cta[hidden] { display: none; }
+#iths-mt-vem .cta:hover { background: #ffc469; }
+#iths-mt-vem .cta:focus-visible { outline-color: var(--pixel); }
+#iths-mt-vem .beh { font-size: 15px; color: var(--muted); }
+#iths-mt-vem .beh a { color: var(--kod); font-family: var(--font-display); font-weight: 800; text-decoration: none; }
+#iths-mt-vem .beh a:hover { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) {
+  #iths-mt-vem * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-mt-vem" aria-labelledby="mt-vem-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <h2 id="mt-vem-rubrik">Vem är du?</h2>
+      <p>Utbildningen kan passa dig som … Tryck på det som stämmer på dig.</p>
+    </div>
+    <ul class="lista">
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>är nyfiken på hur saker fungerar</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>har öga för detaljer</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>tycker om att lösa problem</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>gillar teknik men vill inte nödvändigtvis programmera hela dagarna</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>är noggrann och strukturerad</button></li>
+    </ul>
+    <div class="matare">
+      <div class="stapel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <span class="antal" id="mt-vem-antal" aria-live="polite">0 av 5 stämmer</span>
+    </div>
+    <div class="svar" id="mt-vem-svar" aria-live="polite" hidden>
+      <p id="mt-vem-text"></p>
+      <a class="cta" id="mt-vem-cta" href="#" target="_top"></a>
+    </div>
+    <p class="beh">Och om du saknar vissa förkunskaper kan det finnas vägar <a href="https://www.iths.se/behorighet/" target="_top">att bli behörig ›</a></p>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-mt-vem");
+  if (!root) return;
+  // Länkar
+  var LANKAR = {
+    QUIZ: "https://www.iths.se/vilken-utbildning-passar-mig/?quiz"
+  };
+  var knappar = root.querySelectorAll(".p");
+  var bitar = root.querySelectorAll(".stapel i");
+  var antal = document.getElementById("mt-vem-antal");
+  var svar = document.getElementById("mt-vem-svar");
+  var text = document.getElementById("mt-vem-text");
+  var cta = document.getElementById("mt-vem-cta");
+  var rort = false;
+
+  function uppdatera() {
+    var n = 0;
+    knappar.forEach(function (k) { if (k.getAttribute("aria-pressed") === "true") n++; });
+    bitar.forEach(function (b, i) { b.classList.toggle("on", i < n); });
+    antal.textContent = n + " av 5 stämmer";
+    if (!rort) return;
+    svar.hidden = false;
+    if (n >= 4) {
+      text.innerHTML = "<b>Det låter som du!</b> Mjukvarutestare kan vara rätt utbildning för dig.";
+      cta.hidden = true;
+    } else if (n >= 2) {
+      text.innerHTML = "<b>Du verkar nyfiken.</b> Gör quizet och se vilken utbildning som passar dig bäst.";
+      cta.textContent = "Gör quizet";
+      cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
+    } else {
+      text.innerHTML = "<b>Kanske passar en annan utbildning bättre?</b> Quizet hjälper dig att hitta rätt.";
+      cta.textContent = "Gör quizet";
+      cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
+    }
+  }
+  knappar.forEach(function (k) {
+    k.addEventListener("click", function () {
+      k.setAttribute("aria-pressed", k.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      rort = true;
+      uppdatera();
+    });
+  });
+  uppdatera();
+
+  // Höjd till förälder om komponenten visas i en iframe
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "mt-vem-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
