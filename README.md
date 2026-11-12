@@ -90,3 +90,19 @@ Mappen `vad-ar-frontend/` innehåller en demo för avsnittet "Vad är frontend?"
 - Källan är `vad-ar-frontend/snippet.html`. Kör `python3 tools/build-vad-ar-frontend.py` efter ändringar, så byggs `vad-ar-frontend/index.html` (GitHub Pages) och `wordpress/vad-ar-frontend-wpcode.html` (WPCode).
 - WPCode: klistra in hela `wordpress/vad-ar-frontend-wpcode.html` i ett HTML-snippet. All CSS är avgränsad till `#iths-fe-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "fe-demo-height"`), så iframen kan växa med innehållet.
+
+## Javautvecklare i korthet (faktatabell)
+
+Mappen `java-fakta/` innehåller en klickbar faktatabell för utbildningssidan Javautvecklare: start, studieort, längd, LIA, kostnad, CSN, behörighet, antagningsprov, dator och yrkesroller. Varje rad går att öppna för en kort förklaring. Fakta hämtades från iths.se/utbildningar/javautvecklare/ den 12 november 2026.
+
+- Källan är `java-fakta/snippet.html` (raderna står i `RADER`). Kör `python3 tools/build-java-fakta.py` efter ändringar, så byggs `java-fakta/index.html` (GitHub Pages) och `wordpress/java-fakta-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-java-fakta`.
+- Iframe: tabellen skickar sin höjd med `postMessage` (`type: "java-fakta-height"`), så iframen växer och krymper när rader öppnas.
+
+## Vad är Java? (levande demo)
+
+Mappen `vad-ar-java/` innehåller en demo för utbildningssidan Javautvecklare: "Vad händer när du klickar på Köp?". Samma webbshop som i "Vad är frontend?", men nu syns servern bakom i fyra steg: API, logik (lagerkoll), databas och AI & kvalitet.
+
+- Källan är `vad-ar-java/snippet.html`. Kör `python3 tools/build-vad-ar-java.py` efter ändringar, så byggs `vad-ar-java/index.html` (GitHub Pages) och `wordpress/vad-ar-java-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-java-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "java-demo-height"`).
