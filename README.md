@@ -130,3 +130,11 @@ Mappen `vad-ar-ux/` innehåller en demo för utbildningssidan UX-designer: "Desi
 - Källan är `vad-ar-ux/snippet.html`. Kör `python3 tools/build-vad-ar-ux.py` efter ändringar, så byggs `vad-ar-ux/index.html` (GitHub Pages) och `wordpress/vad-ar-ux-wpcode.html` (WPCode).
 - All CSS är avgränsad till `#iths-ux-demo`.
 - Iframe: demon skickar sin höjd med `postMessage` (`type: "ux-demo-height"`).
+
+## Vad är Cloud? (levande demo)
+
+Mappen `vad-ar-cloud/` innehåller en demo för utbildningssidan .NET Cloud Developer: "Ta butiken ut i molnet". Samma webbshop som i de andra demona, men nu flyttas den från din dator till Microsoft Azure i fyra steg: driftsätt (paketera i en Docker-container, skapa en webbapp i Azure och driftsätt, och testa att butiken nu nås från mobilen), skala (välj 1 server, 5 servrar hela tiden eller autoskalning och kör Black Friday: en server ger 503, fem kostar mest, autoskalning klarar rusningen och skalar ner efteråt), säkerhet (skanna och fixa en öppen databas, ett lösenord i koden och för breda behörigheter) och AI & moln (godkänn eller avvisa AI:s förslag, där ett av dem öppnar databasen för alla). Innehållet bygger på iths.se/utbildningar/net-cloud-developer/ (hämtad 12 november 2026), som nämner C#, .NET, Azure, molnarkitektur, IT-säkerhet, automatisering, Docker, skalbarhet, kostnader och AI-verktyg. Priserna i demon är exempel.
+
+- Källan är `vad-ar-cloud/snippet.html`. Kör `python3 tools/build-vad-ar-cloud.py` efter ändringar, så byggs `vad-ar-cloud/index.html` (GitHub Pages) och `wordpress/vad-ar-cloud-wpcode.html` (WPCode).
+- All CSS är avgränsad till `#iths-cloud-demo`.
+- Iframe: demon skickar sin höjd med `postMessage` (`type: "cloud-demo-height"`).
