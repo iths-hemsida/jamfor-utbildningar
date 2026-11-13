@@ -241,3 +241,7 @@ Ingress och fyra enkla kort med bock, rubrik och text. Redigera `framtidsyrke-do
 ## Vem är du? .NET Cloud (vem-ar-du-dotnet-cloud/)
 
 Samma självkoll som de andra, med fem av punkterna för .NET Cloud. Kör `python3 tools/build-vem-ar-du-dotnet-cloud.py`. WPCode-version: `wordpress/vem-ar-du-dotnet-cloud-wpcode.html`.
+
+## Vem är du? IT-projektledare (vem-ar-du-it-projektledare/)
+
+Samma självkoll som de andra, med fem påståenden från IT-projektledarsidans text. Kör `python3 tools/build-vem-ar-du-it-projektledare.py`. WPCode-version: `wordpress/vem-ar-du-it-projektledare-wpcode.html`.
