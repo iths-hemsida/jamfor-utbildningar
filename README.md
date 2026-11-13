@@ -205,3 +205,7 @@ Samma självkoll som för Frontend, med fem av punkterna från Mjukvarutestare-s
 ## LIA-praktik (lia-mjukvarutest/)
 
 Snyggare LIA-avsnitt för Mjukvarutestare-sidan: punkterna som ikonrutor och nyckeltalen 16 veckor (med en veckostapel som fylls i när blocket syns) och 100 %. Redigera `lia-mjukvarutest/snippet.html` och kör `python3 tools/build-lia-mjukvarutest.py`. WPCode-version: `wordpress/lia-mjukvarutest-wpcode.html`.
+
+## Därför är frontend-utvecklare ett framtidsyrke, enkla kort (framtidsyrke/enkla-kort-snippet.html)
+
+Alternativ till de levande korten: samma ingress och fyra enkla kort med bock, rubrik och text. Kör `python3 tools/build-framtidsyrke-enkla-kort.py`. WPCode-version: `wordpress/framtidsyrke-enkla-kort-wpcode.html`.
