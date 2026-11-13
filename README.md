@@ -237,3 +237,7 @@ Samma självkoll som de andra, med fem av punkterna för .NET. Kör `python3 too
 ## Därför är .NET Cloud ett framtidsyrke (framtidsyrke-dotnet-cloud/)
 
 Ingress och fyra enkla kort med bock, rubrik och text. Redigera `framtidsyrke-dotnet-cloud/snippet.html` och kör `python3 tools/build-framtidsyrke-dotnet-cloud.py`. WPCode-version: `wordpress/framtidsyrke-dotnet-cloud-wpcode.html`.
+
+## Vem är du? .NET Cloud (vem-ar-du-dotnet-cloud/)
+
+Samma självkoll som de andra, med fem av punkterna för .NET Cloud. Kör `python3 tools/build-vem-ar-du-dotnet-cloud.py`. WPCode-version: `wordpress/vem-ar-du-dotnet-cloud-wpcode.html`.
