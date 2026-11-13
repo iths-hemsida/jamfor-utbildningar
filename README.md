@@ -249,3 +249,7 @@ Samma självkoll som de andra, med fem påståenden från IT-projektledarsidans 
 ## Vem är du? IT-säkerhetsspecialist (vem-ar-du-it-sakerhet/)
 
 Samma självkoll som de andra, med fem påståenden från IT-säkerhetssidans text. Kör `python3 tools/build-vem-ar-du-it-sakerhet.py`. WPCode-version: `wordpress/vem-ar-du-it-sakerhet-wpcode.html`.
+
+## Därför är Account Manager ett framtidsyrke (framtidsyrke-account-manager/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-account-manager/snippet.html` och kör `python3 tools/build-framtidsyrke-account-manager.py`. WPCode-version: `wordpress/framtidsyrke-account-manager-wpcode.html`.
