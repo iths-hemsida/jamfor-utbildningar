@@ -245,3 +245,7 @@ Samma självkoll som de andra, med fem av punkterna för .NET Cloud. Kör `pytho
 ## Vem är du? IT-projektledare (vem-ar-du-it-projektledare/)
 
 Samma självkoll som de andra, med fem påståenden från IT-projektledarsidans text. Kör `python3 tools/build-vem-ar-du-it-projektledare.py`. WPCode-version: `wordpress/vem-ar-du-it-projektledare-wpcode.html`.
+
+## Vem är du? IT-säkerhetsspecialist (vem-ar-du-it-sakerhet/)
+
+Samma självkoll som de andra, med fem påståenden från IT-säkerhetssidans text. Kör `python3 tools/build-vem-ar-du-it-sakerhet.py`. WPCode-version: `wordpress/vem-ar-du-it-sakerhet-wpcode.html`.
