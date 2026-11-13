@@ -212,4 +212,4 @@ Alternativ till de levande korten: samma ingress och fyra enkla kort med bock, r
 
 ## Därför är fullstackutvecklare ett framtidsyrke (framtidsyrke-fullstack/)
 
-Ingress, fem enkla kort med bock, rubrik och text och en avslutande mening. Redigera `framtidsyrke-fullstack/snippet.html` och kör `python3 tools/build-framtidsyrke-fullstack.py`. WPCode-version: `wordpress/framtidsyrke-fullstack-wpcode.html`.
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-fullstack/snippet.html` och kör `python3 tools/build-framtidsyrke-fullstack.py`. WPCode-version: `wordpress/framtidsyrke-fullstack-wpcode.html`.
