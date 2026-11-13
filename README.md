@@ -209,3 +209,7 @@ Snyggare LIA-avsnitt för Mjukvarutestare-sidan: punkterna som ikonrutor och nyc
 ## Därför är frontend-utvecklare ett framtidsyrke, enkla kort (framtidsyrke/enkla-kort-snippet.html)
 
 Alternativ till de levande korten: samma ingress och fyra enkla kort med bock, rubrik och text. Kör `python3 tools/build-framtidsyrke-enkla-kort.py`. WPCode-version: `wordpress/framtidsyrke-enkla-kort-wpcode.html`.
+
+## Därför är fullstackutvecklare ett framtidsyrke (framtidsyrke-fullstack/)
+
+Ingress, fem enkla kort med bock, rubrik och text och en avslutande mening. Redigera `framtidsyrke-fullstack/snippet.html` och kör `python3 tools/build-framtidsyrke-fullstack.py`. WPCode-version: `wordpress/framtidsyrke-fullstack-wpcode.html`.
