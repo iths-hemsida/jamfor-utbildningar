@@ -253,3 +253,7 @@ Samma självkoll som de andra, med fem påståenden från IT-säkerhetssidans te
 ## Därför är Account Manager ett framtidsyrke (framtidsyrke-account-manager/)
 
 Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-account-manager/snippet.html` och kör `python3 tools/build-framtidsyrke-account-manager.py`. WPCode-version: `wordpress/framtidsyrke-account-manager-wpcode.html`.
+
+## Vem är du? Account Manager (vem-ar-du-account-manager/)
+
+Samma självkoll som de andra, med en kort ingress och fem punkter för Account Manager, utan behörighetslänk. Kör `python3 tools/build-vem-ar-du-account-manager.py`. WPCode-version: `wordpress/vem-ar-du-account-manager-wpcode.html`.
