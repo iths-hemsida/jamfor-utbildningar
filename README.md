@@ -229,3 +229,7 @@ Samma självkoll som de andra, med fem av punkterna för Java. Kör `python3 too
 ## Därför är .NET ett framtidsyrke (framtidsyrke-dotnet/)
 
 Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-dotnet/snippet.html` och kör `python3 tools/build-framtidsyrke-dotnet.py`. WPCode-version: `wordpress/framtidsyrke-dotnet-wpcode.html`.
+
+## Vem är du? .NET-utvecklare (vem-ar-du-dotnet/)
+
+Samma självkoll som de andra, med fem av punkterna för .NET. Kör `python3 tools/build-vem-ar-du-dotnet.py`. WPCode-version: `wordpress/vem-ar-du-dotnet-wpcode.html`.
