@@ -221,3 +221,7 @@ Samma självkoll som för Frontend och Mjukvarutestare, med fem av punkterna fr�
 ## Därför är javautvecklare ett framtidsyrke (framtidsyrke-java/)
 
 Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-java/snippet.html` och kör `python3 tools/build-framtidsyrke-java.py`. WPCode-version: `wordpress/framtidsyrke-java-wpcode.html`.
+
+## Vem är du? Javautvecklare (vem-ar-du-java/)
+
+Samma självkoll som de andra, med fem av punkterna för Java. Kör `python3 tools/build-vem-ar-du-java.py`. WPCode-version: `wordpress/vem-ar-du-java-wpcode.html`.
