@@ -225,3 +225,7 @@ Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-jav
 ## Vem är du? Javautvecklare (vem-ar-du-java/)
 
 Samma självkoll som de andra, med fem av punkterna för Java. Kör `python3 tools/build-vem-ar-du-java.py`. WPCode-version: `wordpress/vem-ar-du-java-wpcode.html`.
+
+## Därför är .NET ett framtidsyrke (framtidsyrke-dotnet/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-dotnet/snippet.html` och kör `python3 tools/build-framtidsyrke-dotnet.py`. WPCode-version: `wordpress/framtidsyrke-dotnet-wpcode.html`.
