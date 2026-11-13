@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vem är du? IT-projektledare | IT-Högskolan</title>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
+</head>
+<body>
+<!-- IT-Högskolan: "Vem är du?" – snabb självkoll för utbildningssidan IT-projektledare. Klistra in hela snutten i ett HTML-snippet i WPCode. All CSS är avgränsad till #iths-pl-vem. Länkarna ställs in i LANKAR i skriptet längst ner. -->
+<style>
+/* Fem påståenden som besökaren bockar i. En mätare visar hur många som stämmer, och en rad under ger ett nästa steg:
+   4–5 → bekräftelse utan knapp, 0–3 → quizet. Behörighetslänken ligger kvar längst ner.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-pl-vem {
+  --kod: #662247; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0; padding-block: 16px 24px;
+}
+#iths-pl-vem *, #iths-pl-vem *::before, #iths-pl-vem *::after { box-sizing: border-box; }
+#iths-pl-vem .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+#iths-pl-vem .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-pl-vem p { margin: 0; }
+#iths-pl-vem :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+/* Rubriken som rubrikerna på iths.se */
+#iths-pl-vem h2 { margin: 0; color: var(--kod); font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
+#iths-pl-vem .intro { display: grid; gap: 6px; }
+#iths-pl-vem .intro p { color: var(--muted); }
+#iths-pl-vem .intro .ingress { color: var(--ink); font-size: 17px; }
+#iths-pl-vem .intro .hint { font-size: 13.5px; }
+
+/* Påståendena */
+#iths-pl-vem .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+/* Skydd mot temats list- och knappstilar (punkter, versaler, nowrap, fast höjd) så att det fungerar i mobilen */
+#iths-pl-vem .lista li { margin: 0; padding: 0; min-width: 0; list-style: none; background: none; }
+#iths-pl-vem .lista li::before, #iths-pl-vem .lista li::after { content: none; display: none; }
+#iths-pl-vem .p { min-width: 0; max-width: 100%; height: auto; min-height: 0; margin: 0; white-space: normal; overflow-wrap: break-word; text-transform: none; letter-spacing: normal; font-weight: 400; box-shadow: none; text-shadow: none; -webkit-appearance: none; appearance: none; }
+#iths-pl-vem .p { width: 100%; display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; font-size: 15px; line-height: 1.35; cursor: pointer; transition: background .2s ease, border-color .2s ease; }
+#iths-pl-vem .p:hover { border-color: var(--kod); }
+#iths-pl-vem .p .box { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #d6c4cf; background: var(--surface); display: grid; place-items: center; transition: background .2s ease, border-color .2s ease, transform .25s ease; }
+#iths-pl-vem .p .box svg { width: 12px; height: 12px; opacity: 0; transform: scale(.4); transition: opacity .2s ease, transform .25s ease; }
+#iths-pl-vem .p[aria-pressed="true"] { background: var(--soft); border-color: var(--kod); }
+#iths-pl-vem .p[aria-pressed="true"] .box { background: var(--pixel); border-color: var(--pixel); }
+#iths-pl-vem .p[aria-pressed="true"] .box svg { opacity: 1; transform: scale(1); }
+
+/* Mätare och resultat */
+#iths-pl-vem .matare { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+#iths-pl-vem .stapel { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+#iths-pl-vem .stapel i { display: block; height: 6px; border-radius: 3px; background: var(--line); transition: background .25s ease; }
+#iths-pl-vem .stapel i.on { background: var(--kod); }
+#iths-pl-vem .antal { font-family: var(--font-display); font-weight: 800; font-size: 13px; color: var(--muted); white-space: nowrap; }
+#iths-pl-vem .svar { background: var(--soft); color: var(--ink); border-radius: 10px; padding: 14px 16px; display: grid; gap: 12px; }
+#iths-pl-vem .svar[hidden] { display: none; }
+#iths-pl-vem .svar p { font-size: 15px; }
+#iths-pl-vem .svar b { color: var(--kod); font-family: var(--font-display); font-weight: 800; }
+#iths-pl-vem .cta { box-sizing: border-box; width: 100%; max-width: 100%; white-space: normal; text-transform: none; letter-spacing: normal; line-height: 1.3; justify-self: stretch; display: block; text-align: center; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; background: var(--kod); color: #fff; border-radius: 999px; padding: 10px 18px; }
+#iths-pl-vem .cta[hidden] { display: none; }
+#iths-pl-vem .cta:hover { background: var(--server); }
+#iths-pl-vem .beh { font-size: 14.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+#iths-pl-vem .beh a { color: var(--kod); font-family: var(--font-display); font-weight: 800; text-decoration: none; }
+#iths-pl-vem .beh a:hover { text-decoration: underline; }
+@container (min-width: 560px) {
+  #iths-pl-vem .lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-pl-vem .lista li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  #iths-pl-vem .p { height: 100%; }
+}
+@container (max-width: 400px) {
+  #iths-pl-vem .wrap { padding: 18px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-pl-vem * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<section id="iths-pl-vem" aria-labelledby="pl-vem-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Passar utbildningen dig?</span>
+      <h2 id="pl-vem-rubrik">Vem är du?</h2>
+      <p class="ingress">Utbildningen kan passa dig som:</p>
+      <p class="hint">Tryck på det som stämmer på dig.</p>
+    </div>
+    <ul class="lista">
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>trivs med ansvar</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>är kommunikativ och lösningsorienterad</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>motiveras av att kombinera teknik med ledarskap</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>gillar att planera, organisera och driva projekt framåt</button></li>
+      <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>vill vara den som får teamet att fungera och leverera</button></li>
+    </ul>
+    <div class="matare">
+      <div class="stapel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <span class="antal" id="pl-vem-antal" aria-live="polite">0 av 5 stämmer</span>
+    </div>
+    <div class="svar" id="pl-vem-svar" aria-live="polite" hidden>
+      <p id="pl-vem-text"></p>
+      <a class="cta" id="pl-vem-cta" href="#" target="_top"></a>
+    </div>
+    <p class="beh">Och om du saknar vissa förkunskaper kan det finnas vägar <a href="https://www.iths.se/behorighet/" target="_top">att bli behörig ›</a></p>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-pl-vem");
+  if (!root) return;
+  // Länkar
+  var LANKAR = {
+    QUIZ: "https://www.iths.se/vilken-utbildning-passar-mig/?quiz"
+  };
+  var knappar = root.querySelectorAll(".p");
+  var bitar = root.querySelectorAll(".stapel i");
+  var antal = document.getElementById("pl-vem-antal");
+  var svar = document.getElementById("pl-vem-svar");
+  var text = document.getElementById("pl-vem-text");
+  var cta = document.getElementById("pl-vem-cta");
+  var rort = false;
+
+  function uppdatera() {
+    var n = 0;
+    knappar.forEach(function (k) { if (k.getAttribute("aria-pressed") === "true") n++; });
+    bitar.forEach(function (b, i) { b.classList.toggle("on", i < n); });
+    antal.textContent = n + " av 5 stämmer";
+    if (!rort) return;
+    svar.hidden = false;
+    if (n >= 4) {
+      text.innerHTML = "<b>Det låter som du!</b> IT-projektledare kan vara rätt utbildning för dig.";
+      cta.hidden = true;
+    } else if (n >= 2) {
+      text.innerHTML = "<b>Du verkar nyfiken.</b> Gör quizet och se vilken utbildning som passar dig bäst.";
+      cta.textContent = "Gör quizet";
+      cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
+    } else {
+      text.innerHTML = "<b>Kanske passar en annan utbildning bättre?</b> Quizet hjälper dig att hitta rätt.";
+      cta.textContent = "Gör quizet";
+      cta.href = LANKAR.QUIZ;
+      cta.hidden = false;
+    }
+  }
+  knappar.forEach(function (k) {
+    k.addEventListener("click", function () {
+      k.setAttribute("aria-pressed", k.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      rort = true;
+      uppdatera();
+    });
+  });
+  uppdatera();
+
+  // Höjd till förälder om komponenten visas i en iframe
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "pl-vem-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
+
+</body>
+</html>

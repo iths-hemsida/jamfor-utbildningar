@@ -16,15 +16,17 @@
 }
 #iths-fe-framtid *, #iths-fe-framtid *::before, #iths-fe-framtid *::after { box-sizing: border-box; }
 #iths-fe-framtid .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
-#iths-fe-framtid h2, #iths-fe-framtid h3 { font-family: var(--font-display); font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+#iths-fe-framtid h3 { font-family: var(--font-display); }
+#iths-fe-framtid h2, #iths-fe-framtid h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
 #iths-fe-framtid p { margin: 0; }
 #iths-fe-framtid button { font: inherit; color: inherit; cursor: pointer; }
 #iths-fe-framtid :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
 #iths-fe-framtid .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
 #iths-fe-framtid .intro { display: grid; gap: 8px; }
-#iths-fe-framtid .intro h2 { color: var(--kod); font-size: clamp(26px, 4.2vw, 38px); }
+/* Huvudrubriken i Futura semibold, samma som rubrikerna på iths.se (font-family: futura; font-weight: 600).
+   I WPCode används sidans egen webbfont. I iframe används Futura som finns inbyggt i Mac och iPhone, annars Avenir. */
+#iths-fe-framtid .intro h2 { color: var(--kod); font-size: 25px; font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-transform: none; }
 #iths-fe-framtid .intro p { color: var(--muted); max-width: 64ch; }
-#iths-fe-framtid .avslut { max-width: 64ch; }
 
 /* Korten */
 #iths-fe-framtid .kort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -180,7 +182,6 @@
       </article>
     </div>
 
-    <p class="avslut">På IT-Högskolan bygger du en stabil grund inom JavaScript, React och modern webbutveckling och lär dig använda AI som ett verktyg i utvecklingsarbetet.</p>
   </div>
 </section>
 

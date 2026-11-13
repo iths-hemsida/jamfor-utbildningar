@@ -1,0 +1,69 @@
+<!-- IT-Högskolan: "Därför är .NET Cloud ett framtidsyrke" – fyra enkla kort. Klistra in hela snutten i ett HTML-snippet i WPCode. All CSS är avgränsad till #iths-cl-framtid. -->
+<style>
+/* Fem skäl som enkla kort: bock, rubrik och text. Två kort per rad, en spalt på smal yta.
+   Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9, Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-cl-framtid {
+  --kod: #662247; --moln: #F9F9F9; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef; --ok: #2f7d55;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0; padding-block: 16px 24px;
+}
+#iths-cl-framtid *, #iths-cl-framtid *::before, #iths-cl-framtid *::after { box-sizing: border-box; }
+#iths-cl-framtid .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+#iths-cl-framtid h3 { font-family: var(--font-display); }
+#iths-cl-framtid h2, #iths-cl-framtid h3 { font-weight: 800; margin: 0; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
+#iths-cl-framtid p { margin: 0; }
+#iths-cl-framtid button { font: inherit; color: inherit; cursor: pointer; }
+#iths-cl-framtid :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+#iths-cl-framtid .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-cl-framtid .intro { display: grid; gap: 8px; }
+/* Huvudrubriken i Futura semibold, samma som rubrikerna på iths.se (font-family: futura; font-weight: 600).
+   I WPCode används sidans egen webbfont. I iframe används Futura som finns inbyggt i Mac och iPhone, annars Avenir. */
+#iths-cl-framtid .intro h2 { color: var(--kod); font-size: 25px; font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; letter-spacing: -0.01em; text-transform: none; }
+#iths-cl-framtid .intro p { color: var(--muted); max-width: 64ch; }
+
+/* Korten */
+#iths-cl-framtid .kort { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+#iths-cl-framtid .k { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: grid; }
+#iths-cl-framtid .txt { padding: 20px 22px 22px; display: grid; gap: 6px; align-content: start; }
+#iths-cl-framtid .txt h3 { font-size: 19px; color: var(--ink); display: flex; gap: 8px; align-items: baseline; }
+#iths-cl-framtid .txt h3::before { content: ""; flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--pixel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%232D1A2E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat; transform: translateY(2px); }
+#iths-cl-framtid .txt p { color: var(--muted); font-size: 15px; }
+
+#iths-cl-framtid .k.bred { grid-column: 1 / -1; }
+@container (max-width: 600px) {
+  #iths-cl-framtid .kort { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+
+<section id="iths-cl-framtid" aria-labelledby="cl-framtid-rubrik">
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Ett yrke med framtid</span>
+      <h2 id="cl-framtid-rubrik">Därför är .NET Cloud ett framtidsyrke</h2>
+      <p>Arbetsförmedlingen konstaterar i Yrkesbarometern att mjukvaru- och systemutvecklare har mycket goda möjligheter till arbete. Samhället går allt mer mot digitala lösningar för olika tjänster som ständigt behöver utvecklas. Bygg en stark grund inom programmering och utveckla applikationer med Microsofts teknikplattform.</p>
+    </div>
+
+    <div class="kort">
+      <article class="k"><div class="txt"><h3>Skapa skalbara lösningar</h3><p>Lär dig hur digitala tjänster kan byggas för att hantera växande mängder användare och data.</p></div></article>
+      <article class="k"><div class="txt"><h3>AI som utvecklarverktyg</h3><p>Lär dig använda AI för att effektivisera programmering, problemlösning och utvecklingsarbete.</p></div></article>
+      <article class="k"><div class="txt"><h3>Förstå säkerhet och arkitektur</h3><p>Lär dig bygga lösningar där säkerhet, struktur och stabilitet är en del av utvecklingen från början.</p></div></article>
+      <article class="k"><div class="txt"><h3>En väg in i IT</h3><p>Kombinera programmering med molnteknik och få en kompetens som kan användas inom många olika branscher.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-cl-framtid");
+  if (!root || window.parent === window) return;
+  // Höjd till förälder när komponenten visas i en iframe
+  function send() { window.parent.postMessage({ type: "cl-framtid-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*"); }
+  if ("ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
