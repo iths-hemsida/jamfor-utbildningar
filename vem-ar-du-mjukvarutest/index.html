@@ -31,6 +31,8 @@
 #iths-mt-vem h2 { margin: 0; color: var(--kod); font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
 #iths-mt-vem .intro { display: grid; gap: 6px; }
 #iths-mt-vem .intro p { color: var(--muted); }
+#iths-mt-vem .intro .ingress { color: var(--ink); font-size: 17px; }
+#iths-mt-vem .intro .hint { font-size: 13.5px; }
 
 /* Påståendena */
 #iths-mt-vem .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
@@ -80,7 +82,8 @@
     <div class="intro">
       <span class="eyebrow">Passar utbildningen dig?</span>
       <h2 id="mt-vem-rubrik">Vem är du?</h2>
-      <p>Utbildningen kan passa dig som … Tryck på det som stämmer på dig.</p>
+      <p class="ingress">Utbildningen kan passa dig som:</p>
+      <p class="hint">Tryck på det som stämmer på dig.</p>
     </div>
     <ul class="lista">
       <li><button type="button" class="p" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#2D1A2E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>är nyfiken på hur saker fungerar</button></li>
