@@ -213,3 +213,7 @@ Alternativ till de levande korten: samma ingress och fyra enkla kort med bock, r
 ## Därför är fullstackutvecklare ett framtidsyrke (framtidsyrke-fullstack/)
 
 Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-fullstack/snippet.html` och kör `python3 tools/build-framtidsyrke-fullstack.py`. WPCode-version: `wordpress/framtidsyrke-fullstack-wpcode.html`.
+
+## Vem är du? UX-designer (vem-ar-du-ux/)
+
+Samma självkoll som för Frontend och Mjukvarutestare, med fem av punkterna från UX-designer-sidan. Kör `python3 tools/build-vem-ar-du-ux.py`. WPCode-version: `wordpress/vem-ar-du-ux-wpcode.html`.
