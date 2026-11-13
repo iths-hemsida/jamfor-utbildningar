@@ -257,3 +257,7 @@ Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-acc
 ## Vem är du? Account Manager (vem-ar-du-account-manager/)
 
 Samma självkoll som de andra, med en kort ingress och fem punkter för Account Manager, utan behörighetslänk. Kör `python3 tools/build-vem-ar-du-account-manager.py`. WPCode-version: `wordpress/vem-ar-du-account-manager-wpcode.html`.
+
+## Vem är du? IT-säkerhetstestare (vem-ar-du-it-sakerhetstest/)
+
+Samma självkoll som de andra, med fem påståenden från IT-säkerhetstestarsidans text. Kör `python3 tools/build-vem-ar-du-it-sakerhetstest.py`. WPCode-version: `wordpress/vem-ar-du-it-sakerhetstest-wpcode.html`.
