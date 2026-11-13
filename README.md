@@ -196,7 +196,7 @@ Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg
 
 ## Därför är mjukvarutestare ett framtidsyrke (framtidsyrke-mjukvarutest/)
 
-Fem levande kort för Mjukvarutestare-sidan: fler digitala tjänster över tid, ett test som hittar en bugg i AI-skriven kod, manuellt mot automatiserat, när buggen hittas och branscher. Redigera `framtidsyrke-mjukvarutest/snippet.html` och kör `python3 tools/build-framtidsyrke-mjukvarutest.py`. WPCode-version: `wordpress/framtidsyrke-mjukvarutest-wpcode.html`.
+Fem enkla kort (bock, rubrik och text) för Mjukvarutestare-sidan, under en kort ingress. Redigera `framtidsyrke-mjukvarutest/snippet.html` och kör `python3 tools/build-framtidsyrke-mjukvarutest.py`. WPCode-version: `wordpress/framtidsyrke-mjukvarutest-wpcode.html`.
 
 ## Vem är du? Mjukvarutestare (vem-ar-du-mjukvarutest/)
 
