@@ -164,6 +164,48 @@
   #iths-ux-demo .done-box { padding: 14px 14px; }
   #iths-ux-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken, sedan valen. Färre ramar och kortare logg. */
+@container (max-width: 440px) {
+  #iths-ux-demo { padding-block: 16px 32px; }
+  #iths-ux-demo .wrap { gap: 18px; }
+  #iths-ux-demo .intro p { font-size: 15px; }
+  #iths-ux-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-ux-demo .panel { display: contents; }
+  #iths-ux-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-ux-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-ux-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-ux-demo #ux-innehall { order: 4; margin-top: 4px; }
+  #iths-ux-demo .done-box { order: 5; }
+  #iths-ux-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-ux-demo .nav .btn:only-child, #iths-ux-demo #ux-bak[hidden] + #ux-fram { grid-column: 1 / -1; }
+  #iths-ux-demo .chrome { display: none; }
+  #iths-ux-demo .shop { padding: 12px; }
+  #iths-ux-demo .shop-top { margin-bottom: 8px; }
+  #iths-ux-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; }
+  #iths-ux-demo .bild { width: 52px; height: 52px; }
+  #iths-ux-demo .bild svg { width: 38px; }
+  #iths-ux-demo .namn { font-size: 17px; }
+  #iths-ux-demo .produkt.f-pris .pris { font-size: 18px; }
+  #iths-ux-demo .besk { font-size: 12.5px; }
+  #iths-ux-demo .produkt.f-farg .sw { padding: 4px 9px 4px 5px; font-size: 12.5px; }
+  #iths-ux-demo .produkt.f-farg .sw .dot { width: 16px; height: 16px; }
+  #iths-ux-demo .produkt.f-kop .kop { padding: 10px 16px; }
+  #iths-ux-demo .robot { top: 4px; }
+  #iths-ux-demo .logbox { gap: 6px; }
+  #iths-ux-demo .logg { min-height: 0; }
+  #iths-ux-demo .hint { font-size: 13.5px; }
+  #iths-ux-demo .tc { border: 0; border-radius: 0; display: grid; gap: 8px; overflow: visible; }
+  #iths-ux-demo .tc li { border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  #iths-ux-demo .tc li:first-child { border-top: 1px solid var(--line); }
+  #iths-ux-demo .tc b { font-size: 15px; }
+  #iths-ux-demo .tc span.f { font-size: 13px; }
+  #iths-ux-demo .tc .prov i { width: 42px; height: 26px; font-size: 12px; }
+  #iths-ux-demo .ai { gap: 8px; }
+  #iths-ux-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-ux-demo .sug b { font-size: 15px; }
+  #iths-ux-demo .sug p { font-size: 13px; }
+  #iths-ux-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-ux-demo * { animation: none !important; transition: none !important; }
 }
@@ -289,10 +331,13 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + (step <= 1 ? "Inget test gjort än …" : "Inga ändringar än …") + "</span>"; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function setSvar(txt) { $("ux-svar").textContent = txt; }
   function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
 
@@ -363,7 +408,8 @@
     $("ux-loghead").textContent = step <= 1 ? "Användartest · Sara, 34" : step === 2 ? "Kontrastkoll" : "Ändringar i butiken";
     $("ux-bak").hidden = step === 0;
     $("ux-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("ux-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("ux-fram").textContent = kompakt() ? "Nästa: " + STEPS[step + 1].kort : "Nästa steg: " + STEPS[step + 1].kort;
+    $("ux-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     visaInnehall(); visaShop(); visaKor(); visaLogg(false);
     send();
   }
@@ -503,6 +549,10 @@
     window.parent.postMessage({ type: "ux-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   bytSteg(0);
 })();
