@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är IT-projektledare? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -221,6 +221,52 @@
 #iths-pl-demo .acc-b[hidden] { display: none; }
 #iths-pl-demo .acc.nej .acc-h b { color: var(--muted); }
 #iths-pl-demo .story-knapp { justify-self: start; }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken, sedan valen. Färre ramar och skuggor. */
+@container (max-width: 440px) {
+  #iths-pl-demo { padding-block: 16px 32px; }
+  #iths-pl-demo .wrap { gap: 18px; }
+  #iths-pl-demo .intro p { font-size: 15px; }
+  #iths-pl-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-pl-demo .panel { display: contents; }
+  #iths-pl-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-pl-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-pl-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-pl-demo #pl-innehall { order: 4; margin-top: 4px; }
+  #iths-pl-demo .done-box { order: 5; }
+  #iths-pl-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-pl-demo .nav .btn:only-child, #iths-pl-demo #pl-bak[hidden] + #pl-fram { grid-column: 1 / -1; }
+  #iths-pl-demo .chrome { display: none; }
+  #iths-pl-demo .status { background: var(--moln); padding: 7px 10px 7px 12px; }
+  #iths-pl-demo .shop { padding: 12px; }
+  #iths-pl-demo .shop-top { margin-bottom: 8px; }
+  #iths-pl-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; }
+  #iths-pl-demo .bild { width: 52px; height: 52px; }
+  #iths-pl-demo .bild svg { width: 38px; }
+  #iths-pl-demo .namn { font-size: 17px; }
+  #iths-pl-demo .pris { font-size: 18px; }
+  #iths-pl-demo .besk { font-size: 12.5px; }
+  #iths-pl-demo .kop { padding: 10px 16px; }
+  #iths-pl-demo .robot { top: 4px; }
+  #iths-pl-demo .logbox { gap: 6px; }
+  #iths-pl-demo .logg { min-height: 0; }
+  #iths-pl-demo .hint { font-size: 13.5px; }
+  #iths-pl-demo .kap-rad { font-size: 13px; }
+  #iths-pl-demo .tc { border: 0; border-radius: 0; display: grid; gap: 8px; overflow: visible; }
+  #iths-pl-demo .tc li { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  #iths-pl-demo .tc li:first-child { border-top: 1px solid var(--line); }
+  #iths-pl-demo .tc li.blockerad { border-color: #f2c2c8; }
+  #iths-pl-demo .tc b { font-size: 15px; }
+  #iths-pl-demo .tc span.f { font-size: 13px; }
+  #iths-pl-demo .ai { gap: 8px; }
+  #iths-pl-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-pl-demo .sug b { font-size: 15px; }
+  #iths-pl-demo .sug p { font-size: 13px; }
+  #iths-pl-demo .acc { padding: 0; }
+  #iths-pl-demo .acc-h { padding: 10px 12px; }
+  #iths-pl-demo .acc-b { padding: 0 12px 10px; }
+  #iths-pl-demo .ok { padding: 5px 12px; }
+  #iths-pl-demo .ok.lang { padding: 7px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-pl-demo * { animation: none !important; transition: none !important; }
 }
@@ -516,7 +562,9 @@
     $("pl-loghead").textContent = ["Backlog", "Daily standup", "Projektlogg", "Ändringar i projektet"][step];
     $("pl-bak").hidden = step === 0;
     $("pl-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("pl-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    var smal = root.clientWidth <= 440;
+    if (STEPS[step + 1]) $("pl-fram").textContent = (smal ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("pl-bak").textContent = smal ? "Tillbaka" : "Föregående";
     visaInnehall(); visaShop(); visaKor(); visaLogg(false);
     send();
   }
@@ -693,7 +741,10 @@
   $("pl-visa-butik").addEventListener("click", function () { visaButik = !visaButik; visaShop(); send(); });
   $("pl-hela-loggen").addEventListener("click", function () { helaLoggen = !helaLoggen; visaLogg(false); send(); });
   // Kompakt läge när demon är smal (samma gräns som när butiken hamnar ovanför texten)
+  var varSmal = root.clientWidth <= 440;
   function kollaBredd() {
+    var smal = root.clientWidth <= 440;
+    if (smal !== varSmal) { varSmal = smal; render(); }
     var k = root.clientWidth <= 600;
     if (k === kompakt) return;
     kompakt = k; root.classList.toggle("kompakt", k);
