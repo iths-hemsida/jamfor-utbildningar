@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är IT-säkerhetstest? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -181,6 +181,47 @@
   #iths-pen-demo .done-box { padding: 14px 14px; }
   #iths-pen-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken, sedan valen. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-pen-demo { padding-block: 16px 32px; }
+  #iths-pen-demo .wrap { gap: 18px; }
+  #iths-pen-demo .intro p { font-size: 15px; }
+  #iths-pen-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-pen-demo .panel { display: contents; }
+  #iths-pen-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-pen-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-pen-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-pen-demo #pt-innehall { order: 4; margin-top: 4px; }
+  #iths-pen-demo .done-box { order: 5; }
+  #iths-pen-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-pen-demo .nav .btn:only-child, #iths-pen-demo #pt-bak[hidden] + #pt-fram { grid-column: 1 / -1; }
+  #iths-pen-demo .chrome { padding: 7px 10px; }
+  #iths-pen-demo .dots { display: none; }
+  #iths-pen-demo .shop { padding: 12px; }
+  #iths-pen-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; }
+  #iths-pen-demo .bild { width: 52px; height: 52px; }
+  #iths-pen-demo .bild svg { width: 38px; }
+  #iths-pen-demo .namn { font-size: 17px; }
+  #iths-pen-demo .kop { padding: 9px 16px; font-size: 14px; }
+  #iths-pen-demo .proxy { top: 4px; right: 6px; }
+  #iths-pen-demo .logbox { gap: 6px; }
+  #iths-pen-demo .logg { min-height: 0; }
+  #iths-pen-demo .req { padding: 6px 8px; }
+  #iths-pen-demo .hint { font-size: 13.5px; }
+  #iths-pen-demo .uppdrag { border-style: solid; border-color: var(--line); padding: 9px 12px; font-size: 13px; }
+  #iths-pen-demo .lista { border: 0; border-radius: 0; display: grid; gap: 8px; overflow: visible; }
+  #iths-pen-demo .lista > li { border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  #iths-pen-demo .lista > li:first-child { border-top: 1px solid var(--line); }
+  #iths-pen-demo .lista b { font-size: 15px; }
+  #iths-pen-demo .lista span.f { font-size: 13px; }
+  #iths-pen-demo .risk button { padding: 4px 12px; }
+  #iths-pen-demo .fb { font-size: 13px; }
+  #iths-pen-demo .ai { gap: 8px; }
+  #iths-pen-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-pen-demo .sug b { font-size: 15px; }
+  #iths-pen-demo .sug p { font-size: 13px; }
+  #iths-pen-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-pen-demo * { animation: none !important; transition: none !important; }
 }
@@ -302,10 +343,13 @@
       var tom = ["Ingen skanning gjord än …", "Ingen trafik fångad än …", "Inget omtest gjort än …", "Agenten väntar på ditt beslut …"][step];
       logg.innerHTML = '<span class="tom">' + tom + "</span>"; return;
     }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function setSvar(cls, txt) { svar.className = "svar" + (cls ? " s-" + cls : ""); svar.textContent = txt; }
   function showHint(t, stopp) { hint.textContent = t; hint.className = "hint" + (stopp ? " stopp" : ""); hint.hidden = false; send(); }
   function kedja(lista, klar) {
@@ -391,7 +435,8 @@
     $("pt-loghead").textContent = STEPS[step].head;
     $("pt-bak").hidden = step === 0;
     $("pt-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("pt-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("pt-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("pt-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     visaInnehall(); visaVerktyg(); visaLogg(false);
     send();
   }
@@ -538,6 +583,10 @@
     window.parent.postMessage({ type: "pentest-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   render();
 })();
