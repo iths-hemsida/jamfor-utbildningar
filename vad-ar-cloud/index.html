@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är Cloud? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -205,6 +205,54 @@
   #iths-cloud-demo .done-box { padding: 14px 14px; }
   #iths-cloud-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken, sedan valen. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-cloud-demo { padding-block: 16px 32px; }
+  #iths-cloud-demo .wrap { gap: 18px; }
+  #iths-cloud-demo .intro p { font-size: 15px; }
+  #iths-cloud-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-cloud-demo .panel { display: contents; }
+  #iths-cloud-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-cloud-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-cloud-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-cloud-demo #cl-innehall { order: 4; margin-top: 4px; }
+  #iths-cloud-demo .done-box { order: 5; }
+  #iths-cloud-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-cloud-demo .nav .btn:only-child, #iths-cloud-demo #cl-bak[hidden] + #cl-fram { grid-column: 1 / -1; }
+  #iths-cloud-demo .chrome { padding: 7px 10px; }
+  #iths-cloud-demo .dots { display: none; }
+  #iths-cloud-demo .shop { padding: 12px; }
+  #iths-cloud-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; }
+  #iths-cloud-demo .bild { width: 52px; height: 52px; }
+  #iths-cloud-demo .bild svg { width: 38px; }
+  #iths-cloud-demo .namn { font-size: 17px; }
+  #iths-cloud-demo .besk { display: none; }
+  #iths-cloud-demo .bild { grid-row: span 2; }
+  #iths-cloud-demo .pris { font-size: 18px; }
+  #iths-cloud-demo .kop { padding: 9px 16px; font-size: 14px; margin-top: 4px; }
+  #iths-cloud-demo .moln { gap: 8px; }
+  #iths-cloud-demo .moln-head { font-size: 11px; }
+  #iths-cloud-demo .nod { padding: 7px 9px; }
+  #iths-cloud-demo .nod b { font-size: 13px; }
+  #iths-cloud-demo .srv { height: 32px; }
+  #iths-cloud-demo .srv svg { width: 18px; height: 18px; }
+  #iths-cloud-demo .mat { padding: 5px 7px; }
+  #iths-cloud-demo .mat b { font-size: 13px; }
+  #iths-cloud-demo .res { padding: 6px 8px; }
+  #iths-cloud-demo .logbox { gap: 6px; }
+  #iths-cloud-demo .logg { min-height: 0; }
+  #iths-cloud-demo .hint { font-size: 13.5px; }
+  #iths-cloud-demo .tc { border: 0; border-radius: 0; display: grid; gap: 8px; overflow: visible; }
+  #iths-cloud-demo .tc li { border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  #iths-cloud-demo .tc li:first-child { border-top: 1px solid var(--line); }
+  #iths-cloud-demo .tc b { font-size: 15px; }
+  #iths-cloud-demo .tc span.f { font-size: 13px; }
+  #iths-cloud-demo .ai { gap: 8px; }
+  #iths-cloud-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-cloud-demo .sug b { font-size: 15px; }
+  #iths-cloud-demo .sug p { font-size: 13px; }
+  #iths-cloud-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-cloud-demo * { animation: none !important; transition: none !important; }
 }
@@ -338,13 +386,16 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Inget körts än …", "Ingen rusning än …", "Ingen skanning än …", "Inga ändringar än …"][step] + "</span>"; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
   function setSvar(txt, fel) { var s = $("cl-svar"); s.textContent = txt; s.classList.toggle("fel", !!fel); }
   function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
   function chip(cls, txt) { return '<span class="chip' + (cls ? " c-" + cls : "") + '">' + txt + "</span>"; }
+  function kompakt() { return root.clientWidth <= 440; }
   function live() { return step > 0 || !!drift.drift; }
   function antalDrift() { return DRIFT.filter(function (d) { return drift[d.id]; }).length; }
   function allaLuckor() { return LUCKOR.every(function (l) { return luckor[l.id]; }); }
@@ -443,7 +494,8 @@
     $("cl-loghead").textContent = ["Terminal", "Black Friday", "Säkerhetsskanning", "Ändringar i molnet"][step];
     $("cl-bak").hidden = step === 0;
     $("cl-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("cl-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("cl-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("cl-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     visaInnehall(); visaShop(); visaMoln(); visaKor(); visaLogg(false);
     send();
   }
@@ -613,6 +665,10 @@
     window.parent.postMessage({ type: "cloud-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   bytSteg(0);
 })();
