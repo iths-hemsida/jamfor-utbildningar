@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är fullstack? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -191,6 +191,48 @@
   #iths-fs-demo .bild svg { width: 40px; }
   #iths-fs-demo .sug-top { flex-direction: column; align-items: start; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken och servern, sedan koden. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-fs-demo { padding-block: 16px 32px; }
+  #iths-fs-demo .wrap { gap: 18px; }
+  #iths-fs-demo .intro p { font-size: 15px; }
+  #iths-fs-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-fs-demo .panel { display: contents; }
+  #iths-fs-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-fs-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-fs-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-fs-demo #fs-kod { order: 4; margin-top: 4px; }
+  #iths-fs-demo .done-box { order: 5; padding: 14px; }
+  #iths-fs-demo .done-box b { font-size: 17px; }
+  #iths-fs-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-fs-demo #fs-bak[hidden] + #fs-fram { grid-column: 1 / -1; }
+  #iths-fs-demo .chrome { padding: 7px 10px; }
+  #iths-fs-demo .pill { padding: 3px 9px; font-size: 11.5px; }
+  #iths-fs-demo .shop { padding: 12px; }
+  #iths-fs-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 10px; padding: 10px; }
+  #iths-fs-demo .bild { width: 44px; height: 44px; }
+  #iths-fs-demo .bild svg { width: 32px; }
+  #iths-fs-demo .namn { font-size: 16px; }
+  #iths-fs-demo .meta { font-size: 13px; }
+  #iths-fs-demo .rec { padding-top: 8px; gap: 6px; }
+  #iths-fs-demo .rec-h { display: none; }
+  #iths-fs-demo .lista li { padding: 5px 9px; font-size: 13.5px; }
+  #iths-fs-demo .stjarna { font-size: 20px; padding: 1px 2px; }
+  #iths-fs-demo .skicka { padding: 8px 14px; font-size: 14px; }
+  #iths-fs-demo .svar { font-size: 13px; padding: 6px 9px; }
+  #iths-fs-demo .server { gap: 6px; padding: 10px 12px 12px; }
+  #iths-fs-demo .logg { min-height: 0; }
+  #iths-fs-demo .db td:nth-child(2) { display: none; }
+  #iths-fs-demo .hint { font-size: 13.5px; }
+  #iths-fs-demo .koder { gap: 6px; }
+  #iths-fs-demo .ai { gap: 8px; }
+  #iths-fs-demo .ai-head { display: none; }
+  #iths-fs-demo .sug { padding: 10px 12px; }
+  #iths-fs-demo .sug-top { flex-direction: row; align-items: center; gap: 10px; }
+  #iths-fs-demo .sug-top b { font-size: 15px; }
+  #iths-fs-demo .sug-top p { font-size: 13px; }
+  #iths-fs-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-fs-demo * { animation: none !important; transition: none !important; }
 }
@@ -318,10 +360,14 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">Väntar på anrop …</span>'; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
-      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+      if (i < dold) return "";
+      var txt = kompakt() ? r.txt.replace(/\{betyg: \d, /, "{").replace("POST /api/recensioner", "POST /api/rec…").replace("GET /api/recensioner", "GET /api/rec…") : r.txt;
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(txt) + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function visaLista() {
     var n = webblasare.length;
     if (!n) {
@@ -331,7 +377,7 @@
       var sum = 0;
       webblasare.forEach(function (r) { sum += r.b; });
       $("fs-snitt").innerHTML = '<span class="st">★</span> ' + (sum / n).toFixed(1).replace(".", ",") + " · " + n + (n === 1 ? " recension" : " recensioner");
-      lista.innerHTML = webblasare.slice(-3).reverse().map(function (r) {
+      lista.innerHTML = webblasare.slice(kompakt() ? -2 : -3).reverse().map(function (r) {
         var txt = !r.t ? '<span class="notext">(ingen text)</span>' : harKod(r.t) ? '<span class="farlig">' + esc(r.t) + "</span>" : esc(r.t);
         return '<li' + (r.uid === nyast ? ' class="ny"' : "") + '><span class="st" aria-label="' + r.b + ' av 5 stjärnor">' + stj(r.b) + "</span><span>" + txt + "</span></li>";
       }).join("");
@@ -341,7 +387,7 @@
   function visaDb() {
     $("fs-db").hidden = step < 2;
     $("fs-rader").innerHTML = db.length
-      ? db.slice(-4).map(function (r) {
+      ? db.slice(kompakt() ? -3 : -4).map(function (r) {
           return "<tr><td>#" + r.id + "</td><td>" + r.b + "★</td><td" + (harKod(r.t) ? ' class="farlig"' : !r.t ? ' class="tomt"' : "") + ">" + (r.t ? esc(r.t) : "(tom)") + "</td></tr>";
         }).join("")
       : '<tr><td class="tomt" colspan="3">Tom tabell</td></tr>';
@@ -375,7 +421,10 @@
     $("fs-klar").hidden = !(step === 3 && fixes.a && fixes.b && fixes.c);
     $("fs-bak").hidden = step === 0;
     $("fs-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("fs-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("fs-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("fs-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
+    $("fs-ladda").textContent = kompakt() ? "↻ Ladda om" : "↻ Ladda om sidan";
+    $("fs-omstart").textContent = kompakt() ? "Starta om" : "Starta om servern";
     $("fs-server").hidden = step < 1;
     $("fs-test").hidden = !(step === 3 && fixes.c);
     hint.hidden = true;
@@ -501,7 +550,7 @@
       });
       egna = egnaKvar.filter(function (r) { return db.indexOf(r) > -1; });
       hamta(db);
-      if (fixes[k]) logga("ok", k === "a" ? "Tomma recensioner borttagna och stoppas nu" : "Kod borttagen ur recensionerna");
+      if (fixes[k]) logga("ok", k === "a" ? "Tomma recensioner stoppas" : "Kod borttagen ur recensionerna");
     }
     if (k === "c" && fixes.c) logga("ok", "3 tester gick igenom");
     setSvar("", "");
@@ -524,6 +573,10 @@
     window.parent.postMessage({ type: "fullstack-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   bytSteg(0);
 })();
