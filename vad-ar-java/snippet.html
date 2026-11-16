@@ -151,6 +151,42 @@
   #iths-java-demo .btn { padding: 9px 16px; font-size: 14px; }
   #iths-java-demo .sug-top { flex-direction: column; align-items: start; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken och servern, sedan koden. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-java-demo { padding-block: 16px 32px; }
+  #iths-java-demo .wrap { gap: 18px; }
+  #iths-java-demo .intro p { font-size: 15px; }
+  #iths-java-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-java-demo .panel { display: contents; }
+  #iths-java-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-java-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-java-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-java-demo #jv-kod { order: 4; margin-top: 4px; }
+  #iths-java-demo .done-box { order: 5; padding: 14px; }
+  #iths-java-demo .done-box b { font-size: 17px; }
+  #iths-java-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-java-demo #jv-bak[hidden] + #jv-fram { grid-column: 1 / -1; }
+  #iths-java-demo .chrome { padding: 7px 10px; }
+  #iths-java-demo .dots { display: none; }
+  #iths-java-demo .shop { padding: 12px; }
+  #iths-java-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; padding: 10px; }
+  #iths-java-demo .bild { width: 52px; height: 52px; }
+  #iths-java-demo .bild svg { width: 38px; }
+  #iths-java-demo .namn { font-size: 17px; }
+  #iths-java-demo .kop { padding: 9px 16px; font-size: 14px; }
+  #iths-java-demo .svar { font-size: 13px; padding: 6px 9px; }
+  #iths-java-demo .server { gap: 6px; padding: 10px 12px 12px; }
+  #iths-java-demo .logg { min-height: 0; }
+  #iths-java-demo .db td:nth-child(2) { display: none; }
+  #iths-java-demo .hint { font-size: 13.5px; }
+  #iths-java-demo .ai { gap: 8px; }
+  #iths-java-demo .ai-head { display: none; }
+  #iths-java-demo .sug { padding: 10px 12px; }
+  #iths-java-demo .sug-top { flex-direction: row; align-items: center; gap: 10px; }
+  #iths-java-demo .sug-top b { font-size: 15px; }
+  #iths-java-demo .sug-top p { font-size: 13px; }
+  #iths-java-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-java-demo * { animation: none !important; transition: none !important; }
 }
@@ -258,14 +294,18 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">Väntar på beställningar …</span>'; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
-      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
+      if (i < dold) return "";
+      var txt = kompakt() ? r.txt.replace("vara: Pixel One, ", "") : r.txt;
+      return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(txt) + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function visaDb() {
     $("jv-db").hidden = step < 2;
     $("jv-rader").innerHTML = ordrar.length
-      ? ordrar.slice(-4).map(function (o) { return "<tr><td>#" + o + "</td><td>Pixel One</td><td>1 299 kr</td></tr>"; }).join("")
+      ? ordrar.slice(kompakt() ? -2 : -4).map(function (o) { return "<tr><td>#" + o + "</td><td>Pixel One</td><td>1 299 kr</td></tr>"; }).join("")
       : '<tr><td class="tomt">Inga ordrar än</td></tr>';
   }
   function visaLager() {
@@ -297,7 +337,8 @@
     $("jv-klar").hidden = !(step === 3 && fixes.a && fixes.b && fixes.c);
     $("jv-bak").hidden = step === 0;
     $("jv-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("jv-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("jv-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("jv-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     $("jv-test").hidden = !(step === 3 && fixes.c);
     hint.hidden = true;
     setSvar("", "");
@@ -373,6 +414,10 @@
     window.parent.postMessage({ type: "java-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   render();
 })();
