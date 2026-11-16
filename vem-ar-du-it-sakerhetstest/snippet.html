@@ -60,10 +60,13 @@
   #iths-st-vem .p { height: 100%; }
 }
 @container (max-width: 400px) {
-  #iths-st-vem .wrap { padding: 18px 16px; }
+  #iths-st-vem .wrap { padding: 20px 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
   #iths-st-vem * { animation: none !important; transition: none !important; }
+}
+@media (max-width: 600px) {
+  #iths-st-vem { padding-inline: 10px; } /* mobilmarginal */
 }
 </style>
 
