@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är IT-säkerhet? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -199,6 +199,56 @@
   #iths-sak-demo .done-box { padding: 14px 14px; }
   #iths-sak-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken, sedan valen. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-sak-demo { padding-block: 16px 32px; }
+  #iths-sak-demo .wrap { gap: 18px; }
+  #iths-sak-demo .intro p { font-size: 15px; }
+  #iths-sak-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-sak-demo .panel { display: contents; }
+  #iths-sak-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-sak-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-sak-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-sak-demo #sk-innehall { order: 4; margin-top: 4px; }
+  #iths-sak-demo .done-box { order: 5; }
+  #iths-sak-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-sak-demo .nav .btn:only-child, #iths-sak-demo #sk-bak[hidden] + #sk-fram { grid-column: 1 / -1; }
+  #iths-sak-demo .chrome { padding: 7px 10px; }
+  #iths-sak-demo .dots { display: none; }
+  #iths-sak-demo .shop { padding: 12px; }
+  #iths-sak-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 4px 12px; }
+  #iths-sak-demo .bild { width: 52px; height: 52px; grid-row: span 2; }
+  #iths-sak-demo .bild svg { width: 38px; }
+  #iths-sak-demo .namn { font-size: 17px; }
+  #iths-sak-demo .besk { display: none; }
+  #iths-sak-demo .pris { font-size: 18px; }
+  #iths-sak-demo .kop { padding: 9px 16px; font-size: 14px; margin-top: 4px; }
+  #iths-sak-demo .nere b { font-size: 17px; }
+  #iths-sak-demo .nere span { font-size: 12px; }
+  #iths-sak-demo .vy { gap: 8px; }
+  #iths-sak-demo .vy-head { font-size: 11px; }
+  #iths-sak-demo .nod { padding: 7px 9px; }
+  #iths-sak-demo .nod b { font-size: 13px; }
+  #iths-sak-demo .snoop { padding: 7px 9px; }
+  #iths-sak-demo .snoop code { font-size: 12px; }
+  #iths-sak-demo .ips { gap: 6px; }
+  #iths-sak-demo .res { padding: 6px 8px; }
+  #iths-sak-demo .logbox { gap: 6px; }
+  #iths-sak-demo .logg { min-height: 0; }
+  #iths-sak-demo .hint { font-size: 13.5px; }
+  #iths-sak-demo .tc { border: 0; border-radius: 0; display: grid; gap: 8px; overflow: visible; }
+  #iths-sak-demo .tc li { border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  #iths-sak-demo .tc li:first-child { border-top: 1px solid var(--line); }
+  #iths-sak-demo .tc li.klar { border-color: #b7dcc7; }
+  #iths-sak-demo .tc li.miss { border-color: #f2c2c8; }
+  #iths-sak-demo .tc b { font-size: 15px; }
+  #iths-sak-demo .tc span.f { font-size: 13px; }
+  #iths-sak-demo .ai { gap: 8px; }
+  #iths-sak-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-sak-demo .sug b { font-size: 15px; }
+  #iths-sak-demo .sug p { font-size: 13px; }
+  #iths-sak-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-sak-demo * { animation: none !important; transition: none !important; }
 }
@@ -338,10 +388,13 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + ["Inget skickat än …", "Loggen är inte läst än …", "", "Inga ändringar än …"][step] + "</span>"; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function setSvar(txt) { $("sk-svar").textContent = txt; }
   function showHint(t) { hint.textContent = t; hint.hidden = false; send(); }
   function https() { return step > 0 || !!krypto.https; }
@@ -450,7 +503,8 @@
     $("sk-loghead").textContent = ["Nätverket", "Inloggningsloggen", "Larm i natt", "Ändringar i skyddet"][step];
     $("sk-bak").hidden = step === 0;
     $("sk-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("sk-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("sk-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("sk-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     visaInnehall(); visaShop(); visaVy(); visaKor(); visaLogg(false);
     send();
   }
@@ -614,6 +668,10 @@
     window.parent.postMessage({ type: "sakerhet-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   bytSteg(0);
 })();
