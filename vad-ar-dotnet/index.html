@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är .NET? | IT-Högskolan</title>
-<style>html, body { margin: 0; background: #fff; } body { padding: 0 16px; } @media (max-width: 500px) { html.inbaddad body { padding: 0 2px; } }</style>
+<style>html, body { margin: 0; background: #fff; } body { padding: 0 24px; } @media (max-width: 500px) { body { padding: 0 16px; } html.inbaddad body { padding: 0 10px; } }</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
@@ -187,6 +187,45 @@
   #iths-net-demo .done-box { padding: 14px 14px; }
   #iths-net-demo .done-box b { font-size: 17px; }
 }
+/* Mobil: lugnare uppställning. Rubrik och text först, sedan butiken och servern, sedan koden. Färre ramar och skuggor och kortare logg. */
+@container (max-width: 440px) {
+  #iths-net-demo { padding-block: 16px 32px; }
+  #iths-net-demo .wrap { gap: 18px; }
+  #iths-net-demo .intro p { font-size: 15px; }
+  #iths-net-demo .stage { display: flex; flex-direction: column; align-items: stretch; gap: 14px; }
+  #iths-net-demo .panel { display: contents; }
+  #iths-net-demo .panel .t { order: 1; font-size: 22px; }
+  #iths-net-demo .lead { order: 2; font-size: 15px; margin-top: -6px; }
+  #iths-net-demo .browser { order: 3; box-shadow: none; border-radius: 12px; }
+  #iths-net-demo #nt-innehall { order: 4; margin-top: 4px; }
+  #iths-net-demo .done-box { order: 5; padding: 14px; }
+  #iths-net-demo .done-box b { font-size: 17px; }
+  #iths-net-demo .nav { order: 6; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin-top: 2px; }
+  #iths-net-demo #nt-bak[hidden] + #nt-fram { grid-column: 1 / -1; }
+  #iths-net-demo .chrome { padding: 7px 10px; }
+  #iths-net-demo .dots { display: none; }
+  #iths-net-demo .shop { padding: 12px; }
+  #iths-net-demo .produkt { box-shadow: none; border: 1px solid var(--line); gap: 10px; padding: 10px; }
+  #iths-net-demo .topp { gap: 2px 12px; }
+  #iths-net-demo .bild { width: 44px; height: 44px; border-radius: 8px; }
+  #iths-net-demo .bild svg { width: 32px; }
+  #iths-net-demo .namn { font-size: 17px; }
+  #iths-net-demo .meta b { font-size: 15px; }
+  #iths-net-demo .kassa { padding-top: 8px; gap: 6px; }
+  #iths-net-demo .kassa label { font-size: 12px; }
+  #iths-net-demo .skicka { padding: 8px 14px; font-size: 14px; }
+  #iths-net-demo .rad input { padding: 7px 12px; }
+  #iths-net-demo .svar { font-size: 13px; padding: 6px 9px; }
+  #iths-net-demo .server { gap: 6px; padding: 10px 12px 12px; }
+  #iths-net-demo .logg { min-height: 0; }
+  #iths-net-demo .hint { font-size: 13.5px; }
+  #iths-net-demo .ai { gap: 8px; }
+  #iths-net-demo .ai-head { display: none; }
+  #iths-net-demo .sug { padding: 10px 12px; gap: 6px; }
+  #iths-net-demo .sug b { font-size: 15px; }
+  #iths-net-demo .sug p { font-size: 13px; }
+  #iths-net-demo .ok { padding: 5px 12px; }
+}
 @media (prefers-reduced-motion: reduce) {
   #iths-net-demo * { animation: none !important; transition: none !important; }
 }
@@ -316,11 +355,14 @@
   }
   function visaLogg(ny) {
     if (!rader.length) { logg.innerHTML = '<span class="tom">' + (step === 0 ? "Inte byggd än" : "Väntar på anrop …") + "</span>"; return; }
+    var dold = kompakt() ? Math.max(0, rader.length - 3) : 0;
     logg.innerHTML = rader.map(function (r, i) {
+      if (i < dold) return "";
       return '<span class="l-' + r.cls + (ny && i === rader.length - 1 ? " ny" : "") + '">' + esc(r.txt) +
         (r.ratta && !rattad ? '<br><button type="button" class="ratta" id="nt-ratta">Rätta rad 4</button>' : "") + "</span>";
     }).join("");
   }
+  function kompakt() { return root.clientWidth <= 440; }
   function visaPris() {
     var h;
     if (fusk) h = '<b class="fusk">1 kr</b><span>ändrat i webbläsaren</span>';
@@ -381,7 +423,8 @@
     $("nt-ingress").textContent = s.text;
     $("nt-bak").hidden = step === 0;
     $("nt-fram").hidden = step === 3;
-    if (STEPS[step + 1]) $("nt-fram").textContent = "Nästa steg: " + STEPS[step + 1].kort;
+    if (STEPS[step + 1]) $("nt-fram").textContent = (kompakt() ? "Nästa: " : "Nästa steg: ") + STEPS[step + 1].kort;
+    $("nt-bak").textContent = kompakt() ? "Tillbaka" : "Föregående";
     $("nt-server-namn").textContent = step === 0 ? "Visual Studio · Bygg" : "Servern · .NET";
     $("nt-lampa").className = step === 0 ? "vs" : "";
     $("nt-bygg").hidden = step !== 0;
@@ -531,6 +574,10 @@
     window.parent.postMessage({ type: "net-demo-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
   }
   if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+
+  // Byt etiketter och loggens längd när bredden går över eller under mobilgränsen
+  var varKompakt = kompakt();
+  if ("ResizeObserver" in window) new ResizeObserver(function () { if (kompakt() !== varKompakt) { varKompakt = kompakt(); render(); } }).observe(root);
 
   bytSteg(0);
 })();

@@ -8,7 +8,7 @@ page = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vad är .NET? | IT-Högskolan</title>
-<style>html, body {{ margin: 0; background: #fff; }} body {{ padding: 0 16px; }} @media (max-width: 500px) {{ html.inbaddad body {{ padding: 0 2px; }} }}</style>
+<style>html, body {{ margin: 0; background: #fff; }} body {{ padding: 0 24px; }} @media (max-width: 500px) {{ body {{ padding: 0 16px; }} html.inbaddad body {{ padding: 0 10px; }} }}</style>
 <script>if (window.parent !== window) document.documentElement.className = "inbaddad";</script>
 </head>
 <body>
