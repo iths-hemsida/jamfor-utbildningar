@@ -201,52 +201,76 @@ const COURSE_INFO = {"frontend|HTML & CSS": {"appName": "HTML och CSS", "appPts"
 // END COURSE_INFO
 
 // BEGIN AI_INFO
-const AI_INFO = {"frontend": ["AI ingår i kursen Fullstack-utveckling, där du programmerar med AI-verktyg som Copilot. Kursen tar också upp GDPR och EU:s AI-förordning.", "Kursplaner 2025"], "javautvecklare": ["AI-verktyg används i de flesta kurser, till exempel kodassistenter för kodgranskning, testgenerering och felsökning. Du lär dig också hur AI kan integreras i webbtjänster.", "Kursplaner 2026"], "ux-designer": ["Du använder AI-verktyg i designprocessens olika faser och lär dig tänka kritiskt kring AI och användardata. Redan i introduktionskursen tittar du på AI:s roll i UX-områdets framtid.", "Kursplaner 2025"], "it-sakerhetsspecialist": ["AI-verktyg används som stöd i Python, kryptering, omvärldsbevakning och incidenthantering, till exempel för analys, felsökning och dokumentation.", "Kursplaner 2026"], "fullstack": ["AI-verktyg ingår i alla programmeringskurser, till exempel kodassistenter, testgenerering och logganalys. Du lär dig också använda AI på ett ansvarsfullt sätt.", "Kursplaner 2026"], "net": ["Kursplanerna för .NET-utvecklare nämner inte AI.", "Kursplaner 2024"], "net-cloud": ["I kursen Administrera molnlösningar arbetar du med Azure Machine Learning och AI-tjänster i molnet.", "Kursplaner 2024"], "mjukvarutestare": ["En hel kurs handlar om att testa inbyggda system och AI-baserad mjukvara. Du lär dig också använda AI-verktyg för att stötta testdesign.", "Kursplaner 2025"], "it-projektledare": ["Du använder AI-verktyg i alla projektledningskurser, till exempel för planering, riskanalys, user stories och kravarbete, och lär dig använda AI ansvarsfullt.", "Kursplaner 2026"], "account-manager": ["Du lär dig använda relevanta AI-verktyg och automatiseringslösningar i yrkesrollen.", "Utbildningens mål"], "it-sakerhetstestare": ["Du använder AI-agenter för att skriva kod och automatisera steg i penetrationstester. AI används också som stöd när du konfigurerar och felsöker nätverk.", "Kursplaner 2026"]};
+const AI_INFO = {"frontend": ["AI-stöd ingår i alla programmeringskurser, från HTML och CSS till JavaScript. Du använder också AI i design och prototyper och lär dig bedöma AI-genererad kod.", "Ansökan till MYH 2026"], "javautvecklare": ["AI-verktyg används i nästan alla kurser, till exempel kodassistenter för kodgranskning och testgenerering.", "Ansökan till MYH 2026"], "ux-designer": ["Du lär dig använda AI-verktyg i designprocessen för att höja kvaliteten i användarcentrerad design. Du får också en introduktion till AI i yrkesrollen.", "Ansökan till MYH 2026"], "it-sakerhetsspecialist": ["AI-verktyg används som stöd i nästan alla kurser, till exempel för logganalys, incidenthantering och virusanalys.", "Ansökan till MYH 2026"], "fullstack": ["AI-verktyg ingår i alla programmeringskurser, till exempel kodassistenter, testgenerering och logganalys. Du lär dig också använda AI på ett ansvarsfullt sätt.", "Kursplaner 2026"], "net": ["AI-stöd ingår i programmering, webbutveckling, agil utveckling och clean code. Du lär dig också hur databaser används i AI-lösningar och hur du använder AI etiskt.", "Ansökan till MYH 2026"], "net-cloud": ["Du använder AI-verktyg som stöd i C#, webbutveckling och molnlösningar. AI ingår också i examensarbetet.", "Ansökan till MYH 2026"], "mjukvarutestare": ["En hel kurs handlar om att testa inbyggda system och AI-baserad mjukvara. Du lär dig också använda AI-verktyg för att stötta testdesign.", "Ansökan till MYH 2025"], "it-projektledare": ["Du lär dig använda AI-verktyg för analys, planering och riskhantering i projekt, och vad som gäller juridiskt och etiskt kring AI.", "Ansökan till MYH 2026"], "account-manager": ["Du får en introduktion till AI i branschen och yrkesrollen och lär dig använda AI-verktyg och automatisering för att effektivisera arbetet.", "Ansökan till MYH 2026"], "it-sakerhetstestare": ["Du använder AI-agenter för att skriva kod och automatisera steg i penetrationstester. AI används också som stöd när du konfigurerar och felsöker nätverk.", "Kursplaner 2026"]};
 // END AI_INFO
 
-// AI i kurserna: bara där kursplanen (SharePoint, Genomförande/ITHS/02 Kursplaner) uttryckligen nämner AI. Aldrig under LIA. Nyckel "program|kurs" som i PROGRAMS.
+// AI i kurserna: bara där den senaste ansökan till MYH (eller kursplanen) uttryckligen nämner AI. Aldrig under LIA. Nyckel "program|kurs" som i PROGRAMS.
 // Andra värdet är källan. Saknas en kurs här står det inget om AI i underlaget, vilket inte betyder att AI aldrig används.
 const SRC_APP = s => `IT-Högskolans ansökan till Myndigheten för yrkeshögskolan ${s}`;
 const COURSE_AI = {
-  "frontend|Fullstack-utveckling": ["Du programmerar med stöd av AI-verktyg som Copilot och lär dig hur AI kan stödja frontendutvecklingen. Kursen tar också upp GDPR och EU:s AI-förordning och har en egen labb om AI.", "Kursplan 2025"],
+  "frontend|HTML & CSS": ["Du använder AI som stöd när du bygger webbgränssnitt i HTML och CSS.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Native JavaScript": ["Du skriver JavaScript både med och utan AI-stöd, så att du förstår koden du får hjälp med.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|UX & UI-design": ["Du använder AI som stöd i design- och prototyparbetet.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Agil utveckling": ["Du jobbar med versionshantering i Git och använder AI-stöd i utvecklingsprocessen.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "frontend|Fullstack-utveckling": ["Du lär dig bedöma hur AI-genererade lösningar passar in i helheten.", SRC_APP("2026 (för utbildningen i Stockholm)")],
 
-  "javautvecklare|Javaprogrammering": ["Du använder kodassistenter för idéer, kodgranskning och att generera tester, med fokus på källkritik, integritet och upphovsrätt.", "Kursplan 2026"],
-  "javautvecklare|Utveckling mot databaser": ["Du använder AI-verktyg för felsökning, dokumentation och för att ta fram SQL.", "Kursplan 2026"],
-  "javautvecklare|Javaverktyg och byggmiljöer": ["Du använder AI för kodgranskning, för att generera testfall och för att sätta upp pipelines.", "Kursplan 2026"],
-  "javautvecklare|Web services och integrationer": ["Du använder kodassistenter, tar fram testdata med AI och får AI-stöd i felsökning. Du lär dig också hur AI kan integreras i webbtjänster.", "Kursplan 2026"],
-  "javautvecklare|Utveckling av webbapplikationer": ["Du använder kodassistenter för kod, tester och dokumentation och följer policys för etik och kvalitet.", "Kursplan 2026"],
-  "javautvecklare|Agil utveckling": ["Du använder AI-verktyg för planering, analys och kodstöd i teamet.", "Kursplan 2026"],
+  "javautvecklare|Javaprogrammering": ["Du använder kodassistenter för idéer, kodgranskning och att generera tester, med fokus på källkritik, integritet och upphovsrätt.", SRC_APP(2026)],
+  "javautvecklare|Utveckling mot databaser": ["Du använder AI-verktyg för felsökning, dokumentation och för att ta fram SQL.", SRC_APP(2026)],
+  "javautvecklare|Javaverktyg och byggmiljöer": ["Du använder AI för kodgranskning, för att generera testfall och för att sätta upp pipelines.", SRC_APP(2026)],
+  "javautvecklare|Web services och integrationer": ["Du använder kodassistenter, tar fram testdata med AI och får AI-stöd i felsökning.", SRC_APP(2026)],
+  "javautvecklare|Utveckling av webbapplikationer": ["Du använder kodassistenter för kod, tester och dokumentation och följer policys för etik och kvalitet.", SRC_APP(2026)],
 
-  "ux-designer|Introduktion till UX-design": ["Du får en bild av UX-områdets historia, utveckling och framtid, där AI ingår.", "Kursplan 2025"],
-  "ux-designer|Användarcentrerad design": ["Du använder AI-verktyg i designprocessens olika faser för att arbeta effektivare, och lär dig tänka kritiskt kring AI och etiken i att använda AI med användardata.", "Kursplan 2025"],
+  "ux-designer|Användarcentrerad design": ["Du använder AI-verktyg i den användarcentrerade designprocessen för att höja kvaliteten.", SRC_APP(2026)],
+
 
   "fullstack|HTML och CSS": ["Du använder AI ansvarsfullt för kodstöd, dokumentation och förslag på alt-texter, med källkritik och dataskydd.", "Kursplan 2026"],
-  "fullstack|Native JavaScript": ["Du använder AI-verktyg för att lära dig, felsöka och generera kod.", "Kursplan 2026"],
-  "fullstack|Backend-programmering och databaser": ["Du använder kodassistenter och tar fram testfall och dokumentation med AI-stöd, med fokus på ansvarsfull användning.", "Kursplan 2026"],
+  "fullstack|Native JavaScript": ["Du använder AI-verktyg för att lära dig och för att felsöka kod.", "Kursplan 2026"],
+  "fullstack|Backend-programmering och databaser": ["Du använder AI-verktyg i utvecklingsarbetet.", "Kursplan 2026"],
   "fullstack|Agil utveckling": ["Du använder AI-verktyg som stöd i planering, dokumentation och kodarbete.", "Kursplan 2026"],
   "fullstack|Frontend-programmering": ["Du använder AI för kodstöd, att generera testfall, granska tillgänglighet och refaktorera kod.", "Kursplan 2026"],
-  "fullstack|Software life cycle management": ["Du använder kodassistenter, genererar tester och analyserar loggar med AI-stöd, med fokus på ansvarsfull användning.", "Kursplan 2026"],
+  "fullstack|Software life cycle management": ["Du använder AI-verktyg i hela utvecklingskedjan.", "Kursplan 2026"],
 
-  "net-cloud|Administrera molnlösningar": ["Du får arbeta med Azure Machine Learning och tjänster för AI i molnet.", "Kursplan 2024"],
+  "net|Programmering C#": ["Du får en introduktion till AI-stöd och använder AI-verktyg i utvecklingsarbetet.", SRC_APP(2026)],
+  "net|Utveckling mot databas och databasadministration": ["Du lär dig hur databaser används i AI-lösningar och datadrivna applikationer.", SRC_APP(2026)],
+  "net|Webbutveckling med .NET": ["Du bygger webb och API:er med och utan AI-verktyg och lär dig integrera AI-baserade funktioner och tjänster i webbapplikationer.", SRC_APP(2026)],
+  "net|Agil utveckling": ["Du använder AI-stöd i planering, dokumentation och kvalitetssäkring.", SRC_APP(2026)],
+  "net|Clean code": ["Du använder AI-verktyg för kodgranskning, testning och refaktorering och diskuterar etisk användning av AI.", SRC_APP(2026)],
 
-  "mjukvarutestare|Testautomation för Continuous testning": ["Du använder AI-verktyg som stöd i testdesign och lär dig AI:s möjligheter och risker i testdesign och felsökning.", "Kursplan 2025"],
-  "mjukvarutestare|Embedded systems and AI Testing": ["Du lär dig testa AI-baserade system, ta fram teststrategier för AI och hantera bias, datakvalitet och etik. Du ser också hur AI kan förbättra testprocessen.", "Kursplan 2025"],
+  "net-cloud|Programmering med C#": ["Du använder AI som stöd när du programmerar i C#.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Webbutveckling": ["Du använder AI som stöd i webbutvecklingen.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Utveckla molnlösningar": ["Du använder AI som stöd när du förvaltar och distribuerar molnlösningar.", SRC_APP("2026 (för utbildningen i Stockholm)")],
+  "net-cloud|Examensarbete": ["Du använder AI-verktyg i examensarbetet.", SRC_APP("2026 (för utbildningen i Stockholm)")],
 
-  "it-projektledare|Projektledning, projektmodeller och grupp-processer": ["Du använder AI-verktyg i projekt, bland annat för analys, planering och att hitta risker.", "Kursplan 2026"],
-  "it-projektledare|Agil projektledning": ["Du använder AI-assistenter för att skriva user stories, hitta risker, sammanfatta möten och ta fram testfall, med källkritik.", "Kursplan 2026"],
-  "it-projektledare|IT-projektledning": ["Du använder AI-verktyg i idéarbete, planering, riskhantering och kvalitetsarbete och lär dig använda AI ansvarsfullt.", "Kursplan 2026"],
-  "it-projektledare|Kundförståelse och konsultmässighet": ["Du använder AI-verktyg för att analysera kundens behov, formulera krav, räkna på business case och ta fram avtalsutkast.", "Kursplan 2026"],
+  "mjukvarutestare|Embedded systems and AI Testing": ["Du lär dig testa AI-baserade system, ta fram teststrategier för AI och hantera bias, datakvalitet och etik. Du ser också hur AI kan förbättra testprocessen.", SRC_APP(2025)],
+  "mjukvarutestare|Testautomation för Continuous testning": ["Du använder AI-verktyg som stöd i testdesign och lär dig AI:s möjligheter och risker i testdesign och felsökning.", SRC_APP(2025)],
+
 
   "account-manager|Teknisk kunskap och marknadsföring för Account Managers": ["Du lär dig använda relevanta AI-verktyg och automatiseringslösningar.", "Utbildningens mål"],
 
-  "it-sakerhetsspecialist|Python": ["Du använder AI-verktyg som kodassistenter, stöd i felsökning och idégenerering, och lär dig granska resultatet kritiskt.", "Kursplan 2026"],
-  "it-sakerhetsspecialist|Kryptering": ["Du använder AI-verktyg som stöd för analys, felsökning och lärande inom kryptografi.", "Kursplan 2026"],
-  "it-sakerhetsspecialist|Omvärldsbevakning": ["Du använder AI-verktyg för att hämta in, analysera och sammanställa information.", "Kursplan 2026"],
-  "it-sakerhetsspecialist|Incidenthantering": ["Du använder AI-verktyg för analys, prioritering och dokumentation när du hanterar incidenter.", "Kursplan 2026"],
-
   "it-sakerhetstestare|Nätverk och nätverkssäkerhet": ["Du använder AI-agenter som hjälp när du konfigurerar, felsöker och övar på det du lär dig.", "Kursplan 2026"],
   "it-sakerhetstestare|Programmering för penetrationstestare": ["Du använder AI-agenter för att skriva och anpassa Python-kod, automatisera sårbarhetsgranskning och bygga automatiserade webbläsare.", "Kursplan 2026"],
-  "it-sakerhetstestare|Applikationssäkerhet & penetrationstest av web": ["Du hittar sårbarheter i kod med hjälp av AI-agenter.", "Kursplan 2026"]
+  "it-sakerhetstestare|Applikationssäkerhet & penetrationstest av web": ["Du hittar sårbarheter i kod med hjälp av AI-agenter.", "Kursplan 2026"],
+
+  "javautvecklare|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "javautvecklare|Agil utveckling": ["Du använder AI-verktyg för planering, analys och kodstöd i teamet.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Nätverk": ["Du använder AI-verktyg som stöd för analys, felsökning och lärande.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Python": ["Du använder AI-verktyg som stöd i programmering, felsökning och analys.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Virtualisering och cloud": ["Du använder AI-verktyg för analys, konfiguration, felsökning och dokumentation.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Kryptering": ["Du använder AI-verktyg som stöd för analys, felsökning och lärande inom kryptografi.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Virusanalys": ["Du använder AI-verktyg för att analysera, identifiera och tolka skadlig kod.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Omvärldsbevakning": ["Du använder AI-verktyg för att hämta in, analysera och sammanställa information.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Spårbarhet": ["Du använder AI-verktyg för att analysera, bearbeta och tolka loggdata.", SRC_APP(2026)],
+  "it-sakerhetsspecialist|Incidenthantering": ["Du använder AI-verktyg för analys, prioritering och dokumentation när du hanterar incidenter.", SRC_APP(2026)],
+  "net|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-projektledare|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "frontend|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "ux-designer|Introduktion till UX-design": ["Du får en introduktion till branschen och till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "net-cloud|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "account-manager|Kompetensportfölj och hållbar utveckling": ["Du får en introduktion till AI i studierna och i yrkesrollen.", SRC_APP(2026)],
+  "it-projektledare|Projektledning, projektmodeller och grupp-processer": ["Du använder relevanta AI-verktyg i projekt, bland annat för analys, planering och att hitta risker.", SRC_APP(2026)],
+  "it-projektledare|IT-projektledning": ["Du använder AI-verktyg i projektledningen och lär dig juridiska och etiska frågor kring AI.", SRC_APP(2026)],
+  "it-sakerhetstestare|Kompetensportfölj och hållbar utveckling": ["Du lär dig om lärandeteknik och AI och får en introduktion till AI i studierna och i yrkesrollen.", "Kursplan 2026"]
 };
 
 // Kurser som har bytt namn i senaste underlaget: beskrivningen i COURSE_INFO ligger kvar under det gamla namnet.
