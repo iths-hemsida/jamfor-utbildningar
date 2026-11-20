@@ -189,3 +189,75 @@ Mappen `framtidsyrke/` innehåller fyra kort för avsnittet med samma namn på u
 - Källan är `framtidsyrke/snippet.html`. Kör `python3 tools/build-framtidsyrke.py` efter ändringar.
 - WPCode: `wordpress/framtidsyrke-wpcode.html`. All CSS är avgränsad till `#iths-fe-framtid`.
 - Iframe: höjden skickas med `postMessage` (`type: "fe-framtid-height"`).
+
+## Vem är du? (vem-ar-du/)
+
+Självkoll för Frontend-sidan: fem påståenden, en mätare och ett nästa steg (4–5 → "Det låter som du!", 0–3 → quizet). Redigera `vem-ar-du/snippet.html` och kör `python3 tools/build-vem-ar-du.py`. Länkarna ställs in i `LANKAR` i skriptet. WPCode-version: `wordpress/vem-ar-du-wpcode.html`.
+
+## Därför är mjukvarutestare ett framtidsyrke (framtidsyrke-mjukvarutest/)
+
+Fem enkla kort (bock, rubrik och text) för Mjukvarutestare-sidan, under en kort ingress. Redigera `framtidsyrke-mjukvarutest/snippet.html` och kör `python3 tools/build-framtidsyrke-mjukvarutest.py`. WPCode-version: `wordpress/framtidsyrke-mjukvarutest-wpcode.html`.
+
+## Vem är du? Mjukvarutestare (vem-ar-du-mjukvarutest/)
+
+Samma självkoll som för Frontend, med fem av punkterna från Mjukvarutestare-sidan. Redigera `vem-ar-du-mjukvarutest/snippet.html` och kör `python3 tools/build-vem-ar-du-mjukvarutest.py`. WPCode-version: `wordpress/vem-ar-du-mjukvarutest-wpcode.html`.
+
+## LIA-praktik (lia-mjukvarutest/)
+
+Snyggare LIA-avsnitt för Mjukvarutestare-sidan: punkterna som ikonrutor och nyckeltalen 16 veckor (med en veckostapel som fylls i när blocket syns) och 100 %. Redigera `lia-mjukvarutest/snippet.html` och kör `python3 tools/build-lia-mjukvarutest.py`. WPCode-version: `wordpress/lia-mjukvarutest-wpcode.html`.
+
+## Därför är frontend-utvecklare ett framtidsyrke, enkla kort (framtidsyrke/enkla-kort-snippet.html)
+
+Alternativ till de levande korten: samma ingress och fyra enkla kort med bock, rubrik och text. Kör `python3 tools/build-framtidsyrke-enkla-kort.py`. WPCode-version: `wordpress/framtidsyrke-enkla-kort-wpcode.html`.
+
+## Därför är fullstackutvecklare ett framtidsyrke (framtidsyrke-fullstack/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-fullstack/snippet.html` och kör `python3 tools/build-framtidsyrke-fullstack.py`. WPCode-version: `wordpress/framtidsyrke-fullstack-wpcode.html`.
+
+## Vem är du? UX-designer (vem-ar-du-ux/)
+
+Samma självkoll som för Frontend och Mjukvarutestare, med fem av punkterna från UX-designer-sidan. Kör `python3 tools/build-vem-ar-du-ux.py`. WPCode-version: `wordpress/vem-ar-du-ux-wpcode.html`.
+
+## Därför är javautvecklare ett framtidsyrke (framtidsyrke-java/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-java/snippet.html` och kör `python3 tools/build-framtidsyrke-java.py`. WPCode-version: `wordpress/framtidsyrke-java-wpcode.html`.
+
+## Vem är du? Javautvecklare (vem-ar-du-java/)
+
+Samma självkoll som de andra, med fem av punkterna för Java. Kör `python3 tools/build-vem-ar-du-java.py`. WPCode-version: `wordpress/vem-ar-du-java-wpcode.html`.
+
+## Därför är .NET ett framtidsyrke (framtidsyrke-dotnet/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-dotnet/snippet.html` och kör `python3 tools/build-framtidsyrke-dotnet.py`. WPCode-version: `wordpress/framtidsyrke-dotnet-wpcode.html`.
+
+## Vem är du? .NET-utvecklare (vem-ar-du-dotnet/)
+
+Samma självkoll som de andra, med fem av punkterna för .NET. Kör `python3 tools/build-vem-ar-du-dotnet.py`. WPCode-version: `wordpress/vem-ar-du-dotnet-wpcode.html`.
+
+## Därför är .NET Cloud ett framtidsyrke (framtidsyrke-dotnet-cloud/)
+
+Ingress och fyra enkla kort med bock, rubrik och text. Redigera `framtidsyrke-dotnet-cloud/snippet.html` och kör `python3 tools/build-framtidsyrke-dotnet-cloud.py`. WPCode-version: `wordpress/framtidsyrke-dotnet-cloud-wpcode.html`.
+
+## Vem är du? .NET Cloud (vem-ar-du-dotnet-cloud/)
+
+Samma självkoll som de andra, med fem av punkterna för .NET Cloud. Kör `python3 tools/build-vem-ar-du-dotnet-cloud.py`. WPCode-version: `wordpress/vem-ar-du-dotnet-cloud-wpcode.html`.
+
+## Vem är du? IT-projektledare (vem-ar-du-it-projektledare/)
+
+Samma självkoll som de andra, med fem påståenden från IT-projektledarsidans text. Kör `python3 tools/build-vem-ar-du-it-projektledare.py`. WPCode-version: `wordpress/vem-ar-du-it-projektledare-wpcode.html`.
+
+## Vem är du? IT-säkerhetsspecialist (vem-ar-du-it-sakerhet/)
+
+Samma självkoll som de andra, med fem påståenden från IT-säkerhetssidans text. Kör `python3 tools/build-vem-ar-du-it-sakerhet.py`. WPCode-version: `wordpress/vem-ar-du-it-sakerhet-wpcode.html`.
+
+## Därför är Account Manager ett framtidsyrke (framtidsyrke-account-manager/)
+
+Ingress och fem enkla kort med bock, rubrik och text. Redigera `framtidsyrke-account-manager/snippet.html` och kör `python3 tools/build-framtidsyrke-account-manager.py`. WPCode-version: `wordpress/framtidsyrke-account-manager-wpcode.html`.
+
+## Vem är du? Account Manager (vem-ar-du-account-manager/)
+
+Samma självkoll som de andra, med en kort ingress och fem punkter för Account Manager, utan behörighetslänk. Kör `python3 tools/build-vem-ar-du-account-manager.py`. WPCode-version: `wordpress/vem-ar-du-account-manager-wpcode.html`.
+
+## Vem är du? IT-säkerhetstestare (vem-ar-du-it-sakerhetstest/)
+
+Samma självkoll som de andra, med fem påståenden från IT-säkerhetstestarsidans text. Kör `python3 tools/build-vem-ar-du-it-sakerhetstest.py`. WPCode-version: `wordpress/vem-ar-du-it-sakerhetstest-wpcode.html`.
