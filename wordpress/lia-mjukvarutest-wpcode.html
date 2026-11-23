@@ -1,0 +1,126 @@
+<!-- IT-Högskolan: LIA-praktik på 16 veckor (Mjukvarutestare). Klistra in hela snutten i ett HTML-snippet i WPCode. All CSS är avgränsad till #iths-mt-lia. -->
+<style>
+/* Text och punkter till vänster, två nyckeltal till höger (16 veckor och 100 %). På smal yta hamnar allt i en spalt.
+   Veckostapeln fylls i när blocket syns. Färger enligt ITHS grafiska profil: Kod #662247, Moln #F9F9F9,
+   Terminal #2D1A2E, Server #9C4F77, Pixel #FFB547. */
+#iths-mt-lia {
+  --kod: #662247; --terminal: #2D1A2E; --server: #9C4F77; --pixel: #FFB547;
+  --surface: #ffffff; --ink: var(--terminal); --muted: #6e5d6f; --line: #e7dfe5; --soft: #f4e9ef;
+  --font-display: "Avenir LT W01_85 Heavy1475544", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  --font-body: "Avenir LT W01_45 Book1475508", Avenir, "Avenir Next", Helvetica, Arial, sans-serif;
+  container-type: inline-size;
+  color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  max-width: 1040px; margin: 0; padding-block: 16px 24px;
+}
+#iths-mt-lia *, #iths-mt-lia *::before, #iths-mt-lia *::after { box-sizing: border-box; }
+#iths-mt-lia p { margin: 0; }
+#iths-mt-lia .wrap { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+#iths-mt-lia .vanster { display: grid; gap: 14px; min-width: 0; }
+#iths-mt-lia .eyebrow { font-family: var(--font-display); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 800; }
+#iths-mt-lia h2 { margin: 0; color: var(--kod); font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 600; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em; text-transform: none; }
+#iths-mt-lia .rubrik { display: grid; gap: 4px; }
+#iths-mt-lia .ingress { color: var(--muted); }
+#iths-mt-lia .lead { font-family: var(--font-display); font-weight: 800; font-size: 15px; }
+
+/* Punkterna */
+#iths-mt-lia .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+#iths-mt-lia .lista li { margin: 0; padding: 10px 12px; min-width: 0; list-style: none; display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-size: 15px; line-height: 1.35; }
+#iths-mt-lia .lista li::before, #iths-mt-lia .lista li::after { content: none; display: none; }
+#iths-mt-lia .ikon { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+#iths-mt-lia .ikon svg { width: 18px; height: 18px; fill: none; stroke: var(--kod); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Nyckeltalen */
+#iths-mt-lia .hoger { display: grid; gap: 12px; min-width: 0; }
+#iths-mt-lia .tal { border-radius: 14px; padding: 18px; display: grid; gap: 8px; }
+#iths-mt-lia .tal .siffra { font-family: futura, Futura, "Futura PT", var(--font-display); font-weight: 700; font-size: 44px; line-height: 1; letter-spacing: -0.02em; }
+#iths-mt-lia .tal .siffra small { font-size: 20px; margin-left: 4px; }
+#iths-mt-lia .tal p { font-size: 14.5px; line-height: 1.4; }
+#iths-mt-lia .tal.veckor { background: var(--kod); color: #fff; }
+#iths-mt-lia .tal.veckor .siffra { color: var(--pixel); }
+#iths-mt-lia .veckor-stapel { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; }
+#iths-mt-lia .veckor-stapel i { display: block; height: 10px; border-radius: 3px; background: rgba(255, 255, 255, .2); transition: background .25s ease; }
+#iths-mt-lia .veckor-stapel i.on { background: var(--pixel); }
+#iths-mt-lia .veckor-etikett { display: flex; justify-content: space-between; font-size: 11px; opacity: .75; }
+#iths-mt-lia .tal.procent { background: var(--pixel); color: var(--terminal); }
+#iths-mt-lia .tal.procent .siffra { color: var(--kod); }
+
+/* Avslutning */
+#iths-mt-lia .slut { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; background: var(--soft); border-radius: 12px; padding: 14px 16px; }
+#iths-mt-lia .slut p { font-size: 15px; }
+#iths-mt-lia .slut a { flex: none; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; background: var(--kod); color: #fff; border-radius: 999px; padding: 9px 18px; }
+#iths-mt-lia .slut a:hover { background: var(--server); }
+#iths-mt-lia :focus-visible { outline: 3px solid var(--kod); outline-offset: 2px; }
+
+@container (max-width: 620px) {
+  #iths-mt-lia .wrap { grid-template-columns: minmax(0, 1fr); }
+  #iths-mt-lia .hoger { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #iths-mt-lia .tal { padding: 14px; }
+  #iths-mt-lia .tal .siffra { font-size: 36px; }
+}
+@container (max-width: 400px) {
+  #iths-mt-lia .hoger { grid-template-columns: minmax(0, 1fr); }
+  #iths-mt-lia .slut a { width: 100%; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #iths-mt-lia * { transition: none !important; }
+}
+</style>
+
+<section id="iths-mt-lia" aria-labelledby="mt-lia-rubrik">
+  <div class="wrap">
+    <div class="vanster">
+      <div class="rubrik">
+        <span class="eyebrow">Lärande i arbete</span>
+        <h2 id="mt-lia-rubrik">LIA-praktik på 16 veckor</h2>
+      </div>
+      <p class="ingress">En viktig del av utbildningen är LIA, Lärande i arbete. Under 16 veckor får du möjlighet att ta steget ut i arbetslivet och använda dina kunskaper i en riktig verksamhet.</p>
+      <p class="lead">Du får möjlighet att:</p>
+      <ul class="lista">
+        <li><span class="ikon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>arbeta med riktiga system och projekt</li>
+        <li><span class="ikon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11l2 2 4-4"/><circle cx="12" cy="11" r="7"/><path d="M17 16l4 4"/></svg></span>använda testverktyg i praktiken</li>
+        <li><span class="ikon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 19c0-3 2.2-5 5-5s5 2 5 5M11 19c0-3 2.2-5 5-5s5 2 5 5"/></svg></span>samarbeta med utvecklare och andra yrkesroller</li>
+        <li><span class="ikon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></svg></span>bygga arbetslivserfarenhet</li>
+        <li><span class="ikon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 10.9l7.6-3.8M8.2 13.1l7.6 3.8"/></svg></span>skapa kontakter i IT-branschen</li>
+      </ul>
+    </div>
+    <div class="hoger">
+      <div class="tal veckor">
+        <span class="siffra">16<small>veckor</small></span>
+        <div class="veckor-stapel" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="veckor-etikett" aria-hidden="true"><span>Vecka 1</span><span>Vecka 16</span></div>
+        <p>ute i en riktig verksamhet</p>
+      </div>
+      <div class="tal procent">
+        <span class="siffra">100 %</span>
+        <p>av våra studerande hittar en relevant LIA-plats.</p>
+      </div>
+    </div>
+    <div class="slut">
+      <p>Din LIA kan bli en viktig väg från utbildning till arbete.</p>
+      <a href="https://www.iths.se/lia-praktik/" target="_top">Läs mer om LIA ›</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var root = document.getElementById("iths-mt-lia");
+  if (!root) return;
+  // Veckostapeln fylls i en gång när blocket syns
+  var bitar = root.querySelectorAll(".veckor-stapel i");
+  function fyll() { bitar.forEach(function (b, i) { setTimeout(function () { b.classList.add("on"); }, i * 70); }); }
+  var lugn = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (lugn || !("IntersectionObserver" in window)) { bitar.forEach(function (b) { b.classList.add("on"); }); }
+  else {
+    var io = new IntersectionObserver(function (e) { if (e[0].isIntersecting) { fyll(); io.disconnect(); } }, { threshold: 0.4 });
+    io.observe(root);
+  }
+  // Höjd till förälder om komponenten visas i en iframe
+  function send() {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "mt-lia-height", h: Math.ceil(root.getBoundingClientRect().bottom + window.scrollY) }, "*");
+  }
+  if (window.parent !== window && "ResizeObserver" in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
